@@ -10,12 +10,12 @@
 23 DATA-4,4,-4,4,,4,4,,4,-4,4,-4,,-4,-4,1,1,1,32,-32:FORI=3TO22:READJ(I):NEXT
 24 SPRITE$(0)="p¨øp>}½½¹8|fffî"
 26 S=400+N:FORI=0TO15:D(I)=S:C(I)=I*4+128:NEXT
-28 Q(0)=1:Q(1)=-1
+28 Q(0)=1:Q(1)=-1:L=2
 30 '
 31 ' ====== GAME LOOP (4 LINES) ======
-32 I=I+1AND15:Q=I>7:D=D(I):VPOKED,32:D=D+J(18+RND(1)*5)*Q(-Q):VPOKED,C(I):D(I)=D
+32 P=P+1:I=PAND15:T=IAND1:D=D(I):VPOKED,32:IFI<LTHEND=D+J(18+RND(1)*5)*Q(T):VPOKED,C(I):D(I)=D
 34 T=STICK(0)*2:X=X+J(T):Y=Y+J(T+1):PUTSPRITE0,(X,Y):D=N+(Y\8)*32+X\8+32
-35 T=VPEEK(D)\4-32:IFT>=0ANDT<16THENVPOKED,32:D(T)=S
+35 T=VPEEK(D)\4-32:IFT>=0ANDT<16THENVPOKED,32:D(T)=S:L=2+P\64:IFL>15THENL=15
 36 GOTO 32
 1000 ' SAVE "CHICKENS.BAS",A
 1010 ' ----------
@@ -24,7 +24,8 @@
 1040 '  I,J  = loops
 1050 '  D(I) = chicken cur pos/address
 1060 '   S   = chicken init pos/address
-1070 '  X,Y  = player coordinate
+1070 '   P   = player points
+1075 '  X,Y  = player coordinate
 1080 ' J(17-)= player movement (joymap)
 1090 ' J(18+)= chickens movement
 1100 '  var  = ...details...
