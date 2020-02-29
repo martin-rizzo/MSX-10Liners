@@ -1,13 +1,12 @@
 10 CLEAR:ON KEY GOSUB 1000:KEY (1) ON
 20 '
-30 ' == MAIN INIT & DATA (3 LINE) ==
-40 SCREEN1,2,0:KEYOFF:DEFINTA-Z:N=6144:K=32:DIMJ(K),D(K),C(K),Q(K)
+30 ' == MAIN INIT & DATA (1 LINE) ==
+35 SCREEN1,2,0:KEYOFF:DEFINTA-Z:K=32:L=1280:N=6144:D=N:DIMJ(K),D(K),C(K),Q(K)
+40 '
+41 ' == DATA & PLAYFIELD (3 LINES) ==
 42 DATA-4,4,-4,4,,4,4,,4,-4,4,-4,,-4,-4,1,1,1,32,-32,32,64,223,32,215,32,195,32
 44 DATA18,32,7,512,18,32,7,32,44,2,188,2,244,12,28,8,147,2,101,1,69,1:FORI=3TO22
-48 READJ(I):NEXT
-50 '
-60 ' === DRAW PLAYFIELD (1 LINE) ====
-85 D=N:FORJ=1TO15:D=D-1280*(J=9):READT,U:FORI=1TOU:VPOKED,T:D=D+1:NEXTI,J
+48 READJ(I):NEXT:FORJ=1TO15:D=D-L*(J=9):READT,U:FORI=1TOU:VPOKED,T:D=D+1:NEXTI,J
 90 '
 100 ' === INIT IMAGES (? LINES) ===
 110 SPRITE$(0)="p¨øp>}½½¹8|fffî"
@@ -27,6 +26,8 @@
 1010 ' ----------
 1020 '   N   = name table address
 1030 '   T   = temporary var (1 line)
+1034 '   K   =  32  (constant)
+1035 '   L   = 1280 (constant)
 1040 '  I,J  = loops
 1050 '  D(I) = chicken cur pos/address
 1060 '   S   = chicken init pos/address
