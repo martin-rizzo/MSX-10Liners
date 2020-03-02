@@ -1,5 +1,10 @@
-Game description
-----------------
+Chickens (BASIC 10-liner)
+=========================
+
+Description
+-----------
+
+**Chickens** is a game made in just 10 lines of BASIC code for the MSX platform.
 
 * Title    : CHICKENS
 * Platform : MSX
@@ -82,6 +87,5 @@ J(18-22) = chickens movement map       <constant>
 
 ---
 
-2020 - Martin Rizzo  
-email: martinrizzo@gmail.com
+2020 - Martin Rizzo <martinrizzo@gmail.com>
 
