@@ -1,9 +1,6 @@
 Chickens (BASIC 10-liner)
 =========================
 
-Description
------------
-
 **Chickens** is a game made in just 10 lines of BASIC code for the MSX platform.
 
 * Title    : CHICKENS
@@ -24,6 +21,7 @@ README.TXT   : Text file with a brief description of the game.
 README.MD    : Full documentation in Markdown format.
 README.PDF   : Full documentation in PDF.
 ```
+
 
 How to play
 -----------
