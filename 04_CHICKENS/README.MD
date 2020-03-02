@@ -7,19 +7,17 @@ Game description
 * Language : MSX BASIC 1.0
 * Category : PUR-80
 
-
 Files
 -----
 
 ```
-CHICKENS.BAS : BASIC source code in ASCII
-CHICKENS.GIF : Game screenshot
-CHICKENS.DSK : 720Kb disk image for use with the emulator
-CHICKENS.WAV : Audio file for use on real MSX hardware
-README.TXT   : this file
-DOC.PDF      : Documentation in PDF
-DOC-HTML/    : Documentation in HTML
-DOC-MD/      : Documentation in Markdown
+CHICKENS.BAS : BASIC source code in ASCII.
+CHICKENS.GIF : Game screenshot.
+CHICKENS.DSK : 720Kb disk image for use with the emulator.
+CHICKENS.WAV : Audio file for use on real MSX hardware.
+README.TXT   : Text file with a brief description of the game.
+README.MD    : Full documentation in Markdown format.
+README.PDF   : Full documentation in PDF.
 ```
 
 How to play
