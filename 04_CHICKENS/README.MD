@@ -30,6 +30,7 @@ Use the arrow keys to move the farmer and capture all the
 crazy chickens before they escape from the corral.   
 You just have to touch the chickens to capture them.   
 The game is over when a chicken can reach the limits of the screen.
+![Chickens Game](CHICKENS.GIF)
 
 
 How to start the game
