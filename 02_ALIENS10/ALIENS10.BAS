@@ -10,13 +10,13 @@
 21 ' === INIT IMG & LOOP (3 LINES) ===
 22 '
 23 T$="~þ8ð08<|¸¬$$&33c"
-24 FORJ=KTO51:FORI=0TO15:VPOKEJ*K+I,ASC(MID$(T$,I+1)):NEXTI,J:B(0)=1
+24 FORJ=KTO51:FORI=0TO15:VPOKEJ*K+I,ASC(MID$(T$,I+1)):NEXTI,J:B(0)=15
 26 SPRITE$(0)="8D‚’‚D8":SPRITE$(1)="‰$E*„":PLAY"L64","L64":X=J:Y=J:L=N+192:H=L+736
-34 FORI=1TO15:S(I)=L+(IAND7)*64+K-1:D(I)=S(I):E(I)=I*4+128:VPOKEBASE(6)+15+I,I*16+12:NEXT
+34 COLOR3,1:FORI=0TO15:S(I)=L+(IAND7)*64+K-1:D(I)=S(I):E(I)=128+4*I:VPOKEBASE(6)+16+I\2,(I\2+2)*16+1:NEXT
 40 '
 41 ' == GAME LOOP (4 LINES) ==
 42 '
-50 I=IMOD15+1:D=D(I):E=E(I):VPOKED,&H1D:VPOKED+K,&H1D:D=D+J(18+RND(1)*5):D=D-(D<L)*K+(D>H)*K:VPOKED,E:VPOKED+K,E+1
+50 I=1+IAND15:D=D(I):E=E(I):VPOKED,&H1D:VPOKED+K,&H1D:D=D+J(18+RND(1)*5):D=D+(D<LAND64)-(D>HAND64):VPOKED,E:VPOKED+K,E+1
 55 D(I)=D:FORJ=0TO1:B=B(J):PUTSPRITEJ,(X,Y),B:NEXT:T=STICK(0)*2:X=X+J(T)
 60 Y=Y+J(T+1):B(1)=B+(B>0):IFSTRIG(0)=0GOTO50ELSED=N+(Y\8)*K+X\8+33:T=VPEEK(D)\4-K
 70 IFT>=0THENVPOKED,K:D(T)=S(T):B(1)=4:PLAY"CFEG":GOTO50ELSEPLAY"A","G":GOTO50
@@ -26,16 +26,20 @@
 1040 '   T   = temporary var (1 line)
 1050 '   K   = 32 (constant)
 1060 '  I,J  = loops
-1070 '  D(I) = demon cur pos/address
-1080 '  S(I) = demon start pos/address
-1090 '  E(I) = demon character
-1100 '  L,H  = demons min/max address
+1070 '  D(I) = alien cur pos/address
+1080 '  S(I) = alien start pos/address
+1090 '  E(I) = alien character
+1100 '  L,H  = aliens min/max address
 1110 '  X,Y  = crosshair coordinate
 1112 '  B(0) = crosshair color
 1115 '  B(1) = explosion color
 1120 ' J(17-)= target movement
-1130 ' J(18+)= demon movement
+1130 ' J(18+)= alien movement
 1140 '
+1141 ' ALIEN0 = CHR 128+0  = COL 16
+1142 ' ALIEN1 = CHR 128+4  = COL 16
+1143 ' ALIEN2 = CHR 128+8  = COL 17
+1144 ' ALIEN3 = CHR 128+16 = COL 17
 1150 SCREEN0:COLOR15,4,4:C$=CHR$(13)
 1160 WIDTH40:KEYON:KEY1,"run1000"+C$:KEY4,"list-1010"+C$:END
 2000 RESTORE 2010:FORI=1TO8:READA,B:A$=A$+CHR$(A):B$=B$+CHR$(B):NEXT:PRINT A$+B$
