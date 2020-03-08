@@ -3,7 +3,7 @@
 30 ' === INIT DATA (2 LINES) ===
 40 '
 50 SCREEN1,1,0:KEYOFF:DEFINTA-Z:N=BASE(5):C=BASE(6):F=N+192:G=N+736:K=32:O=29:DIMS(47),D(47),Q(K):PLAY"L64","L64"
-55 DATA &H15,3,&HDF,1,&HD7,1,&HC3,1,&H1D,18,-4,4,-4,4,,4,4,,4,-4,4,-4,,-4,-4,-1,-1,-1,64,-64:T$="~þ8ð08<|¸¬$$&33c€B<|f33s"
+55 DATA &H15,3,&HDF,1,&HD7,1,&HC3,1,&H1D,18,-4,4,-4,4,,4,4,,4,-4,4,-4,,-4,-4:T$="~þ8ð08<|¸¬$$&33c€B<|f33s":M(0)=65:M(1)=-63
 80 '
 90 ' ==== INIT SPRITES (1 LINE) ====
 100 '
@@ -11,28 +11,31 @@
 132 '
 134 ' === INIT LEVEL (2 LINES) ====
 136 '
-140 FORL=1TO3:COLORL*2,1:CLS:LOCATE12,12:PRINT"LEVEL";L:RESTORE:D=N:FORJ=1TO5:READT,U:FORI=1TOU*K:VPOKED,T:D=D+1:NEXTI,J
-145 H=L*4:VPOKEC+3,&HC1:FORI=3TO22:READQ(I):NEXT:FORI=KTO47:T=I\2:S(I)=F+T*64-993:D(I)=S(I):VPOKEC+T,T*16-223:NEXT
+140 FORL=1TO3:R=L*3:COLORL*2,1:CLS:LOCATE12,12:PRINT"LEVEL";L:RESTORE:D=N:FORJ=1TO5:READT,U:FORI=1TOU*K:VPOKED,T:D=D+1:NEXTI,J
+145 H=L*4:VPOKEC+3,&HC1:FORI=3TO17:READQ(I):NEXT:FORI=KTO47:T=I\2:S(I)=F+T*64-R-990:D(I)=S(I):VPOKEC+T,T*16-223:NEXT
 150 '
 160 ' == GAME LOOP (5 LINES) ==
 170 '
 180 T=24-W*4:PUTSPRITE0,(X,Y),15:PUTSPRITE1,(U-T,V),W:PUTSPRITE2,(U+T,V),W,1:I=(I+1)AND47:D=D(I):E=DAND31:T$=INKEY$
-200 VPOKED,O:VPOKED+K,O:D=D+Q(18+RND(1)*5):D=D+(D<FAND64)-(D>GAND64):T=I*4:VPOKED,T:VPOKED+K,T+1:D(I)=D
-210 IF(WORH)=0THENNEXTL:A$="WON!":E=0:ELSEIFSTRIG(0)=0GOTO240ELSED=N+(Y\8)*K+X\8+33:T=VPEEK(D):R=(195ANDT)=128
-230 IFRTHENVPOKED,O:VPOKED+K,2ORT:D(T\4)=S(T\4):U=X:V=Y:W=5:H=H-1:P=P+E:LOCATE,0:PRINTP:PLAY"CFEG":ELSEPLAY"A","G"
+200 VPOKED,O:VPOKED+K,O:D=D+M(RND(1)*R)-1:D=D+(D<FAND64)-(D>GAND64):T=I*4:VPOKED,T:VPOKED+K,T+1:D(I)=D
+210 IF(WORH)=0THENNEXTL:A$="WON!":E=0:ELSEIFSTRIG(0)=0GOTO240ELSED=N+(Y\8)*K+X\8+33:T=VPEEK(D):B=(195ANDT)=128
+230 IFBTHENVPOKED,O:VPOKED+K,2ORT:D(T\4)=S(T\4):U=X:V=Y:W=5:H=H-1:P=P+E:LOCATE,0:PRINTP:PLAY"CFEG":ELSEPLAY"A","G"
 240 T=STICK(0)*2:X=X+Q(T):Y=Y+Q(T+1):W=W+(W>0):IFE>6GOTO180ELSESCREEN0:PRINT"YOU "A$,"PTS:";P:FORI=1TO9000:NEXT:RUN
 1000 ' SAVE "ALIENS10.BAS",A
-1010 ' ----------
+1010 ' ---------------------
 1020 '   N   = name table
 1030 '   K   = 32 (constant)
-1040 ' Q(17-)= crosshair movement map
-1050 ' Q(18+)= alien movement map
+1035 '   O   = 29 (constant)
+1040 '  Q(n) = crosshair movement map
+1050 '  M(n) = alien movement map
 1055 '  F,G  = aliens min/max address
-1060 '  S(I) = alien start pos/address
-1062 '  D(I) = alien cur pos/address
-1070 '  I,J  = loops
-1080 '   T   = temporary var
+1060 '  S(n) = alien start pos/address
+1062 '  A(n) = alien cur pos/address
+1070 '   T   = temporary var
+1080 '   B   = temporary var (boolean)
+1082 '  I,J  = temporary var (loops)
 1085 '   L   = game level
+1086 '   R   = game difficulty
 1090 '   P   = player points
 1095 '   H   = headshot countdown
 1100 '  X,Y  = crosshair coordinate
