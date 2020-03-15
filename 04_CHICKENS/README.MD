@@ -157,28 +157,29 @@ L=2
 Z=198
 ```
 
-### Lines 7,8,9,10 (game loop)
+### Lines 7,8 (game loop - movement)
 ```
-'  moves player
-'    J(STICK()*2+0) = delta movement in X coordinate
-'    J(STICK()*2+1) = delta movement in Y coordinate
-'          C        = player color (11=yellow, 1=black)
-T=STICK(0)*2 : X=X+J(T) : Y=Y+J(T+1)
+'  moves the player
+'     J(STICK()*2+0) : delta movement on X-axis
+'     J(STICK()*2+1) : delta movement on Y-axis
+'     X,Y : player screen coordinates
+'      C  : player color, 11=yellow, 1=black
+T=STICK(0)*2
+X=X+J(T)
+Y=Y+J(T+1)
 PUT SPRITE 0,(X,Y),C
 ```
 ---
 ```
-I=Z AND 15
-```
----
-```
 '  moves the chicken
-'     L   = current difficulty level
-'     I   = chicken index
-'     D   = chicken video position/address
-'    29   = background char (used to erase the chicken char)
-'   128+I = chicken char
-D=D(I)
+'     L   : current difficulty level (increments each 99 cycles)
+'     Z   : game cycle (increments each cycle)
+'     I   : chicken index (valid range: 0-15)
+'     D   : chicken video position/address
+'    29   : background char (used to erase the chicken char)
+'   128+I : chicken char
+I = Z AND 15
+D = D(I)
 VPOKE D,29
 IF I<L THEN
     D = D + Q(IAND1) * J(18+RND(1)*5)
@@ -187,6 +188,8 @@ IF I<L THEN
 ENDIF
 ```
 ---
+
+### Lines 8,9,10 (game loop - logic)
 ```
 '  calculates the chicken position/address that corresponds to the player coordinate
 '   X,Y = player's coordinates in pixels
