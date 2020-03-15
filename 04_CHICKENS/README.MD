@@ -1,7 +1,7 @@
 Chickens (BASIC 10-liner)
 =========================
 
-**Chickens** is a game made in just 10 lines of BASIC code for the MSX platform.
+**Chickens** is a game written for the MSX platform in just 10 lines of BASIC code.
 
 * `Title...` : CHICKENS
 * `Platform` : MSX
@@ -48,7 +48,7 @@ http://webmsx.org/?MACHINE=MSX1&DISK=http://???.zip
 Code explanation
 ----------------
 
-### Variables & constants reference
+### Variables & constants
 
 ```
      N   = name table address          <constant>
@@ -57,17 +57,20 @@ Code explanation
     Q(0) =   1                         <constant>
     Q(1) =  -1                         <constant>
     Q(n) = chicken-is-outside flags    <constant>
-J(00-17) = player movement map         <constant>
-J(18-22) = chickens movement map       <constant>
+J(00-17) = player movement table       <constant>
+J(18-22) = chickens movement table     <constant>
      S   = chicken initial pos/address <constant>
      T   = temporary var
-    I,J  = loops
+    I,J  = temporary vars (loops)
     X,Y  = player screen coordinate
      Z   = player game time
      L   = player level (=Z/99)
      P   = player points
-    D(n) = chicken cur pos/address
+    D(n) = chicken current pos/address
 ```
+### Code
+
+![Code](_i/code.gif)
 
 ### Game data (2 lines)
 
