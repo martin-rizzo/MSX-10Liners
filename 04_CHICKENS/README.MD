@@ -72,17 +72,66 @@ J(18-22) = chickens movement table     <constant>
 
 ![Code](_i/code.gif)
 
-### Game data (2 lines)
+### Lines 1,2: Game data
 
-### Initialization (1 line)
+```
+' player movement table to be assigned into J(3-17),
+' note: the values in J(0-3) will be zero
+DATA  -4,4,  -4,4,  0,4,  4,0,  4,-4,  4,-4,  0,-4,  -4
+```
 
-### Drawing  playfield (1 line)
+```
+' chickens movement table to be assigned into J(18-22)  
+' the velues means delta movements in video memory:
+'   *   1 means 1 step right
+'   *  32 means 1 step down
+'   * -32 means 1 step up
+' these 5 values will be randomicamente choised in each chicken movement
+DATA 1, 1, 1, 32, -32
+```
 
-### Init sprite graphic and sound (1 line)
+---  
+  
+    ' playfield background
+    ' pair of values where the first one is an ASCII character
+    ' and the second is the number of repetitions
+    DATA  32,64,  223,32,  215,32,  195,32,  18,32,  29,512,  18,32,  7,32
+    
+---
 
-### Init game loop (1 line)
+    ' playfield background color
+    ' pair of values where the first one is a color code to apply
+    ' and the second is the number of repetitions
+    DATA 44,2,  252,1,  44,1,  244,12,  252,8,  147,2,  101,1,  69,1
+    
 
-### Game loop (4 lines)
+### Lines 3,4: Initialization + drawing playfield
+
+    SCREEN 1,2,0
+    DEFINT A-Z
+    K=32
+    O=1280
+    N=6144
+    DIM J(K),D(K),Q(K)
+    FOR I=3 TO 22 : READ J(I) : NEXT
+    
+Drawing playfield
+    
+    D=6144
+    FOR J=1 TO 16
+        D=D-I*(J=9)
+        READ T,U
+        FOR I=1 TO U
+            VPOKED,T
+            D=D+1
+        NEXT I
+    NEXT J
+
+### Line 5 (initialization of graphic and sound)
+
+### Line 6 (game loop initialization)
+
+### Lines 7,8,9,10 (game loop)
 
 
 
