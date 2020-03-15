@@ -45,63 +45,49 @@ Also, you can play the game using the following online emulator:
 http://webmsx.org/?MACHINE=MSX1&DISK=http://???.zip
 
 
-Code explanation
-----------------
-
-### Variables & constants
-
-```
-     N   = name table address          <constant>
-     K   =  32                         <constant>
-     O   = 1280                        <constant>
-    Q(0) =   1                         <constant>
-    Q(1) =  -1                         <constant>
-    Q(n) = chicken-is-outside flags    <constant>
-J(00-17) = player movement table       <constant>
-J(18-22) = chickens movement table     <constant>
-     S   = chicken initial pos/address <constant>
-     T   = temporary var
-    I,J  = temporary vars (loops)
-    X,Y  = player screen coordinate
-     Z   = player game time
-     L   = player level (=Z/99)
-     P   = player points
-    D(n) = chicken current pos/address
-```
-### Code
+Code
+----
 
 ![Code](_i/code.gif)
 
-### Lines 1,2: Game data
+Code explanation
+----------------
+
+
+### Lines 1,2: The game data
 
 ```
-'  player movement table to be assigned into J(3-17),
+'  first segment is player movement data to be assigned into J(3-17),
+'  data is grouped in pairs of values where:
+'     - the first value is player movement on x-axis (in pixels)
+'     - the second value is player movement on y-axis (in pixels)
 '  note: the values in J(0-3) will be zero
-'  pair of values where the first one is movement on X coordinate
-DATA  -4,4,  -4,4,  0,4,  4,0,  4,-4,  4,-4,  0,-4,  -4
+DATA -4,  4,-4,  4,0,  4,4,  0,4,  -4,4,  -4,0,  -4,-4
 ```
 ---
 ```
-'  chickens movement table to be assigned into J(18-22)  
-'  the velues means delta movements in video memory:
-'   *   1 means 1 step right
-'   *  32 means 1 step down
-'   * -32 means 1 step up
-'  these 5 values will be randomicamente choised in each chicken movement
+'  second segment is chickens movement data to be assigned into J(18-22)
+'  values are movements relative to video memory addresses:
+'       1 = move 1 character right
+'      32 = move 1 character down
+'     -32 = move 1 character up
+'  one of these 5 values will be chosen randomly each time a chicken move
 DATA 1, 1, 1, 32, -32
 ```
 ---
 ```  
-'  playfield background
-'  pair of values where the first one is an ASCII character
-'  and the second is the number of repetitions
-DATA  32,64,  223,32,  215,32,  195,32,  18,32,  29,512,  18,32,  7,32
+'  third segment contains the instructions to draw the playfield
+'  data is grouped in pairs of values where:
+'       - the first value is the character to use
+'       - the second value is the number of times to repeat the character
+DATA 32,64,  223,32,  215,32,  195,32,  18,32,  29,512,  18,32,  7,32
 ```    
 ---
 ```
-'  playfield background color
-'  pair of values where the first one is a color code to apply
-'  and the second is the number of repetitions
+'  last segment contains the colors for playfield characters
+'  data is grouped in pairs of values where:
+'        - the first value is a color-code
+'        - the second value is the number of times to repeat the color-code
 DATA 44,2,  252,1,  44,1,  244,12,  252,8,  147,2,  101,1,  69,1
 ```
 ---    
@@ -227,6 +213,31 @@ ELSE
     ENDIF
 ENDIF
 ```
+
+Code reference
+--------------
+
+### Variables & constants
+
+```
+     N   : name table address          <constant>
+     K   :  32                         <constant>
+     O   : 1280                        <constant>
+    Q(0) :   1                         <constant>
+    Q(1) :  -1                         <constant>
+    Q(n) : chicken-is-outside flags    <constant>
+J(00-17) : player movement table       <constant>
+J(18-22) : chickens movement table     <constant>
+     S   : chicken initial pos/address <constant>
+     T   : temporary var
+    I,J  : temporary vars (loops)
+    X,Y  : player screen coordinate
+     Z   : player game time
+     L   : player level (=Z/99)
+     P   : player points
+    D(n) : chicken current pos/address
+```
+
 
 
 ---
