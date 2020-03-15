@@ -79,7 +79,7 @@ J(18-22) = chickens movement table     <constant>
 ' note: the values in J(0-3) will be zero
 DATA  -4,4,  -4,4,  0,4,  4,0,  4,-4,  4,-4,  0,-4,  -4
 ```
-
+---
 ```
 ' chickens movement table to be assigned into J(18-22)  
 ' the velues means delta movements in video memory:
@@ -89,21 +89,21 @@ DATA  -4,4,  -4,4,  0,4,  4,0,  4,-4,  4,-4,  0,-4,  -4
 ' these 5 values will be randomicamente choised in each chicken movement
 DATA 1, 1, 1, 32, -32
 ```
-
----  
-  
-    ' playfield background
-    ' pair of values where the first one is an ASCII character
-    ' and the second is the number of repetitions
-    DATA  32,64,  223,32,  215,32,  195,32,  18,32,  29,512,  18,32,  7,32
-    
 ---
-
-    ' playfield background color
-    ' pair of values where the first one is a color code to apply
-    ' and the second is the number of repetitions
-    DATA 44,2,  252,1,  44,1,  244,12,  252,8,  147,2,  101,1,  69,1
-    
+```  
+' playfield background
+' pair of values where the first one is an ASCII character
+' and the second is the number of repetitions
+DATA  32,64,  223,32,  215,32,  195,32,  18,32,  29,512,  18,32,  7,32
+```    
+---
+```
+' playfield background color
+' pair of values where the first one is a color code to apply
+' and the second is the number of repetitions
+DATA 44,2,  252,1,  44,1,  244,12,  252,8,  147,2,  101,1,  69,1
+```
+---    
 
 ### Lines 3,4: Initialization + drawing playfield
 
