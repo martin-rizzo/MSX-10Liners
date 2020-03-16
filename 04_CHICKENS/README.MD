@@ -23,7 +23,7 @@ README.PDF     Full documentation in PDF.
 ```
 
 
-How to play
+How to Play
 -----------
 
 Use the arrow keys to move the farmer and capture all the
@@ -34,25 +34,27 @@ The game is over when a chicken can reach the limits of the screen.
 ![CHICKENS](CHICKENS.GIF "The Chickens Game")
 
 
-How to start the game
+How to Start the Game
 ---------------------
 
-< description of how to load the game into the emulator >
-
-< description of how to load the game on real hardware >
-
-Also, you can play the game using the following online emulator:   
-http://webmsx.org/?MACHINE=MSX1&DISK=http://???.zip
+### Loading the game into an emulator
 
 
-Code
-----
+### Loading the game in real hardware
+
+You can load the game on your real MSX using the provided WAV file and following these simple steps:
+
+  1. Copy the WAV file to some audio player (smartphone, table, notebook, PC, ...)
+  2. Connect the EAR cable from the audio player to your MSX
+  3. Type `LOAD"CAS:"` on your MSX
+  4. Start the playback of the WAV file
+  5. When the load is complete, type `RUN` and enjoy the game!
+
+
+Source Code & Explanation
+-------------------------
 
 ![Code](_i/code.gif)
-
-Code explanation
-----------------
-
 
 ### Lines 1,2: The game data
 
@@ -214,7 +216,7 @@ ELSE
 ENDIF
 ```
 
-Code reference
+Code Reference
 --------------
 
 ### Variables & constants
