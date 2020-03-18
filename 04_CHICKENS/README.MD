@@ -100,7 +100,7 @@ DATA 44,2,  252,1,  44,1,  244,12,  252,8,  147,2,  101,1,  69,1
 ```
 ---    
 
-### Lines 3,4: Initialization + drawing playfield
+### Lines 3,4: var initialization and drawing playfield
 
 ```
 SCREEN 1,2,0
@@ -112,6 +112,8 @@ DIM J(K),D(K),Q(K)
 ```
 ---
 ```
+'  reads player movement data and chicken movement
+'  data and store them into J() array
 FOR I=3 TO 22 : READ J(I) : NEXT
 ```
 ---
@@ -135,10 +137,10 @@ NEXT J
 
 ### Line 5: graphics and sound initialization
 ```
-'  set the farmer graphic in sprite 0
+'  sets the farmer graphic in sprite 0
 '  note: only farmer is a sprite, chickens are characters of text
 SPRITE$(0)="..."
-'  set music notes to the shortest possible duration
+'  sets music notes to the shortest possible duration
 PLAY "L64"
 ```
 ---
@@ -154,18 +156,21 @@ NEXT
 
 ### Line 6: game loop initialization
 ```
+'  sets player initial position to 80,80 
+X=80:Y=80
+'  sets difficulty level to 2 (Z is always equal to L*99)
+L=2:Z=198
+'  sets chickens initial position to
+'  [col16,row=12] = 16+12*32 = 400
 S=N+400
 FOR I=0 TO 31
     D(I)=S
     Q(I)= (I<3) OR (I>28)
 NEXT
 Q(0)=1
-X=80:Y=80
-L=2
-Z=198
 ```
 
-### Lines 7,8 (game loop - movement)
+### Lines 7,8: movement (game loop)
 ```
 '  moves the player
 '     J(STICK()*2+0) : delta movement on X-axis
@@ -197,7 +202,7 @@ ENDIF
 ```
 ---
 
-### Lines 8,9,10 (game loop - logic)
+### Lines 8,9,10: game logic (game loop)
 ```
 '  calculates the chicken video address that corresponds to the player coordinate
 '    X,Y : player's coordinates in pixels
