@@ -76,9 +76,9 @@ DATA -4,  4,-4,  4,0,  4,4,  0,4,  -4,4,  -4,0,  -4,-4
 ```
 '  second segment is chickens movement data to be assigned into J(18-22)
 '  values are movements relative to video memory addresses:
-'       1 = move 1 character right
-'      32 = move 1 character down
-'     -32 = move 1 character up
+'       1 : move 1 character right
+'      32 : move 1 character down
+'     -32 : move 1 character up
 '  one of these 5 values will be chosen randomly each time a chicken move
 DATA 1, 1, 1, 32, -32
 ```
@@ -116,29 +116,43 @@ FOR I=3 TO 22 : READ J(I) : NEXT
 ```
 ---
 ```    
-'  drawing playfield
-D=6144
+'  draws playfield writing values to video memory
+'      D    : video address to write
+'      T    : value
+'      U    : number of times to repeat value
+'   -O(J=9) : when J==9 -> 1280 otherwise zero
+D=N
 FOR J=1 TO 16
-    D=D-I*(J=9)
+    D = D -O*(J=9)
     READ T,U
     FOR I=1 TO U
-        VPOKED,T
-        D=D+1
+        VPOKE D,T
+        D = D+1
     NEXT I
 NEXT J
 ```
 ---
 
-### Line 5 (initialization of graphic and sound)
+### Line 5: graphics and sound initialization
 ```
+'  set the farmer graphic in sprite 0
+'  note: only farmer is a sprite, chickens are characters of text
 SPRITE$(0)="..."
+'  set music notes to the shortest possible duration
+PLAY "L64"
+```
+---
+```
+'  copies the graphic of character number 128 (the chicken char)
+'  to the next 16 characters, all of them will be visually
+'  identical but it will be easy to associate character number
+'  with chicken index
 FOR I=1032 TO 1160
     VPOKE I, VPEEK(I-8)
 NEXT
-PLAY "L64"
 ```
 
-### Line 6 (game loop initialization)
+### Line 6: game loop initialization
 ```
 S=N+400
 FOR I=0 TO 31
@@ -199,15 +213,15 @@ IF I<L AND Q(D AND 31) THEN
     SCREEN 0
     PRINT "PTS:"P
     END
-```
----
-```
+ENDIF
 '  (at this point the chicken is inside the pen)
 '  increment player game time
 '  and set default player color to yellow
 Z = Z+1
 C = 11
-    
+```
+---
+```
 '  verify character under the player
 '     E : chicken video address
 '     T : chicken index (valid range: 0-15)
