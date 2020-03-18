@@ -62,7 +62,7 @@ Source Code with Explanation
 
 ![Code](_i/code.gif)
 
-### Lines 1,2: The game data
+### Lines 1,2: the game data
 
 ```
 '  first segment is player movement data to be assigned into J(3-17),
@@ -100,14 +100,21 @@ DATA 44,2,  252,1,  44,1,  244,12,  252,8,  147,2,  101,1,  69,1
 ```
 ---    
 
-### Lines 3,4: var initialization and drawing playfield
+### Lines 3,4: constants, arrays and drawing playfield
 
 ```
+'  sets the 32x24 text mode with sprite size of 16x16
 SCREEN 1,2,0
+'  defines all variables as integer
 DEFINT A-Z
+'  uses some variables as constants
+'     K : 32    (a frequently used value)
+'     O : 1280  (value used when drawing playfield)
+'     N : 6144  (the name-table address in video memory)
 K=32
 O=1280
 N=6144
+'  defines arrays sizes
 DIM J(K),D(K),Q(K)
 ```
 ---
@@ -135,7 +142,7 @@ NEXT J
 ```
 ---
 
-### Line 5: graphics and sound initialization
+### Line 5: graphic and sound initialization
 ```
 '  sets the farmer graphic in sprite 0
 '  note: only farmer is a sprite, chickens are characters of text
@@ -145,10 +152,9 @@ PLAY "L64"
 ```
 ---
 ```
-'  copies the graphic of character number 128 (the chicken char)
-'  to the next 16 characters, all of them will be visually
-'  identical but it will be easy to associate character number
-'  with chicken index
+'  copies the graphic of text character number 128 (the chicken char)
+'  to the next 16 characters, all of them will be visually identical
+'  but it will be easy to associate character number with chicken index
 FOR I=1032 TO 1160
     VPOKE I, VPEEK(I-8)
 NEXT
