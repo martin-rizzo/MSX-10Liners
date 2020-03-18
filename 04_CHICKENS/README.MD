@@ -57,8 +57,8 @@ How to Run the Game
   6. When the load is complete, type `RUN` and enjoy the game!
 
 
-Source Code & Explanation
--------------------------
+Source Code with Explanation
+----------------------------
 
 ![Code](_i/code.gif)
 
@@ -185,45 +185,56 @@ ENDIF
 
 ### Lines 8,9,10 (game loop - logic)
 ```
-'  calculates the chicken position/address that corresponds to the player coordinate
-'   X,Y = player's coordinates in pixels
-'   N   = video address of the first (top-left) character in the screen
-'   E   = chicken video address
+'  calculates the chicken video address that corresponds to the player coordinate
+'    X,Y : player's coordinates in pixels
+'     N  : video address of the first (top-left) character in the screen
+'     E  : chicken video address
 E = N + (Y\8)*32 + (X\8) + 32
 ```
 ---
 ```
+'  if chicken is out of the pen
+'  then print player points and end the program
 IF I<L AND Q(D AND 31) THEN
-    ' chicken is out of the pen,
-    ' print points and end the program
     SCREEN 0
     PRINT "PTS:"P
     END
+```
+---
+```
+'  (at this point the chicken is inside the pen)
+'  increment player game time
+'  and set default player color to yellow
+Z = Z+1
+C = 11
+    
+'  verify character under the player
+'     E : chicken video address
+'     T : chicken index (valid range: 0-15)
+T = VPEEK(E)-128
+IF T<0 GOTO <game-loop>
 ELSE
-    ' chicken is inside the pen
-    ' verify character under the player
-    Z = Z+1
-    C = 11
-    T = VPEEK(E)-128
-    IF T<0 GOTO <game-loop>
-    ELSE
-        ' player is over a chicken
-        '   E = chicken video address
-        '   T = chicken index
-        VPOKE E,29
-        D(T)=S
-        L=Z\99
-        P=P+T
-        PLAY "A"
-        C = 1
-        LOCATE 0,0 : PRINT P
-        GOTO <game-loop>
-    ENDIF
+    '  player is over a chicken!
+    '  remove chicken character
+    '  move chicken to start point
+    VPOKE E,29
+    D(T)=S
+    '  increase player points
+    '  adjust player level relative to player game time
+    P = P+T
+    L = Z\99
+    '  set player color to black
+    '  play capture sound
+    '  print player points
+    C = 1
+    PLAY "A"
+    LOCATE 0,0 : PRINT P
+    GOTO <game-loop>
 ENDIF
 ```
 
-Code Reference
---------------
+Reference
+---------
 
 ### Variables & constants
 
