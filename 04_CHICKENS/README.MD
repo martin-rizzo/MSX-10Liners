@@ -152,7 +152,7 @@ PLAY "L64"
 ```
 ---
 ```
-'  copies the graphic of text character number 128 (the chicken char)
+'  copies graphic of text character number 128 (the chicken char)
 '  to the next 16 characters, all of them will be visually identical
 '  but it will be easy to associate character number with chicken index
 FOR I=1032 TO 1160
@@ -166,8 +166,9 @@ NEXT
 X=80:Y=80
 '  sets difficulty level to 2 (Z is always equal to L*99)
 L=2:Z=198
-'  sets chickens initial position to
-'  [col16,row=12] = 16+12*32 = 400
+'  sets chickens initial position to:
+'   [col=16,row=12] : (16)+(12)*32 + N = 400 + N
+'   N is the video address of the first (top-left) character in the screen
 S=N+400
 FOR I=0 TO 31
     D(I)=S
@@ -191,18 +192,21 @@ PUT SPRITE 0,(X,Y),C
 ---
 ```
 '  moves the chicken
-'     L   : current difficulty level (increments each 99 cycles)
-'     Z   : game cycle (increments each cycle)
-'     I   : chicken index (valid range: 0-15)
-'     D   : chicken video position/address
-'    29   : background char (used to erase the chicken char)
-'   128+I : chicken char
+'      L   : current difficulty level (increments each 99 cycles)
+'      Z   : game cycle (increments each cycle)
+'      I   : chicken index (valid range: 0-15)
+'      D   : chicken video position/address
+'     29   : background char (used to erase the chicken char)
+'  (128+I) : chicken char
+'  note: only chicken with index (I) below player level (L)
+'  will actually be moved, but as level increases as time 
+'  passes, more and more chickens appear at the screen.
 I = Z AND 15
 D = D(I)
 VPOKE D,29
 IF I<L THEN
     D = D + Q(IAND1) * J(18+RND(1)*5)
-    VPOKE D,128+I
+    VPOKE D, (128+I)
     D(I)=D
 ENDIF
 ```
@@ -213,13 +217,13 @@ ENDIF
 '  calculates the chicken video address that corresponds to the player coordinate
 '    X,Y : player's coordinates in pixels
 '     N  : video address of the first (top-left) character in the screen
-'     E  : chicken video address
+'     E  : video address that corresponds to the player coordinates
 E = N + (Y\8)*32 + (X\8) + 32
 ```
 ---
 ```
 '  if chicken is out of the pen
-'  then print player points and end the program
+'  then print player's points and end the program
 IF I<L AND Q(D AND 31) THEN
     SCREEN 0
     PRINT "PTS:"P
@@ -233,33 +237,34 @@ C = 11
 ```
 ---
 ```
-'  verify character under the player
-'     E : chicken video address
-'     T : chicken index (valid range: 0-15)
+'  check character under the player
+'     E : video address that corresponds to the player coordinates
+'     T : chicken index in that address (valid range: 0-15)
 T = VPEEK(E)-128
 IF T<0 GOTO <game-loop>
 ELSE
-    '  player is over a chicken!
-    '  remove chicken character
-    '  move chicken to start point
+    '  player is over a chicken!!
+    '  -> remove chicken character
+    '  -> move chicken to start point
+    '  -> increase player points
+    '  -> adjust player level relative to player game time
     VPOKE E,29
     D(T)=S
-    '  increase player points
-    '  adjust player level relative to player game time
     P = P+T
     L = Z\99
-    '  set player color to black
-    '  play capture sound
-    '  print player points
+    '  -> set player color to black
+    '  -> play capture sound
+    '  -> print player points
     C = 1
     PLAY "A"
     LOCATE 0,0 : PRINT P
     GOTO <game-loop>
 ENDIF
 ```
+---
 
-Reference
----------
+More Code References
+--------------------
 
 ### Variables & constants
 
