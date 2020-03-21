@@ -30,7 +30,9 @@ crazy chickens before they escape from the pen.
 You just have to touch the chickens to capture them.   
 The game is over when a chicken can reach the limits of the screen.
 
-![CHICKENS](CHICKENS.GIF "The Chickens Game")
+<p align="center">
+<img src="CHICKENS.GIF" alt="CHICKENS" width="420"/>
+</p>
 
 
 How to Run the Game
