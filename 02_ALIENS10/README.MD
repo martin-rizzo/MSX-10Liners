@@ -33,7 +33,7 @@ You must prevent deadly aliens from entering the cockpit. Aim the targeting cros
 - The game is over when some alien reaches the left side of the screen.
 - Complete the three levels and you win!.
 
-![ALIENS10](ALIENS10.GIF "Aliens10 Game")
+<img src="ALIENS10.GIF" alt="ALIENS10" width="420"/>
 
 
 How to load
