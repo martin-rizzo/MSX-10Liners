@@ -60,7 +60,7 @@ How to Run the Game
 Source Code with Explanation
 ----------------------------
 
-![Code](_i/code.gif)
+![Code](_i_/code.gif)
 
 ### Lines 1,2: the game data
 
