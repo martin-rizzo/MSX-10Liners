@@ -13,13 +13,13 @@ Chickens (BASIC 10-liner)
 Files
 -----
 
-    CHICKENS.BAS      BASIC source code in ASCII.
-    CHICKENS.GIF      Game screenshot.
-    CHICKENS.DSK      720Kb disk image for use with the emulator.
-    CHICKENS.WAV.ZIP  ZIP containing a audio file for use on real MSX.
-    README.TXT        Text file with a brief description of the game.
-    README.MD         Full documentation in Markdown format.
-    README.PDF        Full documentation in PDF.
+    CHICKENS.BAS   BASIC source code in ASCII.
+    CHICKENS.GIF   Game screenshot.
+    CHICKENS.DSK   720Kb disk image for use with the emulator.
+    CHICKENS.ZIP   ZIP containing a WAV audio file for use on real MSX.
+    README.TXT     Text file with a brief description of the game.
+    README.MD      Full documentation in Markdown format.
+    README.PDF     Full documentation in PDF.
 
 
 Gameplay
@@ -50,7 +50,7 @@ How to Run the Game
   1. Extract the provided ZIP file that contain a WAV audio file
   2. Copy the WAV file to some audio player (smartphone, table, notebook, PC, ...)
   3. Connect the EAR cable from the audio player to your MSX
-  4. Type `LOAD"CAS:"` on your MSX
+  4. Type `CLOAD` on your MSX
   5. Start the playback of the WAV file
   6. When the load is complete, type `RUN` and enjoy the game!
 
