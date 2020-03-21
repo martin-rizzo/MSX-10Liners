@@ -63,33 +63,48 @@ Source Code
 
 ??
 
-More Code References
+Some Code References
 --------------------
 
 ### Variables & constants
 
 ```
-     N   = name table address          <constant>
-     K   =  32                         <constant>
-     O   =  29 (char used as backgnd)  <constant>
-    Q(n) = crosshair movement table    <constant>
-     F   = alien min address           <constant>
-    M(n) = alien movement table        <constant>
-    S(n) = alien start pos/address     <constant>
-    A(n) = alien current pos/address
-     T   = temporary var
-    I,J  = temporary var (loops)
-     L   = game level [1-3]
-     R   = game difficulty [?-?]
-     P   = player points
-     H   = headshot countdown (0 -> go to next level)
-    X,Y  = crosshair coordinate
-    U,V  = explosion coordinate
-     W   = explosion distance
-     Z   = explosion color
-     A$  = ending message
+     N   : name table address          <constant>
+     K   :  32                         <constant>
+     O   :  29 (char used as backgnd)  <constant>
+    Q(n) : crosshair movement table    <constant>
+     F   : alien min address           <constant>
+    M(n) : alien movement table        <constant>
+    S(n) : alien start pos/address     <constant>
+    A(n) : alien current pos/address
+     T   : temporary var
+    I,J  : temporary var (loops)
+     L   : game level [1-3]
+     R   : game difficulty [7-21]
+     H   : headshot countdown (when 0 -> go to next level)
+     P   : player points
+     C   : 51->load graph of aliens | 32->skip
+    X,Y  : crosshair coordinate
+    U,V  : explosion coordinate
+     W   : explosion distance
+     Z   : explosion color
+     A$  : ending message
 ```
 
+### Alien chararacter number and color
+
+``` 
+   char 10xxxx00 = HEAD
+   char 10xxxx01 = legs
+   char 10xxxx10 = dead body
+
+   ALIEN-INDEX HEAD-CHAR COL-ADDRESS  COL
+        0        128         16       &H21
+        1        128+4       16       &H21
+        2        128+8       17       &H31
+        3        128+12      17       &H31
+        n        128+n*4    16+n/2    ....
+```
 
 
 
