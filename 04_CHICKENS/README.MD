@@ -17,9 +17,9 @@ Files
     CHICKENS.GIF   Game screenshot.
     CHICKENS.DSK   720Kb disk image for use with the emulator.
     CHICKENS.ZIP   ZIP containing a WAV audio file for use on real MSX.
-    README.TXT     Text file with a brief description of the game.
+    README.HTM     Full documentation in HTML.
     README.MD      Full documentation in Markdown format.
-    README.PDF     Full documentation in PDF.
+    README.TXT     Text file with a brief description of the game.
 
 
 Gameplay
