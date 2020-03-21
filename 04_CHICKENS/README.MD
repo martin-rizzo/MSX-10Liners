@@ -28,7 +28,7 @@ Gameplay
 Use the arrow keys to move the farmer and capture all the crazy
 chickens before they escape from the pen.  
 You just have to touch the chickens to capture them.   
-The game is over when a chicken can reach the limits of the screen.
+The game is over when a chicken reached the limits of the screen.
 
 <img src="CHICKENS.GIF" alt="CHICKENS" width="420"/>
 
