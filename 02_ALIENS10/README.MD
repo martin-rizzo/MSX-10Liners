@@ -61,7 +61,8 @@ How to Run the Game
 Source Code
 -----------
 
-??
+![Code](_i_/code.gif)
+
 
 Some Code References
 --------------------
