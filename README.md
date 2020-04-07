@@ -3,14 +3,26 @@ MSX-BASIC / 10 Liner Games
 
 A couple of MSX games made in 10 lines of pure BASIC.
 
-This project was born as a place to develop my games for the [Basic 10 Liner Contest](https://mobile.twitter.com/basic10l). 
-All games contained here run on the [MSX platform](https://en.wikipedia.org/wiki/MSX) and they can be loaded in any emulator or real hardware.
+This project contains the games that i develop for the [10 Liner Basic Contest](https://mobile.twitter.com/basic10l) over the years. All the games run on the [MSX platform](https://en.wikipedia.org/wiki/MSX) using standard MSX-BASIC v1.0 and they can be loaded and played on any MSX emulator or real hardware.
 
-The contest has 3 game categories:
+The README file in each game directory gives instructions on how run the game. It also contains info about the gameplay and a description of the source code.
 
-  * **PUR-80:** 10 lines of code with 80 characters per line max
-  * **PUR-120:** 10 lines of code with 120 characters per line max
-  * **EXTREME-256:** 10 lines of code with 256 characters per line max
+
+Code Details
+------------
+
+All the games here fit into one of contest 3 main categories:
+
+  * **PUR-80:** 10 lines of code with a maximum of 80 characters per line
+  * **PUR-120:** 10 lines of code with a maximum of 120 characters per line
+  * **EXTREME-256:** 10 lines of code with a maximum of 256 characters per line
+
+In adittion, the code follows the main rules of the contest:
+
+ * no reloading of data or program parts
+ * can not contain self-written machine code
+ * use of POKE and VPOKE is allowed
+
 
 The Games
 ---------
