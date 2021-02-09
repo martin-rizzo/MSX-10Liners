@@ -45,10 +45,41 @@
       
       <!-- COMMANDS -->
       <context name="Commands" >
-        <StringDetect String="DEFINT" attribute="Command" context="Range of Letters"   insensitive="true" />
-        <StringDetect String="SCREEN" attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="KEYOFF" attribute="Command" context="No Parameters"      insensitive="true" />
+        <StringDetect String="BEEP"   attribute="Command" context="No Parameters"      insensitive="true" />
+        <StringDetect String="BLOAD"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="BSAVE"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <!-- CALL -->
+        <StringDetect String="CIRCLE" attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="CLEAR"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="CLOAD"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <!-- CLOAD? -->
+        <StringDetect String="CLOSE"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="CLS"    attribute="Command" context="No Parameters"      insensitive="true" />
+        <StringDetect String="COLOR"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="CSAVE"  attribute="Command" context="Command Parameters" insensitive="true" />
         <StringDetect String="DATA"   attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="DEFDBL" attribute="Command" context="Range of Letters"   insensitive="true" />
+        <StringDetect String="DEFINT" attribute="Command" context="Range of Letters"   insensitive="true" />
+        <StringDetect String="DEFSNG" attribute="Command" context="Range of Letters"   insensitive="true" />
+        <StringDetect String="DEFSTR" attribute="Command" context="Range of Letters"   insensitive="true" />
+        <StringDetect String="DIM"    attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="DRAW"   attribute="Command" context="String Parameter"   insensitive="true" />
+        <!-- END (flow control) -->
+        <StringDetect String="ERASE"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="ERROR"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="FILES"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <!-- FN -->
+        <StringDetect String="INPUT"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <!-- INPUT# -->
+        <StringDetect String="INTERVAL"         attribute="Command" context="On Off Stop"    insensitive="true" />
+        <StringDetect String="KEY"              attribute="Command" context="Key Parameters" insensitive="true" />
+        
+        
+        
+        
+        <StringDetect String="KEYOFF" attribute="Command" context="No Parameters"      insensitive="true" />
+        <StringDetect String="PLAY"   attribute="Command" context="String Parameter"   insensitive="true" />
+        <StringDetect String="SCREEN" attribute="Command" context="Command Parameters" insensitive="true" />
       </context>
       
       <!-- FUNCTIONS -->
@@ -80,9 +111,33 @@
 
       
       <!-- NO PARAMETERS -->
-      <context name="No Parameters" lineEnContext="#pop" >
+      <context name="No Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
-          <RegExpr String="[0-9a-zA-Z]+" attribute="Syntax Error" context="#stay" />
+          <RegExpr String="\S+" attribute="Syntax Error" context="#stay" />
+      </context>
+      
+      <!-- STRING PARAMETER -->
+      <context name="String Parameter" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop" />
+      </context>
+      
+      <!-- INTERVAL/KEY(n) PARAMETER -->
+      <context name="On Off Stop" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
+          <StringDetect String="ON"      attribute="Normal"         context="#stay" insensitive="true" />
+          <StringDetect String="OFF"     attribute="Normal"         context="#stay" insensitive="true" />
+          <StringDetect String="STOP"    attribute="Normal"         context="#stay" insensitive="true" />
+          <RegExpr      String="[^\s:]+" attribute="Syntax Error"   context="#stay" />
+      </context>
+      
+      <!-- KEY PARAMETERS -->
+      <context name="Key Parameters" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar   char=":"  attribute="Line Separator" context="#pop" />
+          <StringDetect String="ON"      attribute="Normal"         context="#stay" insensitive="true" />
+          <StringDetect String="OFF"     attribute="Normal"         context="#stay" insensitive="true" />
+          <StringDetect String="LIST"    attribute="Normal"         context="#stay" insensitive="true" />
+          <RegExpr      String="[0-9]+"  attribute="Normal"         context="#pop!Command Parameters" insensitive="true" />
+          <RegExpr      String="[^\s:]+" attribute="Syntax Error"   context="#stay" />
       </context>
       
       <!-- COMMAND PARAMETERS -->
