@@ -5,12 +5,72 @@
           version="4"
           kateversion="5.0"
           extensions="*.bas;*.asc"
-          mimetype="text/x-pascal" 
-          priority="8"
-          indenter="pascal"
+          priority="10"
+          indenter="normal"
           author="Martin Rizzo (martinrizzo@gmail.com)"
           >
+
+<!-- 
+
+  Documentation:
+      https://docs.kde.org/stable5/en/applications/katepart/highlight.html
+
+-->
+          
   <highlighting>
+  
+      <list name="numeric-instructions">
+      <item>ABS</item>
+      <item>ASC</item>
+      <item>ATN</item>
+      <item>BASE</item>
+      <item>CDBL</item>
+      <item>CINT</item>
+      <item>COS</item>
+      <item>CSNG</item>
+      <item>CSRLIN</item>
+      <item>CVD</item>
+      <item>CVI</item>
+      <item>CVS</item>
+      <item>DSKF</item>
+      <item>EOF</item>
+      <item>ERL</item>
+      <item>ERR</item>
+      <item>EXP</item>
+      <item>FIX</item>
+      <item>FN</item>
+      <item>FRE</item>
+      <item>INP</item>
+      <item>INSTR</item>
+      <item>INT</item>
+      <item>LPOS</item>
+      <item>LEN</item>
+      <item>LOC</item>
+      <item>LOG</item>
+      <item>PAD</item>
+      <item>PDL</item>
+      <item>PEEK</item>
+      <item>POINT</item>
+      <item>POS</item>
+      <item>RND</item>
+      <item>SGN</item>
+      <item>SIN</item>
+      <item>SPC</item>
+      <item>SQR</item>
+      <item>STICK</item>
+      <item>STRIG</item>
+      <item>TAB</item>
+      <item>TAN</item>
+      <item>USR09</item>
+      <item>VPEEK</item>
+      <item>VAL</item>
+      <item>VALPTR</item>
+      <item>VDP</item>
+      
+      <item>SCREEN</item>
+    </list>
+
+  
     <list name="keywords">
       <item>and</item>
       <item>array</item>
@@ -140,9 +200,43 @@
       <item>Text</item>
     </list>
     <contexts>
+    
       <context attribute="Unnumbered Line" lineEndContext="#stay" name="Normal">
-        <Int attribute="Line Number"  context="Code" firstNonSpace="true" />
+        <Int attribute="Line Number"  context="Statements" firstNonSpace="true" />
       </context>
+      
+      <context attribute="Statements" lineEndContext="#pop" name="Statements">
+        <DetectIdentifier context="Statement" lookAhead="true" />
+      </context>
+      
+      <context attribute="Statements" lineEndContext="#pop" name="Statement">
+        <!--
+        <keyword    attribute="Keyword" context="#stay" String="numeric-instructions" additionalDeliminator="0123456789" />
+        -->
+        <!-- INSTRUCTIONS -->
+        <RegExpr attribute="Keyword" context="Parameters" String="DATA|FOR|PLAY" insensitive="true" minimal="true" />
+        <DetectChar attribute="Line Separator" context="#pop" char=":" />
+      </context>
+      
+      
+      <!-- COMMA-SEPARATED PARAMETERS -->
+      <context name="Parameters" attribute="Code" lineEndContext="#pop" >
+          <DetectChar char="," attribute="Operator"        context="#stay" />
+          <AnyChar String="+-/*" attribute="Operator" context="#stay"  />
+          <RegExpr String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number" context="#stay" />
+          <DetectIdentifier                               attribute="Keyword" context="#stay"  />
+          <DetectChar char=":" attribute="Line Separator"  context="#pop"  />
+      </context>
+      
+      <!-- EXPRESSION -->
+      <context name="Expression" attribute="Code" lineEndContext="#pop" >
+          <AnyChar String="+-/*" attribute="Operator" context="#stay"  />
+          <RegExpr String="-?\d(\.\d+)?[EeDd][+-]?\d+[!#]" attribute="Number" context="#stay" />
+          <DetectIdentifier                               attribute="Keyword" context="#stay"  />
+      </context>
+      
+      
+      
       <context attribute="Code" lineEndContext="#pop" name="Code">
         <RegExpr attribute="Keyword" context="#stay" String="\b(begin|case|record)(?=(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*([\s]|$|//))" insensitive="true" beginRegion="Region1"/>
         <RegExpr attribute="ISO/Delphi Extended" context="#stay" String="\b((object|class)(?=(\(.*\))?(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*;?([\s]|$|//))|try(?=(\{[^}]*(\}|$)|\(\*.*(\*\)|$))*([\s]|$|//)))" insensitive="true" beginRegion="Region1"/>
@@ -196,6 +290,9 @@
       </context>
     </contexts>
     <itemDatas>
+      <itemData name="Statements" defStyleNum="dsNormal" />
+      <itemData name="Line Separator" defStyleNum="dsPreprocessor" />
+    
       <itemData name="Unnumbered Line" defStyleNum="dsError"  />
       <itemData name="Normal Text" defStyleNum="dsNormal"  />
       <itemData name="Code"        defStyleNum="dsNormal"  />
@@ -203,7 +300,8 @@
       <itemData name="Keyword"     defStyleNum="dsKeyword" />
       <itemData name="ISO/Delphi Extended"  defStyleNum="dsKeyword" color="#000080" />
       <itemData name="Type"  defStyleNum="dsDataType"/>
-      <itemData name="Number"      defStyleNum="dsDecVal" />
+      <itemData name="Number"      defStyleNum="dsDecVal" color="#FF8000" />
+      <itemData name="Operator"    defStyleNum="dsOperator" color="#FFFF00" />
       <itemData name="Line Number" defStyleNum="dsPreprocessor" />
       <itemData name="String"      defStyleNum="dsString" />
       <itemData name="Directive"   defStyleNum="dsOthers" />
