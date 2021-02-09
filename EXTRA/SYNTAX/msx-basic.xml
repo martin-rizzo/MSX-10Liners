@@ -39,8 +39,10 @@
       
       <!-- COMMANDS -->
       <context name="Commands" >
-        <StringDetect String="DEFINT" attribute="Command" context="Range Of Letters" insensitive="true" />
-        <StringDetect String="SCREEN" attribute="Command" context="Parameters"       insensitive="true" />
+        <StringDetect String="DEFINT" attribute="Command" context="Range of Letters"   insensitive="true" />
+        <StringDetect String="SCREEN" attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="KEYOFF" attribute="Command" context="No Parameters"      insensitive="true" />
+        <StringDetect String="DATA"   attribute="Command" context="Command Parameters" insensitive="true" />
       </context>
       
       <!-- FUNCTIONS -->
@@ -49,32 +51,51 @@
       </context>
       
       <!-- RANGE OF LETTERS // example: I-N,W-Z -->
-      <context name="Range Of Letters" attribute="Normal" lineEndContext="#pop" >
-          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
-          <DetectChar char="-" attribute="Operator" context="#stay" />
+      <context name="Range of Letters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop"  />
+          <DetectChar char="-" attribute="Operator" context="#stay" />
+          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
       </context>
       
       
-      
-      <!-- COMMA-SEPARATED PARAMETERS -->
-      <context name="Parameters" attribute="Code" lineEndContext="#pop" >
-          <DetectChar char="," attribute="Operator"        context="#stay" />
-          <AnyChar String="+-/*" attribute="Operator" context="#stay"  />
-          <RegExpr String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number" context="#stay" />
-          <DetectIdentifier                               attribute="Keyword" context="#stay"  />
-          <DetectChar char=":" attribute="Line Separator"  context="#pop"  />
+      <!-- OPERATORS -->
+      <context name="Operators" >
+          <AnyChar String="+-*/^\" attribute="Operator" context="#stay" />
+          <StringDetect String="MOD" attribute="Operator" context="#stay" insensitive="true" />
       </context>
       
       <!-- EXPRESSION -->
-      <context name="Expression" attribute="Code" lineEndContext="#pop" >
-          <AnyChar String="+-/*" attribute="Operator" context="#stay"  />
-          <RegExpr String="-?\d(\.\d+)?[EeDd][+-]?\d+[!#]" attribute="Number" context="#stay" />
-          <DetectIdentifier                               attribute="Keyword" context="#stay"  />
+      <context name="Expression" >
+          <IncludeRules context="Operators" />
+          <RegExpr String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number" context="#stay" />
+          <RegExpr String="[a-zA-Z][a-zA-Z0-9]{0,30}\(" attribute="Function" context="Function Parameters" />
+      </context>
+
+
+      
+      <!-- NO PARAMETERS -->
+      <context name="No Parameters" lineEnContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop" />
+          <RegExpr String="[0-9a-zA-Z]+" attribute="Syntax Error" context="#stay" />
       </context>
       
+      <!-- COMMAND PARAMETERS -->
+      <context name="Command Parameters" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator"      context="#pop"  />
+          <DetectChar char="," attribute="Parameter Separator" context="#stay" />
+          <IncludeRules context="Expression" />
+      </context>
       
+      <!-- FUNCTION PARAMETERS -->
+      <context name="Function Parameters" lineEndContext="#pop" >
+          <DetectChar char=")" attribute="Function" context="#pop"  />
+          <IncludeRules context="Command Parameters" />
+      </context>
       
+
+
+
+ 
       <context attribute="String" lineEndContext="#pop" name="CharNum">
           <DetectChar attribute="Hex" context="HexCharNum" char="$" />
           <RegExpr String="[^0-9]" context="#pop"/>
@@ -90,15 +111,17 @@
       </context>
     </contexts>
     <itemDatas>
-      <itemData name="Char"        defStyleNum="dsChar" />
-      <itemData name="Command"        defStyleNum="dsBuiltIn" />
-      <itemData name="Function"       defStyleNum="dsFunction" />
+      <itemData name="Char"                defStyleNum="dsChar"         />
+      <itemData name="Command"             defStyleNum="dsBuiltIn"      />
+      <itemData name="Function"            defStyleNum="dsFunction"     />
+      <itemData name="Line Separator"      defStyleNum="dsPreprocessor" />
+      <itemData name="Parameter Separator" defStyleNum="dsNormal"       />
       
+      <itemData name="Unnumbered Line" defStyleNum="dsError" />
+      <itemData name="Syntax Error"    defStyleNum="dsError" />
     
       <itemData name="Normal"       defStyleNum="dsNormal"  />
       <itemData name="Statements" defStyleNum="dsNormal" />
-      <itemData name="Line Separator" defStyleNum="dsPreprocessor" />
-      <itemData name="Unnumbered Line" defStyleNum="dsError"  />
       <itemData name="Normal Text" defStyleNum="dsNormal"  />
       <itemData name="Code"        defStyleNum="dsNormal"  />
       <itemData name="Hex"         defStyleNum="dsBaseN"   />
