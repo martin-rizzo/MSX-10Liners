@@ -32,9 +32,15 @@
       </context>
       
       
-      <context name="Statements" lineEndContext="#pop" >
+      <context name="Statements" attribute="Normal" lineEndContext="#pop" >
+        <DetectChar char=":" attribute="Line Separator" context="#pop" />
         <IncludeRules context="Commands" />
-        <DetectChar attribute="Line Separator" context="#pop" char=":" />
+        <RegExpr String="[0-9a-zA-Z]" context="No Command" />
+      </context>
+      
+      <context name="No Command" attribute="Normal" lineEndContext="#pop" >
+        <DetectChar char=":" attribute="Line Separator" context="#pop" />
+
       </context>
       
       <!-- COMMANDS -->
