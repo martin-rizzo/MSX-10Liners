@@ -19,54 +19,9 @@
           
   <highlighting>
   
-      <list name="numeric-instructions">
-      <item>ABS</item>
-      <item>ASC</item>
-      <item>ATN</item>
-      <item>BASE</item>
-      <item>CDBL</item>
-      <item>CINT</item>
-      <item>COS</item>
-      <item>CSNG</item>
-      <item>CSRLIN</item>
-      <item>CVD</item>
-      <item>CVI</item>
-      <item>CVS</item>
-      <item>DSKF</item>
-      <item>EOF</item>
-      <item>ERL</item>
-      <item>ERR</item>
-      <item>EXP</item>
-      <item>FIX</item>
-      <item>FN</item>
-      <item>FRE</item>
-      <item>INP</item>
-      <item>INSTR</item>
-      <item>INT</item>
-      <item>LPOS</item>
-      <item>LEN</item>
-      <item>LOC</item>
-      <item>LOG</item>
-      <item>PAD</item>
-      <item>PDL</item>
-      <item>PEEK</item>
-      <item>POINT</item>
-      <item>POS</item>
-      <item>RND</item>
-      <item>SGN</item>
-      <item>SIN</item>
-      <item>SPC</item>
-      <item>SQR</item>
-      <item>STICK</item>
-      <item>STRIG</item>
-      <item>TAB</item>
-      <item>TAN</item>
-      <item>USR09</item>
-      <item>VPEEK</item>
-      <item>VAL</item>
-      <item>VALPTR</item>
-      <item>VDP</item>
-      
+      <list name="instructions">
+      <item>DATA</item>
+      <item>DEFINT</item>
       <item>SCREEN</item>
     </list>
 
@@ -81,13 +36,25 @@
       </context>
       
       <context attribute="Statements" lineEndContext="#pop" name="Statement">
+        <!-- COMMANDS -->
+        <StringDetect String="DEFINT" attribute="Command" context="Range Of Letters" />
+        <StringDetect String="SCREEN" attribute="Command" context="Parameters" />
         <!--
-        <keyword    attribute="Keyword" context="#stay" String="numeric-instructions" additionalDeliminator="0123456789" />
+        <RegExpr attribute="Command" context="Parameters" String="DATA|FOR|PLAY" insensitive="true" minimal="true" />
         -->
-        <!-- INSTRUCTIONS -->
-        <RegExpr attribute="Keyword" context="Parameters" String="DATA|FOR|PLAY" insensitive="true" minimal="true" />
         <DetectChar attribute="Line Separator" context="#pop" char=":" />
       </context>
+      
+      <!-- FUNCTIONS -->
+      
+      
+      <!-- RANGE OF LETTERS // example: I-N,W-Z -->
+      <context name="Range Of Letters" attribute="Normal" lineEndContext="#pop" >
+          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
+          <DetectChar char="-" attribute="Operator" context="#stay" />
+          <DetectChar char=":" attribute="Line Separator" context="#pop"  />
+      </context>
+      
       
       
       <!-- COMMA-SEPARATED PARAMETERS -->
@@ -123,9 +90,12 @@
       </context>
     </contexts>
     <itemDatas>
-      <itemData name="Statements" defStyleNum="dsNormal" />
-      <itemData name="Line Separator" defStyleNum="dsPreprocessor" />
+      <itemData name="Char"        defStyleNum="dsChar" />
     
+      <itemData name="Normal"       defStyleNum="dsNormal"  />
+      <itemData name="Statements" defStyleNum="dsNormal" />
+      <itemData name="Command"        defStyleNum="dsBuiltIn" />
+      <itemData name="Line Separator" defStyleNum="dsPreprocessor" />
       <itemData name="Unnumbered Line" defStyleNum="dsError"  />
       <itemData name="Normal Text" defStyleNum="dsNormal"  />
       <itemData name="Code"        defStyleNum="dsNormal"  />
