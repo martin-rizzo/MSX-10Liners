@@ -121,22 +121,29 @@
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
       </context>
       
-      <!-- INTERVAL/KEY(n) PARAMETER -->
-      <context name="On Off Stop" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
-          <StringDetect String="ON"      attribute="Normal"         context="#stay" insensitive="true" />
-          <StringDetect String="OFF"     attribute="Normal"         context="#stay" insensitive="true" />
-          <StringDetect String="STOP"    attribute="Normal"         context="#stay" insensitive="true" />
-          <RegExpr      String="[^\s:]+" attribute="Syntax Error"   context="#stay" />
-      </context>
-      
       <!-- KEY PARAMETERS -->
       <context name="Key Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"  attribute="Line Separator" context="#pop" />
           <StringDetect String="ON"      attribute="Normal"         context="#stay" insensitive="true" />
           <StringDetect String="OFF"     attribute="Normal"         context="#stay" insensitive="true" />
           <StringDetect String="LIST"    attribute="Normal"         context="#stay" insensitive="true" />
-          <RegExpr      String="[0-9]+"  attribute="Normal"         context="#pop!Command Parameters" insensitive="true" />
+          <DetectChar   char="("         attribute="Function"       context="#pop!Key Index"           />
+          <RegExpr      String="[0-9]+"  attribute="Normal"         context="#pop!Command Parameters"  />
+          <RegExpr      String="[^\s:]+" attribute="Syntax Error"   context="#stay" />
+      </context>
+      
+      <!-- KEY(n) INDEX -->
+      <context name="Key Index" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=")" attribute="Function" context="#pop!On Off Stop" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- KEY(n) & INTERVAL PARAMETERS -->
+      <context name="On Off Stop" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
+          <StringDetect String="ON"      attribute="Normal"         context="#stay" insensitive="true" />
+          <StringDetect String="OFF"     attribute="Normal"         context="#stay" insensitive="true" />
+          <StringDetect String="STOP"    attribute="Normal"         context="#stay" insensitive="true" />
           <RegExpr      String="[^\s:]+" attribute="Syntax Error"   context="#stay" />
       </context>
       
