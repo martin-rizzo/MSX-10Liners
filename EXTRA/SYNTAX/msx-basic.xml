@@ -268,8 +268,16 @@ RUN			MSX1
       
       <!-- OPERATORS -->
       <context name="Operators" >
-          <AnyChar String="+-*/^\" attribute="Operator" context="#stay" />
+          <!-- arithmetic & conditions -->
+          <AnyChar String="+-*/^\=&lt;&gt;" attribute="Operator" context="#stay" />
           <StringDetect String="MOD" attribute="Operator" context="#stay" insensitive="true" />
+          <!-- logical -->
+          <StringDetect String="AND" attribute="Operator" context="#stay" insensitive="true" />
+          <StringDetect String="EQV" attribute="Operator" context="#stay" insensitive="true" />
+          <StringDetect String="IMP" attribute="Operator" context="#stay" insensitive="true" />
+          <StringDetect String="NOT" attribute="Operator" context="#stay" insensitive="true" />
+          <StringDetect String="OR"  attribute="Operator" context="#stay" insensitive="true" />
+          <StringDetect String="XOR" attribute="Operator" context="#stay" insensitive="true" />
       </context>
       
       <!-- EXPRESSION -->
