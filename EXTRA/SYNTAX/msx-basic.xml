@@ -85,12 +85,13 @@
         
         
         
-        <StringDetect String="SWAP"  attribute="Command" context="Var Parameters"     insensitive="true" />
-        <StringDetect String="TROFF" attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="TRON"  attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="VPOKE" attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="WAIT"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="WIDTH" attribute="Command" context="Integer Parameter"  insensitive="true" />
+        <StringDetect String="STRIG(" attribute="Command" context="Index On Off Stop"  insensitive="true" />
+        <StringDetect String="SWAP"   attribute="Command" context="Var Parameters"     insensitive="true" />
+        <StringDetect String="TROFF"  attribute="Command" context="Line Finished"      insensitive="true" />
+        <StringDetect String="TRON"   attribute="Command" context="Line Finished"      insensitive="true" />
+        <StringDetect String="VPOKE"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="WAIT"   attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="WIDTH"  attribute="Command" context="Integer Parameter"  insensitive="true" />
         <!--
         
 LET			MSX1		
@@ -137,8 +138,6 @@ SOUND			MSX1
 SPRITE			MSX1		
 SPRITE$()		MSX1		
 STOP			MSX1		
-STRIG()			MSX1		
-SWAP			MSX1		
         
         -->
         
@@ -215,31 +214,16 @@ SWAP			MSX1
           <RegExpr    String="[A-Z]+[A-Z0-9]*[$%!#]?" attribute="Variable"       context="#stay" insensitive="true" />
           <RegExpr    String="[^\s:,]+"               attribute="Error"          context="#stay" />
       </context>
-
+      
       <!-- KEY PARAMETERS -->
       <context name="Key Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"  attribute="Line Separator" context="#pop" />
           <StringDetect String="ON"      attribute="Normal"   context="#stay" insensitive="true" />
           <StringDetect String="OFF"     attribute="Normal"   context="#stay" insensitive="true" />
           <StringDetect String="LIST"    attribute="Normal"   context="#stay" insensitive="true" />
-          <DetectChar   char="("         attribute="Function" context="#pop!Key Index"           />
+          <DetectChar   char="("         attribute="Command"  context="#pop!Index On Off Stop"   />
           <RegExpr      String="[0-9]+"  attribute="Normal"   context="#pop!Command Parameters"  />
           <RegExpr      String="[^\s:]+" attribute="Error"    context="#stay" />
-      </context>
-      
-      <!-- KEY(n) INDEX -->
-      <context name="Key Index" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=")" attribute="Function" context="#pop!On Off Stop" />
-          <IncludeRules context="Expression" />
-      </context>
-      
-      <!-- KEY(n) & INTERVAL PARAMETERS -->
-      <context name="On Off Stop" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
-          <StringDetect String="ON"      attribute="Normal"         context="#stay" insensitive="true" />
-          <StringDetect String="OFF"     attribute="Normal"         context="#stay" insensitive="true" />
-          <StringDetect String="STOP"    attribute="Normal"         context="#stay" insensitive="true" />
-          <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
       </context>
       
       <!-- COMMAND PARAMETERS -->
@@ -254,9 +238,29 @@ SWAP			MSX1
           <DetectChar char=")" attribute="Function" context="#pop"  />
           <IncludeRules context="Command Parameters" />
       </context>
+
+      <!-- ON / OFF / STOP PARAMETERS -->
+      <context name="On Off Stop" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
+          <StringDetect String="ON"      attribute="Constant"       context="#stay" insensitive="true" />
+          <StringDetect String="OFF"     attribute="Constant"       context="#stay" insensitive="true" />
+          <StringDetect String="STOP"    attribute="Constant"       context="#stay" insensitive="true" />
+          <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
+      </context>
       
+      <!-- (INDEX) ON / OFF / STOP PARAMETERS -->
+      <context name="Index On Off Stop" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=")" attribute="Command" context="#pop!On Off Stop" />
+          <IncludeRules context="Expression" />
+      </context>
       
 
+
+<!--
+==============================================================================================
+                                   SPECIAL
+==============================================================================================
+-->
       <!-- LINE FINISHED -->
       <context name="Line Finished" attribute="Normal Text" lineEndContext="#pop" >
           <DetectChar char=":"         attribute="Line Separator" context="#pop"  />
@@ -269,20 +273,6 @@ SWAP			MSX1
       </context>
 
 
- 
-      <context attribute="String" lineEndContext="#pop" name="CharNum">
-          <DetectChar attribute="Hex" context="HexCharNum" char="$" />
-          <RegExpr String="[^0-9]" context="#pop"/>
-      </context>
-      <context attribute="Hex" lineEndContext="#pop" name="HexCharNum">
-          <RegExpr String="[^a-fA-F0-9]" context="#pop#pop"/>
-      </context>
-      <context attribute="Hex" lineEndContext="#pop" name="Hex">
-          <RegExpr String="[^a-fA-F0-9]" context="#pop"/>
-      </context>
-      <context attribute="String" lineEndContext="#pop" name="String">
-        <DetectChar attribute="String" context="#pop" char="&apos;"/>
-      </context>
     </contexts>
     <itemDatas>
       <itemData name="Char"                defStyleNum="dsChar"         />
@@ -290,8 +280,10 @@ SWAP			MSX1
       <itemData name="Keyword"             defStyleNum="dsKeyword"      />
       <itemData name="Number"              defStyleNum="dsDecVal"       />
       <itemData name="Variable"            defStyleNum="dsVariable"     />
+      <itemData name="Constant"            defStyleNum="dsConstant"     />
       <itemData name="Function"            defStyleNum="dsFunction"     />
       <itemData name="Ctrl Flow"           defStyleNum="dsControlFlow"  />
+      <itemData name="Line Number"         defStyleNum="dsPreprocessor" />
       <itemData name="Line Separator"      defStyleNum="dsPreprocessor" />
       <itemData name="Parameter Separator" defStyleNum="dsNormal"       />
       
@@ -304,7 +296,6 @@ SWAP			MSX1
       <itemData name="Code"        defStyleNum="dsNormal"  />
       <itemData name="Hex"         defStyleNum="dsBaseN"   />
       <itemData name="Operator"    defStyleNum="dsOperator" color="#FFFF00" />
-      <itemData name="Line Number" defStyleNum="dsPreprocessor" />
       <itemData name="String"      defStyleNum="dsString" />
       <itemData name="Comment"     defStyleNum="dsComment" />
     </itemDatas>
