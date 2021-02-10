@@ -38,7 +38,8 @@
       <context name="Statements" attribute="Normal" lineEndContext="#pop" >
         <DetectChar char=":" attribute="Line Separator" context="#pop" />
         <IncludeRules context="Commands" />
-        <RegExpr String="[0-9a-zA-Z]" context="No Command" />
+        <RegExpr String="[A-Z]"  lookAhead="true"  context="Assignment" />
+        <RegExpr String="[^\s:]" attribute="Error" context="#stay" />
       </context>
       
       <context name="No Command" attribute="Normal" lineEndContext="#pop" >
@@ -88,7 +89,7 @@
         <!-- INPUT# -->
         <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"    insensitive="true" />
         <StringDetect String="KEY"      attribute="Command" context="Key Parameters" insensitive="true" />
-        <StringDetect String="LET"      attribute="Command" context="Assigment"      insensitive="true" />
+        <StringDetect String="LET"      attribute="Command" context="Assignment"     insensitive="true" />
         
         
         
@@ -272,11 +273,21 @@ RUN			MSX1
       </context>
       
       <!-- EXPRESSION -->
-      <context name="Expression" >
+      <context name="Expression" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop" />
           <IncludeRules context="Operators" />
-          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"               />
-          <RegExpr    String="[a-zA-Z][a-zA-Z0-9]{0,30}\("                   attribute="Function" context="Function Parameters" />
-          <DetectChar char='"'                                               attribute="String"   context="Inside a String"     />
+          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"                />
+          <RegExpr    String="[A-Z]"                                         attribute="Variable" context="Inside Variable Name" />
+          <RegExpr    String="[a-zA-Z][a-zA-Z0-9]{0,30}\("                   attribute="Function" context="Function Parameters"  />
+          <DetectChar char='"'                                               attribute="String"   context="Inside String"        />
+      </context>
+      
+      <!-- ASSIGNMENT -->
+      <context name="Assignment" attribute="Normal" lineEndContext="#pop" >
+           <DetectChar char=":"         attribute="Error"    context="#pop"                                    />
+           <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Variable Name" insensitive="true" />
+           <DetectChar char="="         attribute="Operator" context="#pop!Expression"                         />
+           <RegExpr    String="[^\s:]+" attribute="Error"    context="#stay"                                   />
       </context>
       
       <!-- INSIDE A VARIABLE NAME -->
@@ -292,7 +303,7 @@ RUN			MSX1
       </context>
       
       <!-- INSIDE A STRING -->
-      <context name="Inside a String" attribute="String" lineEndContext="#pop" >
+      <context name="Inside String" attribute="String" lineEndContext="#pop" >
           <DetectChar char='"' attribute="String" context="#pop" />
       </context>
       
@@ -319,13 +330,14 @@ RUN			MSX1
       <itemData name="Char"                defStyleNum="dsChar"         />
       <itemData name="Command"             defStyleNum="dsBuiltIn"      />
       <itemData name="Keyword"             defStyleNum="dsKeyword"      />
+      <itemData name="Operator"            defStyleNum="dsOperator"     />
       <itemData name="Number"              defStyleNum="dsDecVal"       />
       <itemData name="Variable"            defStyleNum="dsVariable"     />
       <itemData name="Constant"            defStyleNum="dsConstant"     />
       <itemData name="Function"            defStyleNum="dsFunction"     />
       <itemData name="Ctrl Flow"           defStyleNum="dsControlFlow"  />
       <itemData name="Line Number"         defStyleNum="dsPreprocessor" />
-      <itemData name="Line Separator"      defStyleNum="dsPreprocessor" />
+      <itemData name="Line Separator"      defStyleNum="dsPreprocessor" bold="true" />
       <itemData name="Parameter Separator" defStyleNum="dsNormal"       />
       
       <itemData name="Unnumbered Line" defStyleNum="dsNormal" />
@@ -336,13 +348,12 @@ RUN			MSX1
       <itemData name="Normal Text" defStyleNum="dsNormal"  />
       <itemData name="Code"        defStyleNum="dsNormal"  />
       <itemData name="Hex"         defStyleNum="dsBaseN"   />
-      <itemData name="Operator"    defStyleNum="dsOperator" color="#FFFF00" />
       <itemData name="String"      defStyleNum="dsString" />
       <itemData name="Comment"     defStyleNum="dsComment" />
     </itemDatas>
   </highlighting>
   <general>
-    <keywords casesensitive="0" />
+    <keywords casesensitive="false" />
   </general>
 </language>
 <!-- kate: replace-tabs on; tab-width 2 -->
