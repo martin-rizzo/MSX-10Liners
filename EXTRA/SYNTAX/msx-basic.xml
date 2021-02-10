@@ -86,7 +86,11 @@
         
         
         
-        <StringDetect String="WIDTH" attribute="Command" context="Integer Parameter" insensitive="true" />
+        <StringDetect String="TROFF" attribute="Command" context="Line Finished"      insensitive="true" />
+        <StringDetect String="TRON"  attribute="Command" context="Line Finished"      insensitive="true" />
+        <StringDetect String="VPOKE" attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="WAIT"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="WIDTH" attribute="Command" context="Integer Parameter"  insensitive="true" />
         <!--
         
 LET			MSX1		
@@ -135,11 +139,6 @@ SPRITE$()		MSX1
 STOP			MSX1		
 STRIG()			MSX1		
 SWAP			MSX1		
-TROFF			MSX1		
-TRON			MSX1		
-VPOKE			MSX1	MSX2	
-WAIT			MSX1		
-WIDTH			MSX1	MSX2	
         
         -->
         
