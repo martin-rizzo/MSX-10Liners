@@ -18,38 +18,26 @@
 -->
           
   <highlighting>
-  
-      <list name="instructions">
-      <item>DATA</item>
-      <item>DEFINT</item>
-      <item>SCREEN</item>
-    </list>
 
+  
     <contexts>
-    
+
+
+      
       <context name="Normal" attribute="Unnumbered Line" lineEndContext="#stay">
           <RegExpr String="[0-9]{6,}"  attribute="Error"        context="Statements"   />
           <RegExpr String="[0-9]{0,5}" attribute="Line Number"  context="Statements"   />
       </context>
-
-
-      
       
       <context name="Statements" attribute="Normal" lineEndContext="#pop" >
         <DetectChar char=":" attribute="Line Separator" context="#pop" />
         <IncludeRules context="Commands" />
-        <RegExpr String="[A-Z]"  lookAhead="true"  context="Assignment" />
+        <RegExpr String="[A-Z]"  lookAhead="true"  context="Assignment" insensitive="true" />
         <RegExpr String="[^\s:]" attribute="Error" context="#stay" />
       </context>
       
-      <context name="No Command" attribute="Normal" lineEndContext="#pop" >
-        <DetectChar char=":" attribute="Line Separator" context="#pop" />
 
-      </context>
-      
-      
-        
-      
+
 
 <!--
 ==============================================================================================
@@ -95,19 +83,19 @@
         
         
         <StringDetect String="RESUME"   attribute="Command" context="Dest Number Line|Next" insensitive="true" /> 
-        <StringDetect String="RUN"      attribute="Command" context="Command Parameter"  insensitive="true" />
-        <StringDetect String="SAVE"     attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="SOUND"    attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"        insensitive="true" />
-        <StringDetect String="STOP"     attribute="Command" context="On Off Stop"        insensitive="true" />
-        <StringDetect String="STRIG("   attribute="Command" context="Index On Off Stop"  insensitive="true" />
-        <StringDetect String="SWAP"     attribute="Command" context="Var Parameters"     insensitive="true" />
-        <StringDetect String="TROFF"    attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="TRON"     attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="WAIT"     attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="WIDTH"    attribute="Command" context="Integer Parameter"  insensitive="true" />
+        <StringDetect String="RUN"      attribute="Command" context="Command 1 Parameter" insensitive="true" />
+        <StringDetect String="SAVE"     attribute="Command" context="Command Parameters"  insensitive="true" />
+        <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"  insensitive="true" />
+        <StringDetect String="SOUND"    attribute="Command" context="Command Parameters"  insensitive="true" />
+        <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"         insensitive="true" />
+        <StringDetect String="STOP"     attribute="Command" context="On Off Stop"         insensitive="true" />
+        <StringDetect String="STRIG("   attribute="Command" context="Index On Off Stop"   insensitive="true" />
+        <StringDetect String="SWAP"     attribute="Command" context="Var Parameters"      insensitive="true" />
+        <StringDetect String="TROFF"    attribute="Command" context="Line Finished"       insensitive="true" />
+        <StringDetect String="TRON"     attribute="Command" context="Line Finished"       insensitive="true" />
+        <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters"  insensitive="true" />
+        <StringDetect String="WAIT"     attribute="Command" context="Command Parameters"  insensitive="true" />
+        <StringDetect String="WIDTH"    attribute="Command" context="Integer Parameter"   insensitive="true" />
       </context>
         <!--
         
@@ -157,7 +145,8 @@ RUN			MSX1
       
       <!-- FUNCTIONS -->
       <context name="Functions" lineEndContext="#pop" >
-          <StringDetect String="ABS(" attribute="Function" context="#stay" insensitive="true" /> 
+          <StringDetect String="ABS("                  attribute="Function" context="Function 1 Parameter" insensitive="true" />
+          <RegExpr      String="[A-Z][A-Z0-9]{0,30}\(" attribute="Normal"   context="Function Parameters"  insensitive="true" />
       </context>
       
       
@@ -206,7 +195,7 @@ RUN			MSX1
       </context>
       
       <!-- COMMAND PARAMETER (ONLY ONE PARAMETER) -->
-      <context name="Command Parameter" attribute="Normal" lineEndContext="#pop" >
+      <context name="Command 1 Parameter" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator"   context="#pop" />
           <DetectChar char="," attribute="Error"            context="#pop!Fatal Error" />
           <IncludeRules context="Expression" />
@@ -219,10 +208,20 @@ RUN			MSX1
           <IncludeRules context="Expression" />
       </context>
       
-      <!-- FUNCTION PARAMETERS -->
+      <!-- FUNCTION PARAMETER (ONLY ONE PARAMETER) -->
+      <context name="Function 1 Parameter" lineEndContext="#pop" >
+          <DetectChar char=")" attribute="Function" context="#pop"     />
+          <DetectChar char=":" attribute="Error"    context="#pop#pop" />
+          <DetectChar char="," attribute="Error"    context="#pop!Error Until Bracket" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- FUNCTION PARAMETERS (MULTIPLE PARAMETERS) -->
       <context name="Function Parameters" lineEndContext="#pop" >
-          <DetectChar char=")" attribute="Function" context="#pop"  />
-          <IncludeRules context="Command Parameters" />
+          <DetectChar char=")" attribute="Function"            context="#pop" />
+          <DetectChar char=":" attribute="Error"               context="#pop" />
+          <DetectChar char="," attribute="Parameter Separator" context="#stay" />
+          <IncludeRules context="Expression" />
       </context>
       
       <!-- ON / OFF / STOP PARAMETERS -->
@@ -284,10 +283,10 @@ RUN			MSX1
       <context name="Expression" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
           <IncludeRules context="Operators" />
-          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"                />
-          <RegExpr    String="[A-Z]"                                         attribute="Variable" context="Inside Variable Name" />
-          <RegExpr    String="[a-zA-Z][a-zA-Z0-9]{0,30}\("                   attribute="Function" context="Function Parameters"  />
-          <DetectChar char='"'                                               attribute="String"   context="Inside String"        />
+          <IncludeRules context="Functions" />
+          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([ED][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"  insensitive="true"     />
+          <RegExpr    String="[A-Z]"                                       attribute="Variable" context="Inside Variable Name" />
+          <DetectChar char='"'                                             attribute="String"   context="Inside String"        />
       </context>
       
       <!-- ASSIGNMENT -->
@@ -332,6 +331,9 @@ RUN			MSX1
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
       </context>
       
+      <context name="Error Until Bracket" attribute="Error" lineEndContext="#pop" >
+          <DetectChar   char=")" attribute="Error" context="#pop" />
+      </context>
 
     </contexts>
     <itemDatas>
