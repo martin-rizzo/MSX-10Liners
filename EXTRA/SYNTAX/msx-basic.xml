@@ -84,65 +84,62 @@
         
         <!--
         
-LET	MSX1		Optional instruction, can be omitted
-LINE	MSX1	MSX2	
-LINE INPUT	MSX1		
-LIST	MSX1		Instruction for programming
-LLIST	MSX1		Instruction for programming
-LOAD	MSX1		Disk BASIC, MemoryDisk BASIC, RS-232C BASIC
-LOCATE	MSX1		
-LPOS()	MSX1		Data input function
-LPRINT	MSX1		
-MERGE	MSX1		Disk BASIC, MemoryDisk BASIC, RS-232C BASIC
-MID$()	MSX1		String function
-MOTOR	MSX1		Not for MSX Turbo R
-NEW	MSX1		Instruction for programming
-ON...GOSUB	MSX1		
-ON...GOTO	MSX1		
-ON ERROR GOTO	MSX1		
+LET			MSX1		
+LINE			MSX1	MSX2	
+LINE INPUT		MSX1		
+LIST			MSX1		
+LLIST			MSX1		
+LOAD			MSX1		
+LOCATE			MSX1		
+LPOS()			MSX1		
+LPRINT			MSX1		
+MERGE			MSX1		
+MID$()			MSX1		
+MOTOR			MSX1		
+NEW			MSX1		
+ON...GOSUB		MSX1		
+ON...GOTO		MSX1		
+ON ERROR GOTO		MSX1		
 ON INTERVAL GOSUB	MSX1		
-ON KEY GOSUB	MSX1		
-ON SPRITE GOSUB	MSX1		
-ON STOP GOSUB	MSX1		
-ON STRIG GOSUB	MSX1		
-OPEN	MSX1		Disk BASIC, QuickDisk BASIC, MemoryDisk BASIC, RS-232C BASIC
-OUT	MSX1		Data output function
-PAINT	MSX1		
-PLAY	MSX1		MSX-AUDIO BASIC, MSX-MUSIC BASIC
-PLAY()	MSX1		Musical function
-POINT	MSX1		Data input function
-POKE	MSX1		
-PRESET	MSX1	MSX2	
-PRINT	MSX1		Short version: ?
-PSET	MSX1	MSX2	
-PUT SPRITE	MSX1	MSX2	
-READ	MSX1		
-REM	MSX1		Instruction for programming - Short version: '
-RENUM	MSX1		Instruction for programming
-RESTORE	MSX1		
-RESUME	MSX1		
-RUN	MSX1		Disk BASIC, MemoryDisk BASIC
-SAVE	MSX1		Disk BASIC, MemoryDisk BASIC, RS-232C BASIC
-SCREEN	MSX1	MSX2, MSX2+	Hangul BASIC, Kanji BASIC
-SOUND	MSX1		Instruction for PSG experts
-SPRITE	MSX1		
-SPRITE$()	MSX1		
-STOP	MSX1		
-STRIG()	MSX1		Data input function
-SWAP	MSX1		
-TROFF	MSX1		
-TRON	MSX1		
-VPOKE	MSX1	MSX2	
-WAIT	MSX1		Data input function
-WIDTH	MSX1	MSX2	Hangul BASIC, Kanji BASIC
+ON KEY GOSUB		MSX1		
+ON SPRITE GOSUB		MSX1		
+ON STOP GOSUB		MSX1		
+ON STRIG GOSUB		MSX1		
+OPEN			MSX1		
+OUT			MSX1		
+PAINT			MSX1		
+PLAY			MSX1		
+PLAY()			MSX1		
+POINT			MSX1		
+POKE			MSX1		
+PRESET			MSX1	MSX2	
+PRINT			MSX1		
+PSET			MSX1	MSX2	
+PUT SPRITE		MSX1	MSX2	
+READ			MSX1		
+REM			MSX1		
+RENUM			MSX1		
+RESTORE			MSX1		
+RESUME			MSX1		
+RUN			MSX1		
+SAVE			MSX1		
+SCREEN			MSX1	MSX2, MSX2+
+SOUND			MSX1		
+SPRITE			MSX1		
+SPRITE$()		MSX1		
+STOP			MSX1		
+STRIG()			MSX1		
+SWAP			MSX1		
+TROFF			MSX1		
+TRON			MSX1		
+VPOKE			MSX1	MSX2	
+WAIT			MSX1		
+WIDTH			MSX1	MSX2	
         
         -->
         
         
         
-        <StringDetect String="KEYOFF" attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="PLAY"   attribute="Command" context="String Parameter"   insensitive="true" />
-        <StringDetect String="SCREEN" attribute="Command" context="Command Parameters" insensitive="true" />
       </context>
       
       <!-- FUNCTIONS -->
@@ -167,8 +164,9 @@ WIDTH	MSX1	MSX2	Hangul BASIC, Kanji BASIC
       <!-- EXPRESSION -->
       <context name="Expression" >
           <IncludeRules context="Operators" />
-          <RegExpr String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number" context="#stay" />
-          <RegExpr String="[a-zA-Z][a-zA-Z0-9]{0,30}\(" attribute="Function" context="Function Parameters" />
+          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"               />
+          <RegExpr    String="[a-zA-Z][a-zA-Z0-9]{0,30}\("                   attribute="Function" context="Function Parameters" />
+          <DetectChar char='"'                                               attribute="String"   context="Inside a String"     />
       </context>
 
       <!-- DEST NUMBER LINE -->
@@ -178,7 +176,10 @@ WIDTH	MSX1	MSX2	Hangul BASIC, Kanji BASIC
           <RegExpr String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error" />
       </context>
       
-      
+      <!-- INSIDE A STRING -->
+      <context name="Inside a String" attribute="String" lineEndContext="#pop" >
+          <DetectChar char='"' attribute="String" context="#pop" />
+      </context>
 
       
       <!-- NO PARAMETERS -->
