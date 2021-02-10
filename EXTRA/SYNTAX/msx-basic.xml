@@ -28,8 +28,11 @@
     <contexts>
     
       <context name="Normal" attribute="Unnumbered Line" lineEndContext="#stay">
-        <Int attribute="Line Number" context="Statements" firstNonSpace="true" />
+          <RegExpr String="[0-9]{6,}"  attribute="Error"        context="Statements"   />
+          <RegExpr String="[0-9]{0,5}" attribute="Line Number"  context="Statements"   />
       </context>
+
+
       
       
       <context name="Statements" attribute="Normal" lineEndContext="#pop" >
@@ -43,9 +46,12 @@
 
       </context>
       
+      
+        
+      
       <!-- COMMANDS -->
       <context name="Commands" >
-        <StringDetect String="BEEP"   attribute="Command" context="No Parameters"      insensitive="true" />
+        <StringDetect String="BEEP"   attribute="Command" context="Line Finished"      insensitive="true" />
         <StringDetect String="BLOAD"  attribute="Command" context="Command Parameters" insensitive="true" />
         <StringDetect String="BSAVE"  attribute="Command" context="Command Parameters" insensitive="true" />
         <!-- CALL -->
@@ -54,7 +60,7 @@
         <StringDetect String="CLOAD"  attribute="Command" context="Command Parameters" insensitive="true" />
         <!-- CLOAD? -->
         <StringDetect String="CLOSE"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="CLS"    attribute="Command" context="No Parameters"      insensitive="true" />
+        <StringDetect String="CLS"    attribute="Command" context="Line Finished"      insensitive="true" />
         <StringDetect String="COLOR"  attribute="Command" context="Command Parameters" insensitive="true" />
         <StringDetect String="CSAVE"  attribute="Command" context="Command Parameters" insensitive="true" />
         <StringDetect String="DATA"   attribute="Command" context="Command Parameters" insensitive="true" />
@@ -69,15 +75,72 @@
         <StringDetect String="ERROR"  attribute="Command" context="Command Parameters" insensitive="true" />
         <StringDetect String="FILES"  attribute="Command" context="Command Parameters" insensitive="true" />
         <!-- FN -->
-        <StringDetect String="INPUT"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="GOTO"   attribute="Ctrl Flow" context="Dest Number Line"   insensitive="true" />
+        <StringDetect String="GOSUB"  attribute="Ctrl Flow" context="Dest Number Line"   insensitive="true" />
+        <StringDetect String="INPUT"  attribute="Command"   context="Command Parameters" insensitive="true" />
         <!-- INPUT# -->
         <StringDetect String="INTERVAL"         attribute="Command" context="On Off Stop"    insensitive="true" />
         <StringDetect String="KEY"              attribute="Command" context="Key Parameters" insensitive="true" />
         
+        <!--
+        
+LET	MSX1		Optional instruction, can be omitted
+LINE	MSX1	MSX2	
+LINE INPUT	MSX1		
+LIST	MSX1		Instruction for programming
+LLIST	MSX1		Instruction for programming
+LOAD	MSX1		Disk BASIC, MemoryDisk BASIC, RS-232C BASIC
+LOCATE	MSX1		
+LPOS()	MSX1		Data input function
+LPRINT	MSX1		
+MERGE	MSX1		Disk BASIC, MemoryDisk BASIC, RS-232C BASIC
+MID$()	MSX1		String function
+MOTOR	MSX1		Not for MSX Turbo R
+NEW	MSX1		Instruction for programming
+ON...GOSUB	MSX1		
+ON...GOTO	MSX1		
+ON ERROR GOTO	MSX1		
+ON INTERVAL GOSUB	MSX1		
+ON KEY GOSUB	MSX1		
+ON SPRITE GOSUB	MSX1		
+ON STOP GOSUB	MSX1		
+ON STRIG GOSUB	MSX1		
+OPEN	MSX1		Disk BASIC, QuickDisk BASIC, MemoryDisk BASIC, RS-232C BASIC
+OUT	MSX1		Data output function
+PAINT	MSX1		
+PLAY	MSX1		MSX-AUDIO BASIC, MSX-MUSIC BASIC
+PLAY()	MSX1		Musical function
+POINT	MSX1		Data input function
+POKE	MSX1		
+PRESET	MSX1	MSX2	
+PRINT	MSX1		Short version: ?
+PSET	MSX1	MSX2	
+PUT SPRITE	MSX1	MSX2	
+READ	MSX1		
+REM	MSX1		Instruction for programming - Short version: '
+RENUM	MSX1		Instruction for programming
+RESTORE	MSX1		
+RESUME	MSX1		
+RUN	MSX1		Disk BASIC, MemoryDisk BASIC
+SAVE	MSX1		Disk BASIC, MemoryDisk BASIC, RS-232C BASIC
+SCREEN	MSX1	MSX2, MSX2+	Hangul BASIC, Kanji BASIC
+SOUND	MSX1		Instruction for PSG experts
+SPRITE	MSX1		
+SPRITE$()	MSX1		
+STOP	MSX1		
+STRIG()	MSX1		Data input function
+SWAP	MSX1		
+TROFF	MSX1		
+TRON	MSX1		
+VPOKE	MSX1	MSX2	
+WAIT	MSX1		Data input function
+WIDTH	MSX1	MSX2	Hangul BASIC, Kanji BASIC
+        
+        -->
         
         
         
-        <StringDetect String="KEYOFF" attribute="Command" context="No Parameters"      insensitive="true" />
+        <StringDetect String="KEYOFF" attribute="Command" context="Line Finished"      insensitive="true" />
         <StringDetect String="PLAY"   attribute="Command" context="String Parameter"   insensitive="true" />
         <StringDetect String="SCREEN" attribute="Command" context="Command Parameters" insensitive="true" />
       </context>
@@ -108,12 +171,20 @@
           <RegExpr String="[a-zA-Z][a-zA-Z0-9]{0,30}\(" attribute="Function" context="Function Parameters" />
       </context>
 
+      <!-- DEST NUMBER LINE -->
+      <context name="Dest Number Line" attribute="Normal" lineEndContext="#pop"  >
+          <RegExpr String="[0-9]{6,}"  attribute="Error"       context="#pop!Fatal Error" />
+          <RegExpr String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
+          <RegExpr String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error" />
+      </context>
+      
+      
 
       
       <!-- NO PARAMETERS -->
       <context name="No Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
-          <RegExpr String="\S+" attribute="Syntax Error" context="#stay" />
+          <RegExpr String="\S+" attribute="Error" context="#stay" />
       </context>
       
       <!-- STRING PARAMETER -->
@@ -124,12 +195,12 @@
       <!-- KEY PARAMETERS -->
       <context name="Key Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"  attribute="Line Separator" context="#pop" />
-          <StringDetect String="ON"      attribute="Normal"         context="#stay" insensitive="true" />
-          <StringDetect String="OFF"     attribute="Normal"         context="#stay" insensitive="true" />
-          <StringDetect String="LIST"    attribute="Normal"         context="#stay" insensitive="true" />
-          <DetectChar   char="("         attribute="Function"       context="#pop!Key Index"           />
-          <RegExpr      String="[0-9]+"  attribute="Normal"         context="#pop!Command Parameters"  />
-          <RegExpr      String="[^\s:]+" attribute="Syntax Error"   context="#stay" />
+          <StringDetect String="ON"      attribute="Normal"   context="#stay" insensitive="true" />
+          <StringDetect String="OFF"     attribute="Normal"   context="#stay" insensitive="true" />
+          <StringDetect String="LIST"    attribute="Normal"   context="#stay" insensitive="true" />
+          <DetectChar   char="("         attribute="Function" context="#pop!Key Index"           />
+          <RegExpr      String="[0-9]+"  attribute="Normal"   context="#pop!Command Parameters"  />
+          <RegExpr      String="[^\s:]+" attribute="Error"    context="#stay" />
       </context>
       
       <!-- KEY(n) INDEX -->
@@ -144,7 +215,7 @@
           <StringDetect String="ON"      attribute="Normal"         context="#stay" insensitive="true" />
           <StringDetect String="OFF"     attribute="Normal"         context="#stay" insensitive="true" />
           <StringDetect String="STOP"    attribute="Normal"         context="#stay" insensitive="true" />
-          <RegExpr      String="[^\s:]+" attribute="Syntax Error"   context="#stay" />
+          <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
       </context>
       
       <!-- COMMAND PARAMETERS -->
@@ -161,6 +232,16 @@
       </context>
       
 
+      <!-- LINE FINISHED -->
+      <context name="Line Finished" attribute="Normal Text" lineEndContext="#pop" >
+          <DetectChar char=":"         attribute="Line Separator" context="#pop"  />
+          <RegExpr    String="[^\s:]+" attribute="Error"          context="#stay" />
+      </context>
+
+      <!-- FATAL ERROR -->
+      <context name="Fatal Error" attribute="Error" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop" />
+      </context>
 
 
  
@@ -182,11 +263,12 @@
       <itemData name="Char"                defStyleNum="dsChar"         />
       <itemData name="Command"             defStyleNum="dsBuiltIn"      />
       <itemData name="Function"            defStyleNum="dsFunction"     />
+      <itemData name="Ctrl Flow"           defStyleNum="dsControlFlow"  />
       <itemData name="Line Separator"      defStyleNum="dsPreprocessor" />
       <itemData name="Parameter Separator" defStyleNum="dsNormal"       />
       
-      <itemData name="Unnumbered Line" defStyleNum="dsError" />
-      <itemData name="Syntax Error"    defStyleNum="dsError" />
+      <itemData name="Unnumbered Line" defStyleNum="dsNormal" />
+      <itemData name="Error"           defStyleNum="dsError" />
     
       <itemData name="Normal"       defStyleNum="dsNormal"  />
       <itemData name="Statements" defStyleNum="dsNormal" />
