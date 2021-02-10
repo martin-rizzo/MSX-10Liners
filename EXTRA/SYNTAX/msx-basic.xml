@@ -49,6 +49,13 @@
       
         
       
+
+<!--
+==============================================================================================
+                               COMMANDS AND FUNCTIONS
+==============================================================================================
+-->
+
       <!-- COMMANDS -->
       <context name="Commands" >
         <StringDetect String="BEEP"   attribute="Command" context="Line Finished"      insensitive="true" />
@@ -79,8 +86,9 @@
         <StringDetect String="GOSUB"  attribute="Ctrl Flow" context="Dest Number Line"   insensitive="true" />
         <StringDetect String="INPUT"  attribute="Command"   context="Command Parameters" insensitive="true" />
         <!-- INPUT# -->
-        <StringDetect String="INTERVAL"         attribute="Command" context="On Off Stop"    insensitive="true" />
-        <StringDetect String="KEY"              attribute="Command" context="Key Parameters" insensitive="true" />
+        <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"    insensitive="true" />
+        <StringDetect String="KEY"      attribute="Command" context="Key Parameters" insensitive="true" />
+        <StringDetect String="LET"      attribute="Command" context="Assigment"      insensitive="true" />
         
         
         
@@ -99,6 +107,7 @@
         <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters" insensitive="true" />
         <StringDetect String="WAIT"     attribute="Command" context="Command Parameters" insensitive="true" />
         <StringDetect String="WIDTH"    attribute="Command" context="Integer Parameter"  insensitive="true" />
+      </context>
         <!--
         
 LET			MSX1		
@@ -144,47 +153,21 @@ RUN			MSX1
         
         
         
-      </context>
       
       <!-- FUNCTIONS -->
       <context name="Functions" lineEndContext="#pop" >
-        <StringDetect String="ABS(" attribute="Function" context="#stay" insensitive="true" /> 
-      </context>
-      
-      <!-- RANGE OF LETTERS // example: I-N,W-Z -->
-      <context name="Range of Letters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Line Separator" context="#pop"  />
-          <DetectChar char="-" attribute="Operator" context="#stay" />
-          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
+          <StringDetect String="ABS(" attribute="Function" context="#stay" insensitive="true" /> 
       </context>
       
       
-      <!-- OPERATORS -->
-      <context name="Operators" >
-          <AnyChar String="+-*/^\" attribute="Operator" context="#stay" />
-          <StringDetect String="MOD" attribute="Operator" context="#stay" insensitive="true" />
-      </context>
       
-      <!-- EXPRESSION -->
-      <context name="Expression" >
-          <IncludeRules context="Operators" />
-          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"               />
-          <RegExpr    String="[a-zA-Z][a-zA-Z0-9]{0,30}\("                   attribute="Function" context="Function Parameters" />
-          <DetectChar char='"'                                               attribute="String"   context="Inside a String"     />
-      </context>
-
-      
-      <!-- INSIDE A STRING -->
-      <context name="Inside a String" attribute="String" lineEndContext="#pop" >
-          <DetectChar char='"' attribute="String" context="#pop" />
-      </context>
-
 
 <!--
 ==============================================================================================
                                    PARAMETERS
 ==============================================================================================
 -->
+      
       <!-- NO PARAMETERS -->
       <context name="No Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
@@ -202,12 +185,12 @@ RUN			MSX1
           <IncludeRules context="Expression" />
       </context>
       
-      <!-- VAR PARAMETERS -->
+      <!-- VAR PARAMETERS (MULTIPLE PARAMETERS BUT ALL OF THEM ARE VARIABLE NAMES) -->
       <context name="Var Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":"                        attribute="Line Separator" context="#pop"  />
-          <DetectChar char=","                        attribute="Normal"         context="#stay" />
-          <RegExpr    String="[A-Z]+[A-Z0-9]*[$%!#]?" attribute="Variable"       context="#stay" insensitive="true" />
-          <RegExpr    String="[^\s:,]+"               attribute="Error"          context="#stay" />
+          <DetectChar char=":"            attribute="Line Separator" context="#pop"                                    />
+          <DetectChar char=","            attribute="Normal"         context="#stay"                                   />
+          <RegExpr    String="[A-Z]"      attribute="Variable"       context="Inside Variable Name" insensitive="true" />
+          <RegExpr    String="[^\s:,]+"   attribute="Error"          context="#stay"                                   />
       </context>
       
       <!-- KEY PARAMETERS -->
@@ -240,7 +223,7 @@ RUN			MSX1
           <DetectChar char=")" attribute="Function" context="#pop"  />
           <IncludeRules context="Command Parameters" />
       </context>
-
+      
       <!-- ON / OFF / STOP PARAMETERS -->
       <context name="On Off Stop" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
@@ -256,36 +239,80 @@ RUN			MSX1
           <IncludeRules context="Expression" />
       </context>
       
-      <!-- DESTINATION NUMBER LINE (AS ONLY PARAMETER) -->
+      <!-- DESTINATION NUMBER LINE (AS THE ONLY PARAMETER) -->
       <context name="Dest Number Line" attribute="Normal" lineEndContext="#pop"  >
           <RegExpr String="[0-9]{6,}"  attribute="Error"       context="#pop!Fatal Error" />
           <RegExpr String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
           <RegExpr String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error" />
       </context>
       
-      <!-- DESTINATION NUMBER LINE OR "NEXT" (AS ONLY PARAMETER) -->
+      <!-- DESTINATION NUMBER LINE OR "NEXT" (AS THE ONLY PARAMETER) -->
       <context name="Dest Number Line|Next" attribute="Normal" lineEndContext="#pop" >
           <StringDetect String="NEXT" attribute="Constant" context="#pop!Line Finished" insensitive="true" />
           <IncludeRules context="Dest Number Line" />
       </context>
-
-
+      
+      <!-- RANGE OF LETTERS PARAMETERS (EXAMPLE: I-N,W-Z) -->
+      <context name="Range of Letters" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop"  />
+          <DetectChar char="-" attribute="Operator" context="#stay" />
+          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
+      </context>
+      
 <!--
 ==============================================================================================
-                                   SPECIAL
+                                   EXPRESSIONS
 ==============================================================================================
 -->
+      
+      <!-- OPERATORS -->
+      <context name="Operators" >
+          <AnyChar String="+-*/^\" attribute="Operator" context="#stay" />
+          <StringDetect String="MOD" attribute="Operator" context="#stay" insensitive="true" />
+      </context>
+      
+      <!-- EXPRESSION -->
+      <context name="Expression" >
+          <IncludeRules context="Operators" />
+          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([EeDd][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"               />
+          <RegExpr    String="[a-zA-Z][a-zA-Z0-9]{0,30}\("                   attribute="Function" context="Function Parameters" />
+          <DetectChar char='"'                                               attribute="String"   context="Inside a String"     />
+      </context>
+      
+      <!-- INSIDE A VARIABLE NAME -->
+      <context name="Inside Variable Name" attribute="Normal" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop" >
+          <RegExpr String="[A-Z0-9]*[$%!#]?" attribute="Variable" context="#stay" insensitive="true" />
+          <DetectChar char="(" attribute="Variable" context="#pop!Inside Array Subscript" />
+      </context>
+      
+      <!-- INSIDE AN ARRAY SUBSCRIPT -->
+      <context name="Inside Array Subscript" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=")" attribute="Variable" context="#pop" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- INSIDE A STRING -->
+      <context name="Inside a String" attribute="String" lineEndContext="#pop" >
+          <DetectChar char='"' attribute="String" context="#pop" />
+      </context>
+      
+<!--
+==============================================================================================
+                                     SPECIAL
+==============================================================================================
+-->
+      
       <!-- LINE FINISHED -->
       <context name="Line Finished" attribute="Normal Text" lineEndContext="#pop" >
           <DetectChar char=":"         attribute="Line Separator" context="#pop"  />
           <RegExpr    String="[^\s:]+" attribute="Error"          context="#stay" />
       </context>
-
+      
       <!-- FATAL ERROR -->
       <context name="Fatal Error" attribute="Error" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
       </context>
-
+      
 
     </contexts>
     <itemDatas>
