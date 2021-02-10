@@ -85,13 +85,20 @@
         
         
         
-        <StringDetect String="STRIG(" attribute="Command" context="Index On Off Stop"  insensitive="true" />
-        <StringDetect String="SWAP"   attribute="Command" context="Var Parameters"     insensitive="true" />
-        <StringDetect String="TROFF"  attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="TRON"   attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="VPOKE"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="WAIT"   attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="WIDTH"  attribute="Command" context="Integer Parameter"  insensitive="true" />
+        <StringDetect String="RESUME"   attribute="Command" context="Dest Number Line|Next" insensitive="true" /> 
+        <StringDetect String="RUN"      attribute="Command" context="Command Parameter"  insensitive="true" />
+        <StringDetect String="SAVE"     attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="SOUND"    attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"        insensitive="true" />
+        <StringDetect String="STOP"     attribute="Command" context="On Off Stop"        insensitive="true" />
+        <StringDetect String="STRIG("   attribute="Command" context="Index On Off Stop"  insensitive="true" />
+        <StringDetect String="SWAP"     attribute="Command" context="Var Parameters"     insensitive="true" />
+        <StringDetect String="TROFF"    attribute="Command" context="Line Finished"      insensitive="true" />
+        <StringDetect String="TRON"     attribute="Command" context="Line Finished"      insensitive="true" />
+        <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="WAIT"     attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="WIDTH"    attribute="Command" context="Integer Parameter"  insensitive="true" />
         <!--
         
 LET			MSX1		
@@ -132,12 +139,6 @@ RENUM			MSX1
 RESTORE			MSX1		
 RESUME			MSX1		
 RUN			MSX1		
-SAVE			MSX1		
-SCREEN			MSX1	MSX2, MSX2+
-SOUND			MSX1		
-SPRITE			MSX1		
-SPRITE$()		MSX1		
-STOP			MSX1		
         
         -->
         
@@ -172,12 +173,6 @@ STOP			MSX1
           <DetectChar char='"'                                               attribute="String"   context="Inside a String"     />
       </context>
 
-      <!-- DEST NUMBER LINE -->
-      <context name="Dest Number Line" attribute="Normal" lineEndContext="#pop"  >
-          <RegExpr String="[0-9]{6,}"  attribute="Error"       context="#pop!Fatal Error" />
-          <RegExpr String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
-          <RegExpr String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error" />
-      </context>
       
       <!-- INSIDE A STRING -->
       <context name="Inside a String" attribute="String" lineEndContext="#pop" >
@@ -226,8 +221,15 @@ STOP			MSX1
           <RegExpr      String="[^\s:]+" attribute="Error"    context="#stay" />
       </context>
       
-      <!-- COMMAND PARAMETERS -->
-      <context name="Command Parameters" lineEndContext="#pop" >
+      <!-- COMMAND PARAMETER (ONLY ONE PARAMETER) -->
+      <context name="Command Parameter" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator"   context="#pop" />
+          <DetectChar char="," attribute="Error"            context="#pop!Fatal Error" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- COMMAND PARAMETERS (MULTIPLE PARAMETERS) -->
+      <context name="Command Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator"      context="#pop"  />
           <DetectChar char="," attribute="Parameter Separator" context="#stay" />
           <IncludeRules context="Expression" />
@@ -254,6 +256,18 @@ STOP			MSX1
           <IncludeRules context="Expression" />
       </context>
       
+      <!-- DESTINATION NUMBER LINE (AS ONLY PARAMETER) -->
+      <context name="Dest Number Line" attribute="Normal" lineEndContext="#pop"  >
+          <RegExpr String="[0-9]{6,}"  attribute="Error"       context="#pop!Fatal Error" />
+          <RegExpr String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
+          <RegExpr String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error" />
+      </context>
+      
+      <!-- DESTINATION NUMBER LINE OR "NEXT" (AS ONLY PARAMETER) -->
+      <context name="Dest Number Line|Next" attribute="Normal" lineEndContext="#pop" >
+          <StringDetect String="NEXT" attribute="Constant" context="#pop!Line Finished" insensitive="true" />
+          <IncludeRules context="Dest Number Line" />
+      </context>
 
 
 <!--
