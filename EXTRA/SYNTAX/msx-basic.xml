@@ -82,6 +82,11 @@
         <StringDetect String="INTERVAL"         attribute="Command" context="On Off Stop"    insensitive="true" />
         <StringDetect String="KEY"              attribute="Command" context="Key Parameters" insensitive="true" />
         
+        
+        
+        
+        
+        <StringDetect String="WIDTH" attribute="Command" context="Integer Parameter" insensitive="true" />
         <!--
         
 LET			MSX1		
@@ -193,6 +198,12 @@ WIDTH			MSX1	MSX2
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
       </context>
       
+      <!-- INTEGER PARAMETER -->
+      <context name="Integer Parameter" attribute="Normal" lineEndContext="#pop" >
+          <DetechChar char=":" attribute="Line Separator" context="#pop" />
+          <IncludeRules context="Expression" />
+      </context>
+
       <!-- KEY PARAMETERS -->
       <context name="Key Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"  attribute="Line Separator" context="#pop" />
@@ -231,6 +242,7 @@ WIDTH			MSX1	MSX2
           <DetectChar char=")" attribute="Function" context="#pop"  />
           <IncludeRules context="Command Parameters" />
       </context>
+      
       
 
       <!-- LINE FINISHED -->
