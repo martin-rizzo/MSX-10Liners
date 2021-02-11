@@ -30,7 +30,6 @@
       </context>
       
       <context name="Statements" attribute="Normal" lineEndContext="#pop" >
-        <DetectChar char=":" attribute="Line Separator" context="#pop" />
         <IncludeRules context="Commands" />
         <RegExpr String="[A-Z]"  lookAhead="true"  context="Assignment" insensitive="true" />
         <RegExpr String="[^\s:]" attribute="Error" context="#stay" />
@@ -72,8 +71,9 @@
         <StringDetect String="FOR"      attribute="Flow"    context="For Parameters"         insensitive="true" />
         <StringDetect String="FILES"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <!-- FN -->
-        <StringDetect String="GOTO"     attribute="Flow"    context="Line Number"            insensitive="true" />
         <StringDetect String="GOSUB"    attribute="Flow"    context="Line Number"            insensitive="true" />
+        <StringDetect String="GOTO"     attribute="Flow"    context="Line Number"            insensitive="true" />
+        <StringDetect String="IF"       attribute="Flow"    context="If Parameters"          insensitive="true" />
         <StringDetect String="INPUT"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <!-- INPUT# -->
         <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"            insensitive="true" />
@@ -199,9 +199,6 @@ RENUM			MSX1
         <StringDetect String="VPEEK("   attribute="Function" context="1 Function Parameter" insensitive="true" />
       </context>
       
-      
-      
-
 <!--
 ==============================================================================================
                                    PARAMETERS
@@ -311,8 +308,8 @@ RENUM			MSX1
           <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
       </context>
       
-      <!-- FOR PARAMETERS (INCLUDING "TO" & "STEP") -->
-      <context name="For Parameters" attribute="Normal" lineEndContex="#pop" >
+      <!-- "FOR" PARAMETERS (INCLUDING "TO" & "STEP") -->
+      <context name="For Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":"         attribute="Error"    context="#pop"                                           />
           <DetectChar char="="         attribute="Operator" context="#pop!For Start"                                 />
           <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Simple Variable Name" insensitive="true" />
@@ -325,11 +322,24 @@ RENUM			MSX1
           <IncludeRules context="Expression" />
       </context>
       <context name="For End" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"      attribute="Line Separator" context="#pop"                               />
+          <DetectChar   char=":"      attribute="Line Separator" context="#pop"                          />
           <StringDetect String="STEP" attribute="Flow"      context="#pop!Expression" insensitive="true" />
           <IncludeRules context="Expression" />
       </context>
       
+      <!-- "IF" PARAMETERS (INCLUDING "THEN/GOTO" & "ELSE") -->
+      <context name="If Parameters" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar   char=":"      attribute="Error" context="#pop" />
+          <StringDetect String="THEN" attribute="Flow"  context="#pop"         insensitive="true" />
+          <StringDetect String="GOTO" attribute="Flow"  context="#pop!If Goto" insensitive="true" />
+          <IncludeRules context="Expression" />
+      </context>
+      <context name="If Goto" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":"            attribute="Error"       context="#pop"               />
+          <RegExpr    String="[0-9]{6,}"  attribute="Error"       context="#pop!Line Finished" />
+          <RegExpr    String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
+          <RegExpr    String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error"   />
+      </context>
 <!--
 ==============================================================================================
                                    EXPRESSIONS
@@ -384,6 +394,9 @@ RENUM			MSX1
           <StringDetect String="MOD"      lookAhead="true"     context="#pop" insensitive="true"     />
           <StringDetect String="TO"       lookAhead="true"     context="#pop" insensitive="true"     />
           <StringDetect String="STEP"     lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="GOTO"     lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="THEN"     lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="ELSE"     lookAhead="true"     context="#pop" insensitive="true"     />
           <AnyChar      String="$%!#"     attribute="Variable" context="#pop"                        />
           <DetectChar   char="("          attribute="Error"    context="Error Until Bracket"         />
           <RegExpr      String="[A-Z0-9]" attribute="Variable" context="#stay" insensitive="true"    />
@@ -447,7 +460,6 @@ RENUM			MSX1
       <itemData name="Error"           defStyleNum="dsError" />
     
       <itemData name="Normal"       defStyleNum="dsNormal"  />
-      <itemData name="Statements" defStyleNum="dsNormal" />
       <itemData name="Normal Text" defStyleNum="dsNormal"  />
       <itemData name="Code"        defStyleNum="dsNormal"  />
       <itemData name="Hex"         defStyleNum="dsBaseN"   />
