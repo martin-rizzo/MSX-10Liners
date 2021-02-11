@@ -312,10 +312,10 @@ RUN			MSX1
       
       <!-- FOR PARAMETERS (INCLUDING "TO" & "STEP") -->
       <context name="For Parameters" attribute="Normal" lineEndContex="#pop" >
-          <DetectChar char=":"         attribute="Error"    context="#pop"                                    />
-          <DetectChar char="="         attribute="Operator" context="#pop!For Start"                          />
-          <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Variable Name" insensitive="true" />
-          <RegExpr    String="[^\s:]+" attribute="Error"    context="#stay"                                   />
+          <DetectChar char=":"         attribute="Error"    context="#pop"                                           />
+          <DetectChar char="="         attribute="Operator" context="#pop!For Start"                                 />
+          <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Simple Variable Name" insensitive="true" />
+          <RegExpr    String="[^\s:]+" attribute="Error"    context="#stay"                                          />
       </context>
       <context name="For Start" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"    attribute="Error"     context="#pop"                            />
@@ -352,9 +352,9 @@ RUN			MSX1
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
           <IncludeRules context="Operators" />
           <IncludeRules context="Functions" />
-          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([ED][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"  insensitive="true"     />
-          <RegExpr    String="[A-Z]"                                       attribute="Variable" context="Inside Variable Name" />
-          <DetectChar char='"'                                             attribute="String"   context="Inside String"        />
+          <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([ED][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"                insensitive="true" />
+          <RegExpr    String="[A-Z]"                                       attribute="Variable" context="Inside Variable Name" insensitive="true" />
+          <DetectChar char='"'                                             attribute="String"   context="Inside String"                           />
       </context>
       
       <!-- ASSIGNMENT -->
@@ -365,19 +365,26 @@ RUN			MSX1
            <RegExpr    String="[^\s:]+" attribute="Error"    context="#stay"                                   />
       </context>
       
-      <!-- INSIDE A VARIABLE NAME -->
+      <!-- INSIDE A SIMPLE VARIABLE NAME (CANNOT! BE AN ARRAY) -->
+      <context name="Inside Simple Variable Name" attribute="Normal" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop" >
+          <StringDetect String="OR"       lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="AND"      lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="XOR"      lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="NOT"      lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="EQV"      lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="IMP"      lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="MOD"      lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="TO"       lookAhead="true"     context="#pop" insensitive="true"     />
+          <StringDetect String="STEP"     lookAhead="true"     context="#pop" insensitive="true"     />
+          <AnyChar      String="$%!#"     attribute="Variable" context="#pop"                        />
+          <DetectChar   char="("          attribute="Error"    context="Error Until Bracket"         />
+          <RegExpr      String="[A-Z0-9]" attribute="Variable" context="#stay" insensitive="true"    />
+      </context>
+      
+      <!-- INSIDE A VARIABLE NAME (CAN BE AN ARRAY) -->
       <context name="Inside Variable Name" attribute="Normal" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop" >
-          <StringDetect String="TO"    lookAhead="true"     context="#pop" insensitive="true"     />
-          <StringDetect String="OR"    lookAhead="true"     context="#pop" insensitive="true"     />
-          <StringDetect String="AND"   lookAhead="true"     context="#pop" insensitive="true"     />
-          <StringDetect String="XOR"   lookAhead="true"     context="#pop" insensitive="true"     />
-          <StringDetect String="NOT"   lookAhead="true"     context="#pop" insensitive="true"     />
-          <StringDetect String="EQV"   lookAhead="true"     context="#pop" insensitive="true"     />
-          <StringDetect String="IMP"   lookAhead="true"     context="#pop" insensitive="true"     />
-          <StringDetect String="MOD"   lookAhead="true"     context="#pop" insensitive="true"     />
-          <AnyChar      String="$%!#"  attribute="Variable" context="#pop"                        />
-          <DetectChar   char="("       attribute="Variable" context="#pop!Inside Array Subscript" />
-          <RegExpr      String="[A-Z]" attribute="Variable" context="#stay" insensitive="true"    />
+          <DetectChar char="(" attribute="Variable" context="#pop!Inside Array Subscript" />
+          <IncludeRules context="Inside Simple Variable Name" />
       </context>
       
       <!-- INSIDE AN ARRAY SUBSCRIPT -->
@@ -408,6 +415,7 @@ RUN			MSX1
           <DetectChar char=":" attribute="Line Separator" context="#pop" />
       </context>
       
+      <!-- ERROR UNTIL BRACKET -->
       <context name="Error Until Bracket" attribute="Error" lineEndContext="#pop" >
           <DetectChar   char=")" attribute="Error" context="#pop" />
       </context>
