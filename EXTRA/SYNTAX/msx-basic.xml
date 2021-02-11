@@ -145,27 +145,27 @@ RUN			MSX1
       
       <!-- FUNCTIONS -->
       <context name="Functions" lineEndContext="#pop" >
-        <StringDetect String="ABS("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="ASC("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="ATN("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="BASE("   attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="BIN$("   attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="CDBL("   attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="CHR$("   attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="CINT("   attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="COS("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="CSNG("   attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="EOF("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="EXP("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="FIX("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="FRE("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="HEX$("   attribute="Function" context="Function 1 Parameter" insensitive="true" />
-        <StringDetect String="INP("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
+        <StringDetect String="ABS("    attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="ASC("    attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="ATN("    attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="BASE("   attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="BIN$("   attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="CDBL("   attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="CHR$("   attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="CINT("   attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="COS("    attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="CSNG("   attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="EOF("    attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="EXP("    attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="FIX("    attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="FRE("    attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="HEX$("   attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="INP("    attribute="Function" context="1 Function Parameter" insensitive="true" />
         <StringDetect String="INPUT$(" attribute="Function" context="Function Parameters"  insensitive="true" />
         <StringDetect String="INSTR("  attribute="Function" context="Function Parameters"  insensitive="true" />
-        <StringDetect String="INT("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
+        <StringDetect String="INT("    attribute="Function" context="1 Function Parameter" insensitive="true" />
         <StringDetect String="LEFT$("  attribute="Function" context="Function Parameters"  insensitive="true" />
-        <StringDetect String="LEN("    attribute="Function" context="Function 1 Parameter" insensitive="true" />
+        <StringDetect String="LEN("    attribute="Function" context="1 Function Parameter" insensitive="true" />
       </context>
       
       
@@ -227,19 +227,19 @@ RUN			MSX1
           <IncludeRules context="Expression" />
       </context>
       
-      <!-- FUNCTION PARAMETER (ONLY ONE PARAMETER) -->
-      <context name="Function 1 Parameter" lineEndContext="#pop" >
-          <DetectChar char=")" attribute="Function" context="#pop"     />
-          <DetectChar char=":" attribute="Error"    context="#pop#pop" />
-          <DetectChar char="," attribute="Error"    context="#pop!Error Until Bracket" />
-          <IncludeRules context="Expression" />
-      </context>
-      
-      <!-- FUNCTION PARAMETERS (MULTIPLE PARAMETERS) -->
+      <!-- FUNCTION PARAMETERS -->
       <context name="Function Parameters" lineEndContext="#pop" >
           <DetectChar char=")" attribute="Function"            context="#pop" />
           <DetectChar char=":" attribute="Error"               context="#pop" />
           <DetectChar char="," attribute="Parameter Separator" context="#stay" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- FUNCTION PARAMETERS (ONLY ONE PARAMETER) -->
+      <context name="1 Function Parameter" lineEndContext="#pop" >
+          <DetectChar char=")" attribute="Function" context="#pop"     />
+          <DetectChar char=":" attribute="Error"    context="#pop#pop" />
+          <DetectChar char="," attribute="Error"    context="#pop!Error Until Bracket" />
           <IncludeRules context="Expression" />
       </context>
       
