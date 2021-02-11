@@ -84,7 +84,7 @@
         
         
         
-        
+        <StringDetect String="RENUM"    attribute="Command" context="Multiple Line Numbers"  insensitive="true" />
         <StringDetect String="RESTORE"  attribute="Command" context="Op Line Number"         insensitive="true" />
         <StringDetect String="RESUME"   attribute="Flow"    context="Op Line Number|Next"    insensitive="true" />
         <StringDetect String="RUN"      attribute="Command" context="1 Command Parameter"    insensitive="true" />
@@ -104,7 +104,6 @@
       </context>
         <!--
         
-LET			MSX1		
 LINE			MSX1	MSX2	
 LINE INPUT		MSX1		
 LIST			MSX1		
@@ -138,7 +137,6 @@ PSET			MSX1	MSX2
 PUT SPRITE		MSX1	MSX2	
 READ			MSX1		
 REM			MSX1		
-RENUM			MSX1		
         
         -->
         
@@ -279,6 +277,15 @@ RENUM			MSX1
       <context name="Index|Equal|Expression" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=")" attribute="Command" context="#pop!Equal|Expression" />
           <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- MULTIPLE LINE NUMBERS -->
+      <context name="Multiple Line Numbers" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":"            attribute="Line Separator" context="#pop"              />
+          <DetectChar char=","            attribute="Operator"       context="#stay"             />
+          <RegExpr    String="[0-9]{6,}"  attribute="Error"          context="Error Until Comma" />
+          <RegExpr    String="[0-9]{0,5}" attribute="Line Number"    context="#stay"             />
+          <RegExpr    String="[^\s:,]+"   attribute="Error"          context="Error Until Comma" />
       </context>
       
       <!-- LINE NUMBER (AS THE ONLY PARAMETER) -->
@@ -440,6 +447,13 @@ RENUM			MSX1
       <context name="Error Until Bracket" attribute="Error" lineEndContext="#pop" >
           <DetectChar   char=")" attribute="Error" context="#pop" />
       </context>
+      
+      <!-- ERROR UNTIL COMMA -->
+      <context name="Error Until Comma" attribute="Error" lineEndContext="#pop" >
+          <DetectChar char=":"  lookAhead="true" context="#pop" />
+          <DetectChar char=","  lookAhead="true" context="#pop" />
+      </context>
+      
 
     </contexts>
     <itemDatas>
