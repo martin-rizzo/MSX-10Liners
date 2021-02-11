@@ -80,10 +80,12 @@
         <StringDetect String="KEY"      attribute="Command" context="Key Parameters"         insensitive="true" />
         <StringDetect String="LET"      attribute="Command" context="Assignment"             insensitive="true" />
         
+        
         <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"         insensitive="true" />
         
         
-        
+        <StringDetect String="READ"     attribute="Command" context="Var Parameters"         insensitive="true" />
+        <StringDetect String="REM"      attribute="Remark"  context="Inside Remark"          insensitive="true" />
         <StringDetect String="RENUM"    attribute="Command" context="Multiple Line Numbers"  insensitive="true" />
         <StringDetect String="RESTORE"  attribute="Command" context="Op Line Number"         insensitive="true" />
         <StringDetect String="RESUME"   attribute="Flow"    context="Op Line Number|Next"    insensitive="true" />
@@ -102,6 +104,8 @@
         <StringDetect String="WAIT"     attribute="Command" context="Command Parameters"     insensitive="true" />
         <StringDetect String="WIDTH"    attribute="Command" context="1 Command Parameter"    insensitive="true" />
       </context>
+      
+      
         <!--
         
 LINE			MSX1	MSX2	
@@ -135,8 +139,6 @@ PRESET			MSX1	MSX2
 PRINT			MSX1		
 PSET			MSX1	MSX2	
 PUT SPRITE		MSX1	MSX2	
-READ			MSX1		
-REM			MSX1		
         
         -->
         
@@ -426,6 +428,11 @@ REM			MSX1
           <DetectChar char='"' attribute="String" context="#pop" />
       </context>
       
+      <!-- INSIDE A REMARK (COMMENT) -->
+      <context name="Inside Remark" attribute="Remark" lineEndContext="#pop" >
+      </context>
+      
+
 <!--
 ==============================================================================================
                                      SPECIAL
@@ -465,6 +472,7 @@ REM			MSX1
       <itemData name="Variable"            defStyleNum="dsVariable"     />
       <itemData name="Constant"            defStyleNum="dsConstant"     />
       <itemData name="Function"            defStyleNum="dsFunction"     />
+      <itemData name="Remark"              defStyleNum="dsComment"      />
       <itemData name="Flow"                defStyleNum="dsControlFlow"  />
       <itemData name="Line Number"         defStyleNum="dsPreprocessor" />
       <itemData name="Line Separator"      defStyleNum="dsPreprocessor" bold="true" />
@@ -478,7 +486,6 @@ REM			MSX1
       <itemData name="Code"        defStyleNum="dsNormal"  />
       <itemData name="Hex"         defStyleNum="dsBaseN"   />
       <itemData name="String"      defStyleNum="dsString" />
-      <itemData name="Comment"     defStyleNum="dsComment" />
     </itemDatas>
   </highlighting>
   <general>
