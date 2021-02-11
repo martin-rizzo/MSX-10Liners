@@ -47,58 +47,59 @@
 
       <!-- COMMANDS -->
       <context name="Commands" >
-        <StringDetect String="BEEP"   attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="BLOAD"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="BSAVE"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="BEEP"     attribute="Command" context="Line Finished"          insensitive="true" />
+        <StringDetect String="BLOAD"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="BSAVE"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <!-- CALL -->
-        <StringDetect String="CIRCLE" attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="CLEAR"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="CLOAD"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="CIRCLE"   attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="CLEAR"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="CLOAD"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <!-- CLOAD? -->
-        <StringDetect String="CLOSE"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="CLS"    attribute="Command" context="Line Finished"      insensitive="true" />
-        <StringDetect String="COLOR"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="CSAVE"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="DATA"   attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="DEFDBL" attribute="Command" context="Range of Letters"   insensitive="true" />
-        <StringDetect String="DEFINT" attribute="Command" context="Range of Letters"   insensitive="true" />
-        <StringDetect String="DEFSNG" attribute="Command" context="Range of Letters"   insensitive="true" />
-        <StringDetect String="DEFSTR" attribute="Command" context="Range of Letters"   insensitive="true" />
-        <StringDetect String="DIM"    attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="DRAW"   attribute="Command" context="String Parameter"   insensitive="true" />
-        <!-- END (flow control) -->
-        <StringDetect String="ERASE"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="ERROR"  attribute="Command" context="Command Parameters" insensitive="true" />
-        <StringDetect String="FILES"  attribute="Command" context="Command Parameters" insensitive="true" />
+        <StringDetect String="CLOSE"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="CLS"      attribute="Command" context="Line Finished"          insensitive="true" />
+        <StringDetect String="COLOR"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="CSAVE"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="DATA"     attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="DEFDBL"   attribute="Command" context="Range of Letters"       insensitive="true" />
+        <StringDetect String="DEFINT"   attribute="Command" context="Range of Letters"       insensitive="true" />
+        <StringDetect String="DEFSNG"   attribute="Command" context="Range of Letters"       insensitive="true" />
+        <StringDetect String="DEFSTR"   attribute="Command" context="Range of Letters"       insensitive="true" />
+        <StringDetect String="DIM"      attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="DRAW"     attribute="Command" context="String Parameter"       insensitive="true" />
+        <StringDetect String="END"      attribute="Flow"    context="Line Finished"          insensitive="true" />
+        <StringDetect String="ERASE"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="ERROR"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="FOR"      attribute="Flow"    context="For Parameters"         insensitive="true" />
+        <StringDetect String="FILES"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <!-- FN -->
-        <StringDetect String="GOTO"   attribute="Ctrl Flow" context="Dest Number Line"   insensitive="true" />
-        <StringDetect String="GOSUB"  attribute="Ctrl Flow" context="Dest Number Line"   insensitive="true" />
-        <StringDetect String="INPUT"  attribute="Command"   context="Command Parameters" insensitive="true" />
+        <StringDetect String="GOTO"     attribute="Flow"    context="Dest Number Line"       insensitive="true" />
+        <StringDetect String="GOSUB"    attribute="Flow"    context="Dest Number Line"       insensitive="true" />
+        <StringDetect String="INPUT"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <!-- INPUT# -->
-        <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"    insensitive="true" />
-        <StringDetect String="KEY"      attribute="Command" context="Key Parameters" insensitive="true" />
-        <StringDetect String="LET"      attribute="Command" context="Assignment"     insensitive="true" />
+        <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"            insensitive="true" />
+        <StringDetect String="KEY"      attribute="Command" context="Key Parameters"         insensitive="true" />
+        <StringDetect String="LET"      attribute="Command" context="Assignment"             insensitive="true" />
         
-        <StringDetect String="FOR"      attribute="Ctrl Flow" context="For Parameters" insensitive="true" />
-        <StringDetect String="NEXT"     attribute="Ctrl Flow" context="Var Parameters" insensitive="true" />
-        
+        <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"         insensitive="true" />
         
         
         
-        <StringDetect String="RESUME"   attribute="Command" context="Dest Number Line|Next" insensitive="true" /> 
-        <StringDetect String="RUN"      attribute="Command" context="Command 1 Parameter" insensitive="true" />
-        <StringDetect String="SAVE"     attribute="Command" context="Command Parameters"  insensitive="true" />
-        <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"  insensitive="true" />
-        <StringDetect String="SOUND"    attribute="Command" context="Command Parameters"  insensitive="true" />
-        <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"         insensitive="true" />
-        <StringDetect String="STOP"     attribute="Command" context="On Off Stop"         insensitive="true" />
-        <StringDetect String="STRIG("   attribute="Command" context="Index On Off Stop"   insensitive="true" />
-        <StringDetect String="SWAP"     attribute="Command" context="Var Parameters"      insensitive="true" />
-        <StringDetect String="TROFF"    attribute="Command" context="Line Finished"       insensitive="true" />
-        <StringDetect String="TRON"     attribute="Command" context="Line Finished"       insensitive="true" />
-        <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters"  insensitive="true" />
-        <StringDetect String="WAIT"     attribute="Command" context="Command Parameters"  insensitive="true" />
-        <StringDetect String="WIDTH"    attribute="Command" context="Integer Parameter"   insensitive="true" />
+        
+        <StringDetect String="RESUME"   attribute="Command" context="Dest Number Line|Next"  insensitive="true" />
+        <StringDetect String="RUN"      attribute="Command" context="Command 1 Parameter"    insensitive="true" />
+        <StringDetect String="SAVE"     attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="SOUND"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="SPRITE$(" attribute="Command" context="Index|Equal|Expression" insenstivie="true" />
+        <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"            insensitive="true" />
+        <StringDetect String="STOP"     attribute="Command" context="On Off Stop"            insensitive="true" />
+        <StringDetect String="STRIG("   attribute="Command" context="Index|On Off Stop"      insensitive="true" />
+        <StringDetect String="SWAP"     attribute="Command" context="Var Parameters"         insensitive="true" />
+        <StringDetect String="TROFF"    attribute="Command" context="Line Finished"          insensitive="true" />
+        <StringDetect String="TRON"     attribute="Command" context="Line Finished"          insensitive="true" />
+        <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="WAIT"     attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="WIDTH"    attribute="Command" context="Integer Parameter"      insensitive="true" />
       </context>
         <!--
         
@@ -285,8 +286,14 @@ RUN			MSX1
       </context>
       
       <!-- (INDEX) ON / OFF / STOP PARAMETERS -->
-      <context name="Index On Off Stop" attribute="Normal" lineEndContext="#pop" >
+      <context name="Index|On Off Stop" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=")" attribute="Command" context="#pop!On Off Stop" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- (INDEX) = EXPRESSION -->
+      <context name="Index|Equal|Expression" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=")" attribute="Command" context="#pop!Equal|Expression" />
           <IncludeRules context="Expression" />
       </context>
       
@@ -320,12 +327,12 @@ RUN			MSX1
       <context name="For Start" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"    attribute="Error"     context="#pop"                            />
           <DetectChar   char="="    attribute="Error"     context="#stay"                           />
-          <StringDetect String="TO" attribute="Ctrl Flow" context="#pop!For End" insensitive="true" />
+          <StringDetect String="TO" attribute="Flow" context="#pop!For End" insensitive="true" />
           <IncludeRules context="Expression" />
       </context>
       <context name="For End" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"      attribute="Line Separator" context="#pop"                               />
-          <StringDetect String="STEP" attribute="Ctrl Flow"      context="#pop!Expression" insensitive="true" />
+          <StringDetect String="STEP" attribute="Flow"      context="#pop!Expression" insensitive="true" />
           <IncludeRules context="Expression" />
       </context>
       
@@ -357,11 +364,18 @@ RUN			MSX1
           <DetectChar char='"'                                             attribute="String"   context="Inside String"                           />
       </context>
       
+      <!-- "= EXPRESSION" -->
+      <context name="Equal|Expression" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":"         attribute="Error"    context="#pop"            />
+          <DetectChar char="="         attribute="Operator" context="#pop!Expression" />
+          <DetectChar String="[^\s:]+" attribute="Error"    context="#stay" />
+      </context>
+      
       <!-- ASSIGNMENT -->
       <context name="Assignment" attribute="Normal" lineEndContext="#pop" >
            <DetectChar char=":"         attribute="Error"    context="#pop"                                    />
-           <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Variable Name" insensitive="true" />
            <DetectChar char="="         attribute="Operator" context="#pop!Expression"                         />
+           <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Variable Name" insensitive="true" />
            <RegExpr    String="[^\s:]+" attribute="Error"    context="#stay"                                   />
       </context>
       
@@ -430,7 +444,7 @@ RUN			MSX1
       <itemData name="Variable"            defStyleNum="dsVariable"     />
       <itemData name="Constant"            defStyleNum="dsConstant"     />
       <itemData name="Function"            defStyleNum="dsFunction"     />
-      <itemData name="Ctrl Flow"           defStyleNum="dsControlFlow"  />
+      <itemData name="Flow"                defStyleNum="dsControlFlow"  />
       <itemData name="Line Number"         defStyleNum="dsPreprocessor" />
       <itemData name="Line Separator"      defStyleNum="dsPreprocessor" bold="true" />
       <itemData name="Parameter Separator" defStyleNum="dsNormal"       />
