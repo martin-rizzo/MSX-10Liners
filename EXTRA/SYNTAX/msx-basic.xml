@@ -65,7 +65,7 @@
         <StringDetect String="DEFSNG"   attribute="Command" context="Range of Letters"       insensitive="true" />
         <StringDetect String="DEFSTR"   attribute="Command" context="Range of Letters"       insensitive="true" />
         <StringDetect String="DIM"      attribute="Command" context="Command Parameters"     insensitive="true" />
-        <StringDetect String="DRAW"     attribute="Command" context="Command 1 Parameter"    insensitive="true" />
+        <StringDetect String="DRAW"     attribute="Command" context="1 Command Parameter"    insensitive="true" />
         <StringDetect String="END"      attribute="Flow"    context="Line Finished"          insensitive="true" />
         <StringDetect String="ERASE"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <StringDetect String="ERROR"    attribute="Command" context="Command Parameters"     insensitive="true" />
@@ -87,7 +87,7 @@
         
         <StringDetect String="RESTORE"  attribute="Command" context="Op Line Number"         insensitive="true" />
         <StringDetect String="RESUME"   attribute="Flow"    context="Op Line Number|Next"    insensitive="true" />
-        <StringDetect String="RUN"      attribute="Command" context="Command 1 Parameter"    insensitive="true" />
+        <StringDetect String="RUN"      attribute="Command" context="1 Command Parameter"    insensitive="true" />
         <StringDetect String="SAVE"     attribute="Command" context="Command Parameters"     insensitive="true" />
         <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"     insensitive="true" />
         <StringDetect String="SOUND"    attribute="Command" context="Command Parameters"     insensitive="true" />
@@ -100,7 +100,7 @@
         <StringDetect String="TRON"     attribute="Command" context="Line Finished"          insensitive="true" />
         <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <StringDetect String="WAIT"     attribute="Command" context="Command Parameters"     insensitive="true" />
-        <StringDetect String="WIDTH"    attribute="Command" context="Command 1 Parameter"    insensitive="true" />
+        <StringDetect String="WIDTH"    attribute="Command" context="1 Command Parameter"    insensitive="true" />
       </context>
         <!--
         
@@ -233,17 +233,17 @@ RENUM			MSX1
           <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
       </context>
       
-      <!-- COMMAND PARAMETER (ONLY ONE PARAMETER) -->
-      <context name="Command 1 Parameter" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Line Separator"   context="#pop" />
-          <DetectChar char="," attribute="Error"            context="#pop!Fatal Error" />
-          <IncludeRules context="Expression" />
-      </context>
-      
-      <!-- COMMAND PARAMETERS (MULTIPLE PARAMETERS) -->
+      <!-- COMMAND PARAMETERS -->
       <context name="Command Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator"      context="#pop"  />
           <DetectChar char="," attribute="Parameter Separator" context="#stay" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- COMMAND PARAMETERS (ONLY ONE PARAMETER) -->
+      <context name="1 Command Parameter" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator"   context="#pop" />
+          <DetectChar char="," attribute="Error"            context="#pop!Fatal Error" />
           <IncludeRules context="Expression" />
       </context>
       
