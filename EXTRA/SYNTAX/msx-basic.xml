@@ -72,8 +72,8 @@
         <StringDetect String="FOR"      attribute="Flow"    context="For Parameters"         insensitive="true" />
         <StringDetect String="FILES"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <!-- FN -->
-        <StringDetect String="GOTO"     attribute="Flow"    context="Dest Number Line"       insensitive="true" />
-        <StringDetect String="GOSUB"    attribute="Flow"    context="Dest Number Line"       insensitive="true" />
+        <StringDetect String="GOTO"     attribute="Flow"    context="Line Number"            insensitive="true" />
+        <StringDetect String="GOSUB"    attribute="Flow"    context="Line Number"            insensitive="true" />
         <StringDetect String="INPUT"    attribute="Command" context="Command Parameters"     insensitive="true" />
         <!-- INPUT# -->
         <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"            insensitive="true" />
@@ -85,8 +85,8 @@
         
         
         
-        <StringDetect String="RESTORE"  attribute="Command" context="Dest Number Line"       insensitive="true" />
-        <StringDetect String="RESUME"   attribute="Command" context="Dest Number Line|Next"  insensitive="true" />
+        <StringDetect String="RESTORE"  attribute="Command" context="Op Line Number"         insensitive="true" />
+        <StringDetect String="RESUME"   attribute="Flow"    context="Op Line Number|Next"    insensitive="true" />
         <StringDetect String="RUN"      attribute="Command" context="Command 1 Parameter"    insensitive="true" />
         <StringDetect String="SAVE"     attribute="Command" context="Command Parameters"     insensitive="true" />
         <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"     insensitive="true" />
@@ -224,13 +224,13 @@ RENUM			MSX1
       
       <!-- KEY PARAMETERS (USED ONLY IN THE "KEY" COMMAND) -->
       <context name="Key Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"  attribute="Line Separator" context="#pop" />
-          <StringDetect String="ON"      attribute="Normal"   context="#stay" insensitive="true" />
-          <StringDetect String="OFF"     attribute="Normal"   context="#stay" insensitive="true" />
-          <StringDetect String="LIST"    attribute="Normal"   context="#stay" insensitive="true" />
-          <DetectChar   char="("         attribute="Command"  context="#pop!Index|On Off Stop"   />
-          <RegExpr      String="[0-9]+"  attribute="Normal"   context="#pop!Command Parameters"  />
-          <RegExpr      String="[^\s:]+" attribute="Error"    context="#stay" />
+          <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
+          <StringDetect String="ON"      attribute="Constant"       context="#stay" insensitive="true" />
+          <StringDetect String="OFF"     attribute="Constant"       context="#stay" insensitive="true" />
+          <StringDetect String="LIST"    attribute="Constant"       context="#stay" insensitive="true" />
+          <DetectChar   char="("         attribute="Command"        context="#pop!Index|On Off Stop"   />
+          <RegExpr      String="[0-9]+"  attribute="Normal"         context="#pop!Command Parameters"  />
+          <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
       </context>
       
       <!-- COMMAND PARAMETER (ONLY ONE PARAMETER) -->
@@ -284,19 +284,24 @@ RENUM			MSX1
           <IncludeRules context="Expression" />
       </context>
       
-      <!-- DESTINATION NUMBER LINE (AS THE ONLY PARAMETER) -->
-      <context name="Dest Number Line" attribute="Normal" lineEndContext="#pop"  >
+      <!-- LINE NUMBER (AS THE ONLY PARAMETER) -->
+      <context name="Line Number" attribute="Normal" lineEndContext="#pop"  >
           <DetectChar char=":"            attribute="Error"       context="#pop"               />
           <RegExpr    String="[0-9]{6,}"  attribute="Error"       context="#pop!Fatal Error"   />
           <RegExpr    String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
           <RegExpr    String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error"   />
       </context>
       
-      <!-- DESTINATION NUMBER LINE OR "NEXT" (AS THE ONLY PARAMETER) -->
-      <context name="Dest Number Line|Next" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"       attribute="Error"    context="#pop"                                  />
-          <RegExpr      String="[0-9]" lookAhead="true"     context="#pop!Dest Number Line"                 />
+      <!-- OPTIONAL LINE NUMBER (AS THE ONLY PARAMETER) -->
+      <context name="Op Line Number" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop" />
+          <IncludeRules context="Line Number" />
+      </context>
+      
+      <!-- OPTIONAL LINE NUMBER OR "NEXT" (AS THE ONLY PARAMETER) -->
+      <context name="Op Line Number|Next" attribute="Normal" lineEndContext="#pop" >
           <StringDetect String="NEXT"  attribute="Constant" context="#pop!Line Finished" insensitive="true" />
+          <IncludeRules context="Op Line Number" />
       </context>
       
       <!-- RANGE OF LETTERS PARAMETERS (EXAMPLE: I-N,W-Z) -->
