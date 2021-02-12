@@ -85,10 +85,11 @@
         <StringDetect String="LOAD"     attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="LOCATE"   attribute="Command" context="Command Parameters"       insensitive="true" />
         <!-- LPRINT -->
+        <StringDetect String="MERGE"    attribute="Command" context="1 Command Parameter"      insensitive="true" />
+        <StringDetect String="MID$("    attribute="Command" context="Params+Equal+Expr"        insensitive="true" />
         
+        <StringDetect String="NEW"      attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"           insensitive="true" />
-        
-        
         <StringDetect String="ON"       attribute="Command" context="ON Subcommands"           insensitive="true" />
         <!-- OPEN -->
         <StringDetect String="OUT"      attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -108,7 +109,7 @@
         <StringDetect String="SAVE"     attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="SOUND"    attribute="Command" context="Command Parameters"       insensitive="true" />
-        <StringDetect String="SPRITE$(" attribute="Command" context="Index|Equal|Expression"   insenstivie="true" />
+        <StringDetect String="SPRITE$(" attribute="Command" context="Index+Equal+Expr"         insenstivie="true" />
         <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"              insensitive="true" />
         <StringDetect String="STOP"     attribute="Command" context="On Off Stop"              insensitive="true" />
         <StringDetect String="STRIG("   attribute="Command" context="Index|On Off Stop"        insensitive="true" />
@@ -308,13 +309,22 @@ NEW			MSX1
       </context>
       
       <!-- (INDEX) = EXPRESSION -->
-      <context name="Index|Equal|Expression" attribute="Normal" lineEndContext="#pop" >
+      <context name="Index+Equal+Expr" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+          <DetectChar char=")"  attribute="Command" context="#pop!Equal|Expression" />
+          <DetectSpaces         attribute="Normal"  context="#stay"                 />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- (param,param,..) = EXPRESSION -->
+      <context name="Params+Equal+Expr" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
           <DetectChar char=")" attribute="Command" context="#pop!Equal|Expression" />
+          <DetectChar char="," attribute="Normal"  context="#stay"                 />
+          <DetectSpaces        attribute="Normal"  context="#stay"                 />
           <IncludeRules context="Expression" />
       </context>
       
       <!-- <expression> GOSUB <line-number> -->
-      <context name="Expression+Gosub+Line Number" attribute="Normal" lineEndContext="#pop" >
+      <context name="Expression+Gosub+Line Number" lineEndContext="#pop" >
           <StringDetect String="GOSUB" attribute="Command" context="#pop!Line Number" />
           <IncludeRules context="Expression" />
       </context>
