@@ -80,6 +80,10 @@
         <StringDetect String="KEY"      attribute="Command" context="Key Parameters"         insensitive="true" />
         <StringDetect String="LET"      attribute="Command" context="Assignment"             insensitive="true" />
         <StringDetect String="LINE"     attribute="Command" context="Line Commands"          insensitive="true" />
+        <StringDetect String="LIST"     attribute="Command" context="Line Number Range"      insensitive="true" />
+        <StringDetect String="LLIST"    attribute="Command" context="Line Number Range"      insensitive="true" />
+        <StringDetect String="LOAD"     attribute="Command" context="Command Parameters"     insensitive="true" />
+        <StringDetect String="LOCATE"   attribute="Command" context="Command Parameters"     insensitive="true" />
         
         
         <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"         insensitive="true" />
@@ -88,7 +92,7 @@
         <StringDetect String="PUT"      attribute="Command" context="Put Commands"           insensitive="true" />
         <StringDetect String="READ"     attribute="Command" context="Var Parameters"         insensitive="true" />
         <StringDetect String="REM"      attribute="Remark"  context="Inside Remark"          insensitive="true" />
-        <StringDetect String="RENUM"    attribute="Command" context="Multiple Line Numbers"  insensitive="true" />
+        <StringDetect String="RENUM"    attribute="Command" context="Line Number List"       insensitive="true" />
         <StringDetect String="RESTORE"  attribute="Command" context="Op Line Number"         insensitive="true" />
         <StringDetect String="RESUME"   attribute="Flow"    context="Op Line Number|Next"    insensitive="true" />
         <StringDetect String="RUN"      attribute="Command" context="1 Command Parameter"    insensitive="true" />
@@ -124,10 +128,6 @@
       
         <!--
         
-LIST			MSX1		
-LLIST			MSX1		
-LOAD			MSX1		
-LOCATE			MSX1		
 LPOS()			MSX1		
 LPRINT			MSX1		
 MERGE			MSX1		
@@ -152,7 +152,6 @@ POKE			MSX1
 PRESET			MSX1	MSX2	
 PRINT			MSX1		
 PSET			MSX1	MSX2	
-PUT SPRITE		MSX1	MSX2	
         
         -->
         
@@ -309,21 +308,30 @@ PUT SPRITE		MSX1	MSX2
           <IncludeRules context="Expression" />
       </context>
       
-      <!-- MULTIPLE LINE NUMBERS -->
-      <context name="Multiple Line Numbers" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":"            attribute="Line Separator" context="#pop"              />
-          <DetectChar char=","            attribute="Operator"       context="#stay"             />
-          <RegExpr    String="[0-9]{6,}"  attribute="Error"          context="Error Until Comma" />
-          <RegExpr    String="[0-9]{0,5}" attribute="Line Number"    context="#stay"             />
-          <RegExpr    String="[^\s:,]+"   attribute="Error"          context="Error Until Comma" />
-      </context>
-      
       <!-- LINE NUMBER (AS THE ONLY PARAMETER) -->
       <context name="Line Number" attribute="Normal" lineEndContext="#pop"  >
           <DetectChar char=":"            attribute="Error"       context="#pop"               />
           <RegExpr    String="[0-9]{6,}"  attribute="Error"       context="#pop!Fatal Error"   />
           <RegExpr    String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
           <RegExpr    String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error"   />
+      </context>
+      
+      <!-- LINE NUMBER LIST (LINE1, LINE2, LINE3, ...) -->
+      <context name="Line Number List" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":"            attribute="Line Separator" context="#pop"  />
+          <DetectChar char=","            attribute="Operator"       context="#stay" />
+          <RegExpr    String="[0-9]{6,}"  attribute="Error"          context="#stay" />
+          <RegExpr    String="[0-9]{0,5}" attribute="Line Number"    context="#stay" />
+          <RegExpr    String="[^\s:,]+"   attribute="Error"          context="#stay" />
+      </context>
+      
+      <!-- LINE NUMBER RANGE (START - END) -->
+      <context name="Line Number Range" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":"            attribute="Line Separator" context="#pop"  />
+          <DetectChar char="-"            attribute="Operator"       context="#stay" />
+          <RegExpr    String="[0-9]{6,}"  attribute="Error"          context="#stay" />
+          <RegExpr    String="[0-9]{0,5}" attribute="Line Number"    context="#stay" />
+          <RegExpr    String="[^\s:-]+"   attribute="Error"          context="#stay" />
       </context>
       
       <!-- OPTIONAL LINE NUMBER (AS THE ONLY PARAMETER) -->
