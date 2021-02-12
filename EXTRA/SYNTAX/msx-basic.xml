@@ -257,17 +257,18 @@ PSET			MSX1	MSX2
           <IncludeRules context="Expression" />
       </context>
       
-      <context name="Coord" attribute="Normal" lineEndContext="#pop" >
+      <!-- STEP(x,y)-STEP(x,y) #pop -->
+      <context name="Coord" attribute="Normal" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop" >
           <DetectChar   char=":"        attribute="Line Separator" context="#pop"                />
+          <DetectSpaces                 attribute="Normal"         context="#stay"               />
           <StringDetect String="STEP("  attribute="Function"       context="Function Parameters" />
           <StringDetect String="("      attribute="Function"       context="Function Parameters" />
           <DetectChar   char="-"        attribute="Function"       context="#stay"               />
       </context>
       
-      <!-- STEP(x,y)-STEP(x,y) & COMMAND PARAMETERS -->
-      <context name="Coord+Command Parameters" attribute="Normal" lineEndContext="#pop" >
+      <!-- STEP(x,y)-STEP(x,y) & COMMAND PARAMETERS #pop -->
+      <context name="Coord+Command Parameters" attribute="Normal" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!CommandParameters" >
           <IncludeRules context="Coord" />
-          <RegExpr      String="[^\s]" lookAhead="true" context="#pop!Command Parameters" />
       </context>
       
       <!-- OPTIONAL "#" + COMMAND PARAMETERS -->
