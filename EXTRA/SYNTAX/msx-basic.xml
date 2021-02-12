@@ -87,7 +87,7 @@
         <!-- LPRINT -->
         <StringDetect String="MERGE"    attribute="Command" context="1 Command Parameter"      insensitive="true" />
         <StringDetect String="MID$("    attribute="Command" context="Params+Equal+Expr"        insensitive="true" />
-        
+        <StringDetect String="MOTOR"    attribute="Command" context="ON|OFF"                   insensitive="true" />
         <StringDetect String="NEW"      attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"           insensitive="true" />
         <StringDetect String="ON"       attribute="Command" context="ON Subcommands"           insensitive="true" />
@@ -293,11 +293,17 @@ NEW			MSX1
           <IncludeRules context="Expression" />
       </context>
       
-      <!-- ON / OFF / STOP PARAMETERS -->
+      <!-- "ON" OR "OFF" OR <nothing> -->
+      <context name="ON|OFF" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+          <DetectChar   char=":"     attribute="Line Separator" context="#pop" />
+          <DetectSpaces              attribute="Normal"         context="#stay" />
+          <StringDetect String="ON"  attribute="Constant"       context="#stay" insensitive="true" />
+          <StringDetect String="OFF" attribute="Constant"       context="#stay" insensitive="true" />
+      </context>
+      
+      <!-- "ON" OR "OFF" OR "STOP" OR <nothing> -->
       <context name="On Off Stop" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
-          <StringDetect String="ON"      attribute="Constant"       context="#stay" insensitive="true" />
-          <StringDetect String="OFF"     attribute="Constant"       context="#stay" insensitive="true" />
           <StringDetect String="STOP"    attribute="Constant"       context="#stay" insensitive="true" />
           <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
       </context>
