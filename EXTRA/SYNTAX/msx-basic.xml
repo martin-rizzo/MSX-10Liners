@@ -88,6 +88,9 @@
         
         <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"           insensitive="true" />
         
+        
+        <StringDetect String="ON"       attribute="Command" context="ON Subcommands"           insensitive="true" />
+        <!-- OPEN -->
         <StringDetect String="OUT"      attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="PAINT"    attribute="Command" context="Coord+Command Parameters" insensitive="true" />
         <StringDetect String="PLAY"     attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -123,6 +126,16 @@
         <RegExpr      String="[^\s]"  attribute="Error"   context="#pop!Fatal Error"                                 />
       </context>
       
+      <context name="ON Subcommands" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Expression+Go+Line Number List" >
+        <StringDetect String="ERROR"    attribute="Command" context="Goto+Line Number"       insensitive="true" />
+        <StringDetect String="INTERVAL" attribute="Command" context="Expression+Gosub+Line Number" insensitive="true" />
+        <StringDetect String="KEY"      attribute="Command" context="Gosub+Line Number List" insensitive="true" />
+        <StringDetect String="SPRITE"   attribute="Command" context="Gosub+Line Number"      insensitive="true" />
+        <StringDetect String="STOP"     attribute="Command" context="Gosub+Line Number"      insensitive="true" />
+        <StringDetect String="STRIG"    attribute="Command" context="Gosub+Line Number List" insensitive="true" />
+        <DetectSpaces                   attribute="Normal"  context="#stay" />
+      </context>
+      
       <context name="Put Commands" lineEndContext="#pop">
         <DetectChar   char=":"         attribute="Error"   context="#pop"                                       />
         <StringDetect String="SPRITE"  attribute="Command" context="#pop!Command Parameters" insensitive="true" />
@@ -138,16 +151,6 @@ MERGE			MSX1
 MID$()			MSX1		
 MOTOR			MSX1		
 NEW			MSX1		
-ON...GOSUB		MSX1		
-ON...GOTO		MSX1		
-ON ERROR GOTO		MSX1		
-ON INTERVAL GOSUB	MSX1		
-ON KEY GOSUB		MSX1		
-ON SPRITE GOSUB		MSX1		
-ON STOP GOSUB		MSX1		
-ON STRIG GOSUB		MSX1		
-OPEN			MSX1		
-OUT			MSX1		
         
         -->
         
@@ -310,6 +313,19 @@ OUT			MSX1
           <IncludeRules context="Expression" />
       </context>
       
+      <!-- <expression> GOSUB <line-number> -->
+      <context name="Expression+Gosub+Line Number" attribute="Normal" lineEndContext="#pop" >
+          <StringDetect String="GOSUB" attribute="Command" context="#pop!Line Number" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- <expression> GOTO/GOSUB <line-number>, <line-number>, ... -->
+      <context name="Expression+Go+Line Number List" attribute="Normal" lineEndContext="#pop" >
+          <StringDetect String="GOTO"  attribute="Command" context="#pop!Line Number List" />
+          <StringDetect String="GOSUB" attribute="Command" context="#pop!Line Number List" />
+          <IncludeRules context="Expression" />
+      </context>
+      
       <!-- LINE NUMBER (AS THE ONLY PARAMETER) -->
       <context name="Line Number" attribute="Normal" lineEndContext="#pop"  >
           <DetectChar char=":"            attribute="Error"       context="#pop"               />
@@ -334,6 +350,24 @@ OUT			MSX1
           <RegExpr    String="[0-9]{6,}"  attribute="Error"          context="#stay" />
           <RegExpr    String="[0-9]{0,5}" attribute="Line Number"    context="#stay" />
           <RegExpr    String="[^\s:-]+"   attribute="Error"          context="#stay" />
+      </context>
+      
+      <!-- GOTO <line-number> -->
+      <context name="Goto+Line Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+          <StringDetect String="GOTO" attribute="Command" context="#pop!Line Number" />
+          <DetectSpaces               attribute="Normal"  context="#stay"            />
+      </context>
+      
+      <!-- GOSUB <line-number> -->
+      <context name="Gosub+Line Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+          <StringDetect String="GOSUB" attribute="Command" context="#pop!Line Number" />
+          <DetectSpaces                attribute="Normal"  context="#stay"            />
+      </context>
+      
+      <!-- GOSUB <line-number>, <line-number>, ... -->
+      <context name="Gosub+Line Number List" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+          <StringDetect String="GOSUB" attribute="Command" context="#pop!Line Number List" />
+          <DetectSpaces                attribute="Normal"  context="#stay"                 />
       </context>
       
       <!-- OPTIONAL LINE NUMBER (AS THE ONLY PARAMETER) -->
