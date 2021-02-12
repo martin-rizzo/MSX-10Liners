@@ -262,7 +262,7 @@ OUT			MSX1
           <DetectChar   char="-"        attribute="Function"       context="#stay"               />
       </context>
       
-      <!-- STEP(x,y)-STEP(x,y) & COMMAND PARAMETERS #pop -->
+      <!-- STEP(x,y)-STEP(x,y) + COMMAND PARAMETERS #pop -->
       <context name="Coord+Command Parameters" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Command Parameters" >
           <IncludeRules context="Coord" />
       </context>
@@ -355,7 +355,7 @@ OUT			MSX1
           <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
       </context>
       
-      <!-- "FOR" PARAMETERS (INCLUDING "TO" & "STEP") -->
+      <!-- "FOR" PARAMETERS (INCLUDING "TO" and "STEP") -->
       <context name="For Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":"         attribute="Error"    context="#pop"                                           />
           <DetectChar char="="         attribute="Operator" context="#pop!For Start"                                 />
@@ -374,7 +374,7 @@ OUT			MSX1
           <IncludeRules context="Expression" />
       </context>
       
-      <!-- "IF" PARAMETERS (INCLUDING "THEN/GOTO" & "ELSE") -->
+      <!-- "IF" PARAMETERS (INCLUDING "THEN/GOTO" and "ELSE") -->
       <context name="If Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"      attribute="Error" context="#pop" />
           <StringDetect String="THEN" attribute="Flow"  context="#pop"         insensitive="true" />
@@ -414,6 +414,9 @@ OUT			MSX1
           <DetectChar char="(" attribute="Operator"       context="Expression" />
           <IncludeRules context="Operators" />
           <IncludeRules context="Functions" />
+          <StringDetect String="&amp;H" attribute="Hex Number"    context="Inside Hex Number"    insensitive="true" />
+          <StringDetect String="&amp;O" attribute="Octal Number"  context="Inside Octal Number"  insensitive="true" />
+          <StringDetect String="&amp;B" attribute="Binary Number" context="Inside Binary Number" insensitive="true" />
           <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([ED][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"                insensitive="true" />
           <RegExpr    String="[A-Z]"                                       attribute="Variable" context="Inside Variable Name" insensitive="true" />
           <DetectChar char='"'                                             attribute="String"   context="Inside String"                           />
@@ -474,6 +477,21 @@ OUT			MSX1
       <context name="Inside Remark" attribute="Remark" lineEndContext="#pop" >
       </context>
       
+      <!-- INSIDE A HEX NUMBER (&Hxxxx) -->
+      <context name="Inside Hex Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop" >
+          <AnyChar String="0123456789ABCDEF" attribute="Hex Number" context="#stay" insensitive="true" />
+      </context>
+      
+      <!-- INSIDE AN OCTAL NUMER (&Oxxxx) -->
+      <context name="Inside Octal Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop" >
+          <AnyChar String="01234567" attribute="Octal Number" context="#stay" />
+      </context>
+      
+      <!-- INSIDE A BINARY NUMBER (&Bxxxx) -->
+      <context name="Inside Binary Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop" >
+          <AnyChar String="01" attribute="Octal Number" context="#stay" />
+      </context>
+      
 
 <!--
 ==============================================================================================
@@ -513,10 +531,9 @@ OUT			MSX1
       <itemData name="Keyword"             defStyleNum="dsKeyword"      />
       <itemData name="Operator"            defStyleNum="dsOperator"     />
       <itemData name="Number"              defStyleNum="dsDecVal"       />
-      <!--
       <itemData name="Hex Number"          defStyleNum="dsBaseN"        />
       <itemData name="Octal Number"        defStyleNum="dsBaseN"        />
-      -->
+      <itemData name="Binary Number"       defStyleNum="dsBaseN"        />
       <itemData name="Variable"            defStyleNum="dsVariable"     />
       <itemData name="Constant"            defStyleNum="dsConstant"     />
       <itemData name="Function"            defStyleNum="dsFunction"     />
