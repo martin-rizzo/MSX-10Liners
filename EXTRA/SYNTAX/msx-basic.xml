@@ -84,11 +84,15 @@
         <StringDetect String="LLIST"    attribute="Command" context="Line Number Range"      insensitive="true" />
         <StringDetect String="LOAD"     attribute="Command" context="Command Parameters"     insensitive="true" />
         <StringDetect String="LOCATE"   attribute="Command" context="Command Parameters"     insensitive="true" />
-        
+        <!-- LPRINT -->
         
         <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"         insensitive="true" />
         
         
+        <StringDetect String="PLAY"     attribute="Command" context="Command Parameters"       insensitive="true" />
+        <StringDetect String="POKE"     attribute="Command" context="Command Parameters"       insensitive="true" />
+        <StringDetect String="PRESET"   attribute="Command" context="Coord+Command Parameters" insensitive="true" />
+        <!-- PRINT -->
         <StringDetect String="PSET"     attribute="Command" context="Coord+Command Parameters" insensitive="true" />
         <StringDetect String="PUT"      attribute="Command" context="Put Commands"             insensitive="true" />
         <StringDetect String="READ"     attribute="Command" context="Var Parameters"           insensitive="true" />
@@ -129,7 +133,6 @@
       
         <!--
         
-LPRINT			MSX1		
 MERGE			MSX1		
 MID$()			MSX1		
 MOTOR			MSX1		
@@ -146,12 +149,6 @@ OPEN			MSX1
 OUT			MSX1		
 PAINT			MSX1		
 PLAY			MSX1		
-PLAY()			MSX1		
-POINT			MSX1		
-POKE			MSX1		
-PRESET			MSX1	MSX2	
-PRINT			MSX1		
-PSET			MSX1	MSX2	
         
         -->
         
