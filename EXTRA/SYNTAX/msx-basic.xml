@@ -390,6 +390,7 @@ PSET			MSX1	MSX2
           <RegExpr    String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
           <RegExpr    String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error"   />
       </context>
+      
 <!--
 ==============================================================================================
                                    EXPRESSIONS
@@ -397,6 +398,7 @@ PSET			MSX1	MSX2
 -->
       
       <!-- OPERATORS -->
+      <!-- it's only to be included in other contexts -->
       <context name="Operators" >
           <AnyChar String="+-*/^\=&lt;&gt;" attribute="Operator" context="#stay" />
           <StringDetect String="OR"  attribute="Operator" context="#stay" insensitive="true" />
@@ -409,8 +411,11 @@ PSET			MSX1	MSX2
       </context>
       
       <!-- EXPRESSION -->
-      <context name="Expression" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Line Separator" context="#pop" />
+      <!-- it's only to be included in other context -->
+      <context name="Expression" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop"       />
+          <DetectChar char=")" attribute="Operator"       context="#pop"       />
+          <DetectChar char="(" attribute="Operator"       context="Expression" />
           <IncludeRules context="Operators" />
           <IncludeRules context="Functions" />
           <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([ED][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"                insensitive="true" />
