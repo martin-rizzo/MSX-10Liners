@@ -267,7 +267,7 @@ PSET			MSX1	MSX2
       </context>
       
       <!-- STEP(x,y)-STEP(x,y) & COMMAND PARAMETERS #pop -->
-      <context name="Coord+Command Parameters" attribute="Normal" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!CommandParameters" >
+      <context name="Coord+Command Parameters" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Command Parameters" >
           <IncludeRules context="Coord" />
       </context>
       
@@ -412,8 +412,7 @@ PSET			MSX1	MSX2
       </context>
       
       <!-- EXPRESSION -->
-      <!-- it's only to be included in other context -->
-      <context name="Expression" >
+      <context name="Expression" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop"       />
           <DetectChar char=")" attribute="Operator"       context="#pop"       />
           <DetectChar char="(" attribute="Operator"       context="Expression" />
