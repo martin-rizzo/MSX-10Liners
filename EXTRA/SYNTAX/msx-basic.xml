@@ -89,26 +89,27 @@
         <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"         insensitive="true" />
         
         
-        <StringDetect String="PUT"      attribute="Command" context="Put Commands"           insensitive="true" />
-        <StringDetect String="READ"     attribute="Command" context="Var Parameters"         insensitive="true" />
-        <StringDetect String="REM"      attribute="Remark"  context="Inside Remark"          insensitive="true" />
-        <StringDetect String="RENUM"    attribute="Command" context="Line Number List"       insensitive="true" />
-        <StringDetect String="RESTORE"  attribute="Command" context="Op Line Number"         insensitive="true" />
-        <StringDetect String="RESUME"   attribute="Flow"    context="Op Line Number|Next"    insensitive="true" />
-        <StringDetect String="RUN"      attribute="Command" context="1 Command Parameter"    insensitive="true" />
-        <StringDetect String="SAVE"     attribute="Command" context="Command Parameters"     insensitive="true" />
-        <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"     insensitive="true" />
-        <StringDetect String="SOUND"    attribute="Command" context="Command Parameters"     insensitive="true" />
-        <StringDetect String="SPRITE$(" attribute="Command" context="Index|Equal|Expression" insenstivie="true" />
-        <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"            insensitive="true" />
-        <StringDetect String="STOP"     attribute="Command" context="On Off Stop"            insensitive="true" />
-        <StringDetect String="STRIG("   attribute="Command" context="Index|On Off Stop"      insensitive="true" />
-        <StringDetect String="SWAP"     attribute="Command" context="Var Parameters"         insensitive="true" />
-        <StringDetect String="TROFF"    attribute="Command" context="Line Finished"          insensitive="true" />
-        <StringDetect String="TRON"     attribute="Command" context="Line Finished"          insensitive="true" />
-        <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters"     insensitive="true" />
-        <StringDetect String="WAIT"     attribute="Command" context="Command Parameters"     insensitive="true" />
-        <StringDetect String="WIDTH"    attribute="Command" context="1 Command Parameter"    insensitive="true" />
+        <StringDetect String="PSET"     attribute="Command" context="Coord+Command Parameters" insensitive="true" />
+        <StringDetect String="PUT"      attribute="Command" context="Put Commands"             insensitive="true" />
+        <StringDetect String="READ"     attribute="Command" context="Var Parameters"           insensitive="true" />
+        <StringDetect String="REM"      attribute="Remark"  context="Inside Remark"            insensitive="true" />
+        <StringDetect String="RENUM"    attribute="Command" context="Line Number List"         insensitive="true" />
+        <StringDetect String="RESTORE"  attribute="Command" context="Op Line Number"           insensitive="true" />
+        <StringDetect String="RESUME"   attribute="Flow"    context="Op Line Number|Next"      insensitive="true" />
+        <StringDetect String="RUN"      attribute="Command" context="1 Command Parameter"      insensitive="true" />
+        <StringDetect String="SAVE"     attribute="Command" context="Command Parameters"       insensitive="true" />
+        <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"       insensitive="true" />
+        <StringDetect String="SOUND"    attribute="Command" context="Command Parameters"       insensitive="true" />
+        <StringDetect String="SPRITE$(" attribute="Command" context="Index|Equal|Expression"   insenstivie="true" />
+        <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"              insensitive="true" />
+        <StringDetect String="STOP"     attribute="Command" context="On Off Stop"              insensitive="true" />
+        <StringDetect String="STRIG("   attribute="Command" context="Index|On Off Stop"        insensitive="true" />
+        <StringDetect String="SWAP"     attribute="Command" context="Var Parameters"           insensitive="true" />
+        <StringDetect String="TROFF"    attribute="Command" context="Line Finished"            insensitive="true" />
+        <StringDetect String="TRON"     attribute="Command" context="Line Finished"            insensitive="true" />
+        <StringDetect String="VPOKE"    attribute="Command" context="Command Parameters"       insensitive="true" />
+        <StringDetect String="WAIT"     attribute="Command" context="Command Parameters"       insensitive="true" />
+        <StringDetect String="WIDTH"    attribute="Command" context="1 Command Parameter"      insensitive="true" />
       </context>
       
       <context name="Line Commands" lineEndContext="#pop">
@@ -128,7 +129,6 @@
       
         <!--
         
-LPOS()			MSX1		
 LPRINT			MSX1		
 MERGE			MSX1		
 MID$()			MSX1		
@@ -189,7 +189,7 @@ PSET			MSX1	MSX2
         <StringDetect String="PDL("     attribute="Function" context="1 Function Parameter" insensitive="true" />
         <StringDetect String="PEEK("    attribute="Function" context="1 Function Parameter" insensitive="true" />
         <StringDetect String="PLAY("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <!-- POINT STEP -->
+        <StringDetect String="POINT"    attribute="Function" context="Coord"                insensitive="true" />
         <StringDetect String="POS("     attribute="Function" context="1 Function Parameter" insensitive="true" />
         <StringDetect String="RIGHT$("  attribute="Function" context="Function Parameters"  insensitive="true" />
         <StringDetect String="RND("     attribute="Function" context="1 Function Parameter" insensitive="true" />
@@ -257,12 +257,17 @@ PSET			MSX1	MSX2
           <IncludeRules context="Expression" />
       </context>
       
+      <context name="Coord" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar   char=":"        attribute="Line Separator" context="#pop"                />
+          <StringDetect String="STEP("  attribute="Function"       context="Function Parameters" />
+          <StringDetect String="("      attribute="Function"       context="Function Parameters" />
+          <DetectChar   char="-"        attribute="Function"       context="#stay"               />
+      </context>
+      
       <!-- STEP(x,y)-STEP(x,y) & COMMAND PARAMETERS -->
-      <context name="Coord+Command Parameters" attriute="Normal" lineEndContext="#pop" >
-          <StringDetect String="STEP("  attribute="Function" context="Function Parameters"     />
-          <StringDetect String="("      attribute="Function" context="Function Parameters"     />
-          <DetectChar   char="-"        attribute="Function" context="#stay"                   />
-          <RegExpr      String="[^\s]"  lookAhead="true"     context="#pop!Command Parameters" />
+      <context name="Coord+Command Parameters" attribute="Normal" lineEndContext="#pop" >
+          <IncludeRules context="Coord" />
+          <RegExpr      String="[^\s]" lookAhead="true" context="#pop!Command Parameters" />
       </context>
       
       <!-- OPTIONAL "#" + COMMAND PARAMETERS -->
