@@ -64,6 +64,7 @@
         <StringDetect String="DEFINT"   attribute="Command" context="DEFINT Parameters"        insensitive="true" />
         <StringDetect String="DEFSNG"   attribute="Command" context="DEFINT Parameters"        insensitive="true" />
         <StringDetect String="DEFSTR"   attribute="Command" context="DEFINT Parameters"        insensitive="true" />
+        <StringDetect String="DEF"      attribute="Command" context="DEF Parameters"           insensitive="true" />
         <StringDetect String="DIM"      attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="DRAW"     attribute="Command" context="1 Command Parameter"      insensitive="true" />
         <StringDetect String="END"      attribute="Flow"    context="Line Finished"            insensitive="true" />
@@ -147,56 +148,57 @@
       
       <!-- FUNCTIONS -->
       <context name="Functions" lineEndContext="#pop" >
-        <StringDetect String="ABS("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="ASC("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="ATN("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="BASE("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="BIN$("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="CDBL("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="CHR$("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="CINT("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="COS("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="CSNG("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="EOF("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="EXP("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="FIX("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="FRE("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="HEX$("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="INP("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="INPUT$("  attribute="Function" context="Function Parameters"  insensitive="true" />
-        <StringDetect String="INSTR("   attribute="Function" context="Function Parameters"  insensitive="true" />
-        <StringDetect String="INT("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="LEFT$("   attribute="Function" context="Function Parameters"  insensitive="true" />
-        <StringDetect String="LEN("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="LOG("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="LPOS("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="MID$("    attribute="Function" context="Function Parameters"  insensitive="true" />
-        <StringDetect String="OCT$("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="PAD("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="PDL("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="PEEK("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="PLAY("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="POINT"    attribute="Function" context="Coord"                insensitive="true" />
-        <StringDetect String="POS("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="RIGHT$("  attribute="Function" context="Function Parameters"  insensitive="true" />
-        <StringDetect String="RND("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="SGN("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="SIN("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="SPACE$("  attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="ABS("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="ASC("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="ATN("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="BASE("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="BIN$("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="CDBL("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="CHR$("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="CINT("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="COS("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="CSNG("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="EOF("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="EXP("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="FIX("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="FN"  attribute="User Function" context="FN Function Parameters" insensitive="true" />
+        <StringDetect String="FRE("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="HEX$("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="INP("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="INPUT$("  attribute="Function" context="Function Parameters"    insensitive="true" />
+        <StringDetect String="INSTR("   attribute="Function" context="Function Parameters"    insensitive="true" />
+        <StringDetect String="INT("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="LEFT$("   attribute="Function" context="Function Parameters"    insensitive="true" />
+        <StringDetect String="LEN("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="LOG("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="LPOS("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="MID$("    attribute="Function" context="Function Parameters"    insensitive="true" />
+        <StringDetect String="OCT$("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="PAD("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="PDL("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="PEEK("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="PLAY("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="POINT"    attribute="Function" context="Coord"                  insensitive="true" />
+        <StringDetect String="POS("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="RIGHT$("  attribute="Function" context="Function Parameters"    insensitive="true" />
+        <StringDetect String="RND("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="SGN("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="SIN("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="SPACE$("  attribute="Function" context="1 Function Parameter"   insensitive="true" />
         <!-- SPC ?? -->
-        <StringDetect String="SPRITE$(" attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="SQR("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="STICK("   attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="STR$("    attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="STRIG("   attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="STRING$(" attribute="Function" context="Function Parameters"  insensitive="true" />
+        <StringDetect String="SPRITE$(" attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="SQR("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="STICK("   attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="STR$("    attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="STRIG("   attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="STRING$(" attribute="Function" context="Function Parameters"    insensitive="true" />
         <!-- TAB ?? -->
-        <StringDetect String="TAN("     attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="TAN("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
         <!-- USR<Number>(x) -->
-        <StringDetect String="VAL("     attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="VAL("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
         <!-- VARPTR(<VariableName>) VARPTR(#<FileNumber>) -->
-        <StringDetect String="VDP("     attribute="Function" context="1 Function Parameter" insensitive="true" />
-        <StringDetect String="VPEEK("   attribute="Function" context="1 Function Parameter" insensitive="true" />
+        <StringDetect String="VDP("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
+        <StringDetect String="VPEEK("   attribute="Function" context="1 Function Parameter"   insensitive="true" />
       </context>
       
 <!--
@@ -245,22 +247,6 @@
       <context name="Hash+Command Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char="#"       attribute="Number" context="#pop!Command Parameters" />
           <RegExpr    String="[^\s]" lookAhead="true"   context="#pop!Command Parameters" />
-      </context>
-      
-      <!-- FUNCTION PARAMETERS -->
-      <context name="Function Parameters" lineEndContext="#pop" >
-          <DetectChar char=")" attribute="Function"            context="#pop" />
-          <DetectChar char=":" attribute="Error"               context="#pop" />
-          <DetectChar char="," attribute="Parameter Separator" context="#stay" />
-          <IncludeRules context="Expression" />
-      </context>
-      
-      <!-- FUNCTION PARAMETERS (ONLY ONE PARAMETER) -->
-      <context name="1 Function Parameter" lineEndContext="#pop" >
-          <DetectChar char=")" attribute="Function" context="#pop"     />
-          <DetectChar char=":" attribute="Error"    context="#pop#pop" />
-          <DetectChar char="," attribute="Error"    context="#pop!Error Until Bracket" />
-          <IncludeRules context="Expression" />
       </context>
       
       <!-- "ON" OR "OFF" OR <nothing> -->
@@ -368,6 +354,34 @@
           <IncludeRules context="Op Line Number" />
       </context>
       
+      
+      <!-- FUNCTION PARAMETERS (ONLY ONE PARAMETER) -->
+      <context name="1 Function Parameter" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Error"    context="#pop#pop" />
+          <DetectChar char=")" attribute="Function" context="#pop"     />
+          <DetectChar char="," attribute="Error"    context="#pop!Error Until Bracket" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- FUNCTION PARAMETERS -->
+      <context name="Function Parameters" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Error"               context="#pop"  />
+          <DetectChar char=")" attribute="Function"            context="#pop"  />
+          <DetectChar char="," attribute="Parameter Separator" context="#stay" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- "FN" FUNCTION PARAMETERS -->
+      <context name="FN Function Parameters" attribute="Error" lineEndContext="#pop" >
+          <DetectChar char=":"                attribute="Error"         context="#pop" />
+          <RegExpr    String="[A-Z][0-9A-Z]*" attribute="User Function" context="#pop!FN/Optional User Parameters" insensitive="true" />
+          <DetectSpaces                       attribute="Normal"        context="#stay" />
+      </context>
+      <context name="FN/Optional User Parameters" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop"  >
+          <DetectChar char="(" attribute="User Function"  context="#pop!Function Parameters" />
+          <DetectSpaces        attribute="Normal"         context="#stay"                    />
+      </context>
+
 <!--
 ==============================================================================================
                                  COMMAND SPECIFIC PARAMETERS
@@ -394,8 +408,25 @@
       <!-- "DEFINT"/"DEFSNG"/"DEFDLB"/"DEFSTR" PARAMETERS (EXAMPLE: I-N,W-Z) -->
       <context name="DEFINT Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop"  />
-          <DetectChar char="-" attribute="Operator" context="#stay" />
+          <DetectChar char="-" attribute="Operator"       context="#stay" />
           <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
+      </context>
+      
+      <!-- "DEF FNxxx" PARAMETERS -->
+      <context name="DEF Parameters" attribute="Error" lineEndContext="#pop" >
+          <DetectChar   char=":"    attribute="Error"         context="#pop"                            />
+          <StringDetect String="FN" attribute="User Function" context="#pop!DEF:Name+Params+Equal+Expr" />
+          <DetectSpaces             attribute="Normal"        context="#stay"                           />
+      </context>
+      <context name="DEF:Name+Params+Equal+Expr" attribute="Error" lineEndContext="#pop" >
+          <RegExpr      String="[A-Z][0-9A-Z]*\$?" attribute="User Function" context="#pop!DEF:Params+Equal+Expr" />
+          <DetectSpaces                            attribute="Normal"        context="#stay"                      />
+      </context>
+      <context name="DEF:Params+Equal+Expr" lineEndContext="#pop" >
+          <DetectChar  char=":" attribute="Error"         cotnext="#pop"                   />
+          <DetectChar  char="(" attribute="User Function" context="#pop!Params+Equal+Expr" />
+          <DetectChar  char="=" attribute="Operator"      context="#pop!Expression"        />
+          <DetectSpaces         attribute="Normal"        context="#stay"                  />
       </context>
       
       <!-- "FOR" PARAMETERS (INCLUDING "TO" and "STEP") -->
@@ -618,8 +649,9 @@
       <itemData name="Normal"              defStyleNum="dsNormal"       />
       <itemData name="Normal Text"         defStyleNum="dsNormal"       />
       <itemData name="Char"                defStyleNum="dsChar"         />
-      <itemData name="Command"             defStyleNum="dsBuiltIn"      />
-      <itemData name="Keyword"             defStyleNum="dsKeyword"      />
+      <itemData name="Command"             defStyleNum="dsKeyword"      />
+      <itemData name="Function"            defStyleNum="dsBuiltIn"      />
+      <itemData name="User Function"       defStyleNum="dsFunction"     />
       <itemData name="Operator"            defStyleNum="dsOperator"     />
       <itemData name="Number"              defStyleNum="dsDecVal"       />
       <itemData name="Hex Number"          defStyleNum="dsBaseN"        />
@@ -627,7 +659,6 @@
       <itemData name="Binary Number"       defStyleNum="dsBaseN"        />
       <itemData name="Variable"            defStyleNum="dsVariable"     />
       <itemData name="Constant"            defStyleNum="dsConstant"     />
-      <itemData name="Function"            defStyleNum="dsFunction"     />
       <itemData name="Remark"              defStyleNum="dsComment"      />
       <itemData name="Flow"                defStyleNum="dsControlFlow"  />
       <itemData name="Line Number"         defStyleNum="dsPreprocessor" />
