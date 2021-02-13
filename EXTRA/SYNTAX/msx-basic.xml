@@ -91,7 +91,7 @@
         <StringDetect String="NEW"      attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="NEXT"     attribute="Flow"    context="Var Parameters"           insensitive="true" />
         <StringDetect String="ON"       attribute="Command" context="ON Subcommands"           insensitive="true" />
-        <!-- OPEN -->
+        <StringDetect String="OPEN"     attribute="Command" context="OPEN Parameters"          insensitive="true" />
         <StringDetect String="OUT"      attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="PAINT"    attribute="Command" context="Coord+Command Parameters" insensitive="true" />
         <StringDetect String="PLAY"     attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -446,6 +446,28 @@
           <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
       </context>
       
+      <!-- "OPEN" PARAMETERS -->
+      <context name="OPEN Parameters" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":"                 attribute="Line Separator" context="#pop" />
+          <RegExpr    String="(FOR|AS|LENGTH)" lookAhead="true"           context="OPEN:Last Parameters" insensitive="true" />
+          <IncludeRules context="Expression" />
+      </context>
+      <context name="OPEN:Last Parameters" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar  char=":" attribute="Line Separator" context="#pop" />
+          <StringDetect String="FOR" attribute="Command" context="OPEN:Direction" insensitive="true" />
+          <StringDetect String="AS"  attribute="Command" context="File Number"    insensitive="true" />
+          <StringDetect String="LEN" attribute="Command" context="OPEN:Length"    insensitive="true" />
+      </context>
+      <context name="OPEN:Direction" attribute="Error" lineEndContext="#pop" >
+          <DetectChar   char=":"                       lookAhead="true"     context="#pop"  />
+          <RegExpr      String="(OUTPUT|INPUT|APPEND)" attribute="Constant" context="#pop"  />
+          <DetectSpaces                                attribute="Normal"   context="#stay" />
+      </context>
+      <context name="OPEN:Length" attribute="Error" lineEndContext="#pop" >
+          <DetectChar   char="=" attribute="Command" context="#pop!Expression" />
+          <DetectSpaces          attribute="Normal"  context="#stay"           />
+      </context>
+      
 <!--
 ==============================================================================================
                                    EXPRESSIONS
@@ -550,7 +572,18 @@
           <AnyChar String="01" attribute="Octal Number" context="#stay" />
       </context>
       
-
+      <!-- (#<file-number> | #<expression>) // the hash is optional -->
+      <context name="File Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!File Number:Expr" >
+          <DetectChar   char=":"     lookAhead="true"   context="#pop"                  />
+          <DetectChar   char="#"     attribute="Number" context="#pop!File Number:Expr" />
+          <DetectSpaces              attribute="Normal" context="#stay"                 />
+      </context>
+      <context name="File Number:Expr" lineEndContext="#pop" >
+          <!-- escape to the "LEN" parameter of the OPEN command -->
+          <StringDetect String="LEN" lookAhead="true" context="#pop" insensitive="true" />
+          <IncludeRules context="Expression" />
+      </context>
+      
 <!--
 ==============================================================================================
                                      SPECIAL
