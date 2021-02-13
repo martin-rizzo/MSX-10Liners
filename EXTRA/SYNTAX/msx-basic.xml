@@ -46,10 +46,11 @@
 
       <!-- COMMANDS -->
       <context name="Commands" >
+        <DetectChar   char="_"          attribute="Command" context="CALL Parameters"          insensitive="true" />
         <StringDetect String="BEEP"     attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="BLOAD"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="BSAVE"    attribute="Command" context="Command Parameters"       insensitive="true" />
-        <!-- CALL -->
+        <StringDetect String="CALL"     attribute="Command" context="CALL Parameters"          insensitive="true" />
         <StringDetect String="CIRCLE"   attribute="Command" context="Coord+Command Parameters" insensitive="true" />
         <StringDetect String="CLEAR"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="CLOAD"    attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -59,21 +60,21 @@
         <StringDetect String="COLOR"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="CSAVE"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="DATA"     attribute="Command" context="Command Parameters"       insensitive="true" />
-        <StringDetect String="DEFDBL"   attribute="Command" context="Range of Letters"         insensitive="true" />
-        <StringDetect String="DEFINT"   attribute="Command" context="Range of Letters"         insensitive="true" />
-        <StringDetect String="DEFSNG"   attribute="Command" context="Range of Letters"         insensitive="true" />
-        <StringDetect String="DEFSTR"   attribute="Command" context="Range of Letters"         insensitive="true" />
+        <StringDetect String="DEFDBL"   attribute="Command" context="DEFINT Parameters"        insensitive="true" />
+        <StringDetect String="DEFINT"   attribute="Command" context="DEFINT Parameters"        insensitive="true" />
+        <StringDetect String="DEFSNG"   attribute="Command" context="DEFINT Parameters"        insensitive="true" />
+        <StringDetect String="DEFSTR"   attribute="Command" context="DEFINT Parameters"        insensitive="true" />
         <StringDetect String="DIM"      attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="DRAW"     attribute="Command" context="1 Command Parameter"      insensitive="true" />
         <StringDetect String="END"      attribute="Flow"    context="Line Finished"            insensitive="true" />
         <StringDetect String="ERASE"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="ERROR"    attribute="Command" context="Command Parameters"       insensitive="true" />
-        <StringDetect String="FOR"      attribute="Flow"    context="For Parameters"           insensitive="true" />
+        <StringDetect String="FOR"      attribute="Flow"    context="FOR Parameters"           insensitive="true" />
         <StringDetect String="FILES"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <!-- FN -->
         <StringDetect String="GOSUB"    attribute="Flow"    context="Line Number"              insensitive="true" />
         <StringDetect String="GOTO"     attribute="Flow"    context="Line Number"              insensitive="true" />
-        <StringDetect String="IF"       attribute="Flow"    context="If Parameters"            insensitive="true" />
+        <StringDetect String="IF"       attribute="Flow"    context="IF Parameters"            insensitive="true" />
         <StringDetect String="INPUT"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <!-- INPUT# -->
         <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"              insensitive="true" />
@@ -145,19 +146,6 @@
       
       
       
-      
-        <!--
-        
-MERGE			MSX1		
-MID$()			MSX1		
-MOTOR			MSX1		
-NEW			MSX1		
-        
-        -->
-        
-        
-        
-      
       <!-- FUNCTIONS -->
       <context name="Functions" lineEndContext="#pop" >
         <StringDetect String="ABS("     attribute="Function" context="1 Function Parameter" insensitive="true" />
@@ -214,7 +202,7 @@ NEW			MSX1
       
 <!--
 ==============================================================================================
-                                   PARAMETERS
+                                   GENERIC PARAMETERS
 ==============================================================================================
 -->
       
@@ -398,46 +386,72 @@ NEW			MSX1
           <IncludeRules context="Op Line Number" />
       </context>
       
-      <!-- RANGE OF LETTERS PARAMETERS (EXAMPLE: I-N,W-Z) -->
-      <context name="Range of Letters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Line Separator" context="#pop"  />
-          <DetectChar char="-" attribute="Operator" context="#stay" />
-          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
-      </context>
-      
-      <!-- "FOR" PARAMETERS (INCLUDING "TO" and "STEP") -->
-      <context name="For Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":"         attribute="Error"    context="#pop"                                           />
-          <DetectChar char="="         attribute="Operator" context="#pop!For Start"                                 />
-          <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Simple Variable Name" insensitive="true" />
-          <RegExpr    String="[^\s:]+" attribute="Error"    context="#stay"                                          />
-      </context>
-      <context name="For Start" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"    attribute="Error"     context="#pop"                            />
-          <DetectChar   char="="    attribute="Error"     context="#stay"                           />
-          <StringDetect String="TO" attribute="Flow" context="#pop!For End" insensitive="true" />
-          <IncludeRules context="Expression" />
-      </context>
-      <context name="For End" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"      attribute="Line Separator" context="#pop"                          />
-          <StringDetect String="STEP" attribute="Flow"      context="#pop!Expression" insensitive="true" />
-          <IncludeRules context="Expression" />
-      </context>
+<!--
+==============================================================================================
+                                 COMMAND SPECIFIC PARAMETERS
+==============================================================================================
+-->
       
       <!-- "IF" PARAMETERS (INCLUDING "THEN/GOTO" and "ELSE") -->
-      <context name="If Parameters" attribute="Normal" lineEndContext="#pop" >
+      <context name="IF Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar   char=":"      attribute="Error" context="#pop" />
           <StringDetect String="THEN" attribute="Flow"  context="#pop"         insensitive="true" />
-          <StringDetect String="GOTO" attribute="Flow"  context="#pop!If Goto" insensitive="true" />
+          <StringDetect String="GOTO" attribute="Flow"  context="#pop!IF Goto" insensitive="true" />
           <IncludeRules context="Expression" />
       </context>
-      <context name="If Goto" attribute="Normal" lineEndContext="#pop" >
+      <context name="IF Goto" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":"            attribute="Error"       context="#pop"               />
           <RegExpr    String="[0-9]{6,}"  attribute="Error"       context="#pop!Line Finished" />
           <RegExpr    String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
           <RegExpr    String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error"   />
       </context>
       
+      <!-- "FOR" PARAMETERS (INCLUDING "TO" and "STEP") -->
+      <context name="FOR Parameters" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":"         attribute="Error"    context="#pop"                                           />
+          <DetectChar char="="         attribute="Operator" context="#pop!FOR Start"                                 />
+          <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Simple Variable Name" insensitive="true" />
+          <RegExpr    String="[^\s:]+" attribute="Error"    context="#stay"                                          />
+      </context>
+      <context name="FOR Start" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar   char=":"    attribute="Error"     context="#pop"                            />
+          <DetectChar   char="="    attribute="Error"     context="#stay"                           />
+          <StringDetect String="TO" attribute="Flow" context="#pop!FOR End" insensitive="true" />
+          <IncludeRules context="Expression" />
+      </context>
+      <context name="FOR End" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar   char=":"      attribute="Line Separator" context="#pop"                          />
+          <StringDetect String="STEP" attribute="Flow"      context="#pop!Expression" insensitive="true" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- "CALL" PARAMETERS -->
+      <context name="CALL Parameters" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop" />
+          <RegExpr String="[A-Z][A-Z0-9]*" attribute="Command" context="#pop!CALL CMD (Parameters)" />
+      </context>
+      <context name="CALL CMD (Parameters)" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!CALL CMD Parameters" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop"                     />
+          <DetectChar char="(" attribute="Command"        context="#pop!CALL CMD Parameters" />
+          <DetectSpaces        attribute="Normal"         context="#stay"                    />
+      </context>
+      <context name="CALL CMD Parameters" lineEndContext="#pop" >
+          <DetectChar  char=":"  attribute="Line Separator" context="#pop" />
+          <DetectChar  char=")"  attribute="Command"        context="#pop" />
+          <DetectChar  char=","  attribute="Normal"         context="#stay" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- "DEFINT"/"DEFSNG"/"DEFDLB"/"DEFSTR" PARAMETERS (EXAMPLE: I-N,W-Z) -->
+      <context name="DEFINT Parameters" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":" attribute="Line Separator" context="#pop"  />
+          <DetectChar char="-" attribute="Operator" context="#stay" />
+          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
+      </context>
+      
+
+
+
 <!--
 ==============================================================================================
                                    EXPRESSIONS
