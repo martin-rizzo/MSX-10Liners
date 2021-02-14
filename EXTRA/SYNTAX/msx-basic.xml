@@ -415,10 +415,12 @@
       </context>
       
       <!-- "DEFINT"/"DEFSNG"/"DEFDLB"/"DEFSTR" PARAMETERS (EXAMPLE: I-N,W-Z) -->
-      <context name="DEFINT Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Line Separator" context="#pop"  />
-          <DetectChar char="-" attribute="Operator"       context="#stay" />
-          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Variable" context="#stay" />
+      <context name="DEFINT Parameters" attribute="Error" lineEndContext="#pop" >
+          <DetectChar char=":" lookAhead="true"               context="#pop"  />
+          <DetectChar char="-" attribute="Operator"           context="#stay" />
+          <DetectChar char="," attribute="Separator"          context="#stay" />
+          <RegExpr    String="\b[A-Z]\b" attribute="Variable" context="#stay" insensitive="true" />
+          <DetectSpaces                  attribute="Normal"   context="#stay" />
       </context>
       
       <!-- "DEF FNxxx" PARAMETERS -->
@@ -689,6 +691,7 @@
       <itemData name="Constant"            defStyleNum="dsConstant"     />
       <itemData name="Remark"              defStyleNum="dsComment"      />
       <itemData name="Flow"                defStyleNum="dsControlFlow"  />
+      <itemData name="Separator"           defStyleNum="dsNormal"       />
       <itemData name="Line Number"         defStyleNum="dsPreprocessor" />
       <itemData name="Line Separator"      defStyleNum="dsControlFlow"  />
       <itemData name="Parameter Separator" defStyleNum="dsNormal"       />
