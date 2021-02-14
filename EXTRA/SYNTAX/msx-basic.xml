@@ -47,6 +47,7 @@
       <!-- COMMANDS -->
       <context name="Commands" >
         <DetectChar   char=":" attribute="Line Separator" context="#stay" />
+        <DetectChar   char="'"          attribute="Remark"  context="Inside Remark"                               />
         <DetectChar   char="_"          attribute="Command" context="CALL Parameters"                             />
         <StringDetect String="BEEP"     attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="BLOAD"    attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -417,7 +418,7 @@
       <context name="DEFINT Parameters" attribute="Normal" lineEndContext="#pop" >
           <DetectChar char=":" attribute="Line Separator" context="#pop"  />
           <DetectChar char="-" attribute="Operator"       context="#stay" />
-          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Char" context="#stay" />
+          <AnyChar String="ABCDEFGHIJKLMNOPQRSTUVWXYZ" attribute="Variable" context="#stay" />
       </context>
       
       <!-- "DEF FNxxx" PARAMETERS -->
