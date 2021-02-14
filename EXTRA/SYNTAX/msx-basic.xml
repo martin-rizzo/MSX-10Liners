@@ -78,7 +78,7 @@
         <StringDetect String="GOTO"     attribute="Flow"    context="Line Number"              insensitive="true" />
         <StringDetect String="IF"       attribute="Flow"    context="IF Parameters"            insensitive="true" />
         <StringDetect String="INPUT"    attribute="Command" context="Hash+Command Parameters"  insensitive="true" />
-        <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"              insensitive="true" />
+        <StringDetect String="INTERVAL" attribute="Command" context="ON|OFF|STOP"              insensitive="true" />
         <StringDetect String="KEY"      attribute="Command" context="KEY Parameters"           insensitive="true" />
         <StringDetect String="LET"      attribute="Command" context="Assignment"               insensitive="true" />
         <StringDetect String="LINE"     attribute="Command" context="LINE Subcommands"         insensitive="true" />
@@ -112,9 +112,9 @@
         <StringDetect String="SCREEN"   attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="SOUND"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="SPRITE$(" attribute="Command" context="Index+Equal+Expr"         insenstivie="true" />
-        <StringDetect String="SPRITE"   attribute="Command" context="On Off Stop"              insensitive="true" />
-        <StringDetect String="STOP"     attribute="Command" context="On Off Stop"              insensitive="true" />
-        <StringDetect String="STRIG("   attribute="Command" context="Index|On Off Stop"        insensitive="true" />
+        <StringDetect String="SPRITE"   attribute="Command" context="ON|OFF|STOP"              insensitive="true" />
+        <StringDetect String="STOP"     attribute="Command" context="ON|OFF|STOP"              insensitive="true" />
+        <StringDetect String="STRIG("   attribute="Command" context="Index+ON|OFF|STOP"        insensitive="true" />
         <StringDetect String="SWAP"     attribute="Command" context="Var Parameters"           insensitive="true" />
         <StringDetect String="TROFF"    attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="TRON"     attribute="Command" context="Line Finished"            insensitive="true" />
@@ -261,20 +261,20 @@
       <!-- "ON" OR "OFF" OR <nothing> -->
       <context name="ON|OFF" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
           <IncludeRules context="#pop-if-line-separator" />
-          <StringDetect String="ON"  attribute="Constant" context="#stay" insensitive="true" />
-          <StringDetect String="OFF" attribute="Constant" context="#stay" insensitive="true" />
+          <StringDetect String="ON"  attribute="Constant" context="Line Finished" insensitive="true" />
+          <StringDetect String="OFF" attribute="Constant" context="Line Finished" insensitive="true" />
           <DetectSpaces              attribute="Normal"   context="#stay" />
       </context>
       
       <!-- "ON" OR "OFF" OR "STOP" OR <nothing> -->
-      <context name="On Off Stop" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+      <context name="ON|OFF|STOP" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
           <IncludeRules context="ON|OFF" />
-          <StringDetect String="STOP" attribute="Constant" context="#stay" insensitive="true" />
+          <StringDetect String="STOP" attribute="Constant" context="Line Finished" insensitive="true" />
       </context>
       
       <!-- (INDEX) ON / OFF / STOP PARAMETERS -->
-      <context name="Index|On Off Stop" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=")" attribute="Command" context="#pop!On Off Stop" />
+      <context name="Index+ON|OFF|STOP" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=")" attribute="Command" context="#pop!ON|OFF|STOP" />
           <IncludeRules context="Expression" />
       </context>
       
@@ -483,7 +483,7 @@
           <StringDetect String="ON"      attribute="Constant"       context="#stay" insensitive="true" />
           <StringDetect String="OFF"     attribute="Constant"       context="#stay" insensitive="true" />
           <StringDetect String="LIST"    attribute="Constant"       context="#stay" insensitive="true" />
-          <DetectChar   char="("         attribute="Command"        context="#pop!Index|On Off Stop"   />
+          <DetectChar   char="("         attribute="Command"        context="#pop!Index+ON|OFF|STOP"   />
           <RegExpr      String="[0-9]+"  attribute="Normal"         context="#pop!Command Parameters"  />
           <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
       </context>
