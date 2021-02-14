@@ -226,8 +226,7 @@
       <!-- COMMAND PARAMETERS -->
       <context name="Command Parameters" attribute="Normal" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar char=":" attribute="Line Separator"      context="#pop"  />
-          <DetectChar char="," attribute="Parameter Separator" context="#stay" />
+          <DetectChar   char="," attribute="Parameter Separator" context="#stay" />
           <IncludeRules context="Expression" />
       </context>
       
@@ -307,29 +306,28 @@
       </context>
       
       <!-- LINE NUMBER (AS THE ONLY PARAMETER) -->
-      <context name="Line Number" attribute="Normal" lineEndContext="#pop"  >
-          <DetectChar char=":"            attribute="Error"       context="#pop"               />
+      <context name="Line Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
           <RegExpr    String="[0-9]{6,}"  attribute="Error"       context="#pop!Fatal Error"   />
           <RegExpr    String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
-          <RegExpr    String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error"   />
+          <DetectSpaces                   attribute="Normal"      context="#stay"              />
       </context>
       
       <!-- LINE NUMBER LIST (LINE1, LINE2, LINE3, ...) -->
-      <context name="Line Number List" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":"            attribute="Line Separator" context="#pop"  />
-          <DetectChar char=","            attribute="Operator"       context="#stay" />
-          <RegExpr    String="[0-9]{6,}"  attribute="Error"          context="#stay" />
-          <RegExpr    String="[0-9]{0,5}" attribute="Line Number"    context="#stay" />
-          <RegExpr    String="[^\s:,]+"   attribute="Error"          context="#stay" />
+      <context name="Line Number List" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <RegExpr      String="[0-9]{6,}"   attribute="Error"       context="#stay" />
+          <RegExpr      String="[0-9]{0,5}"  attribute="Line Number" context="#stay" />
+          <DetectChar   char=","             attribute="Separator"   context="#stay" />
+          <DetectSpaces                      attribute="Normal"      context="#stay" />
       </context>
       
       <!-- LINE NUMBER RANGE (START - END) -->
-      <context name="Line Number Range" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":"            attribute="Line Separator" context="#pop"  />
-          <DetectChar char="-"            attribute="Operator"       context="#stay" />
-          <RegExpr    String="[0-9]{6,}"  attribute="Error"          context="#stay" />
-          <RegExpr    String="[0-9]{0,5}" attribute="Line Number"    context="#stay" />
-          <RegExpr    String="[^\s:-]+"   attribute="Error"          context="#stay" />
+      <context name="Line Number Range" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <RegExpr      String="[0-9]{6,}"  attribute="Error"          context="#stay" />
+          <RegExpr      String="[0-9]{0,5}" attribute="Line Number"    context="#stay" />
+          <DetectChar   char="-"            attribute="Operator"       context="#stay" />
+          <DetectSpaces                     attribute="Normal"         context="#stay" />
       </context>
       
       <!-- GOTO <line-number> -->
