@@ -81,7 +81,7 @@
         <StringDetect String="INTERVAL" attribute="Command" context="On Off Stop"              insensitive="true" />
         <StringDetect String="KEY"      attribute="Command" context="KEY Parameters"           insensitive="true" />
         <StringDetect String="LET"      attribute="Command" context="Assignment"               insensitive="true" />
-        <StringDetect String="LINE"     attribute="Command" context="Line Commands"            insensitive="true" />
+        <StringDetect String="LINE"     attribute="Command" context="LINE Subcommands"            insensitive="true" />
         <StringDetect String="LIST"     attribute="Command" context="Line Number Range"        insensitive="true" />
         <StringDetect String="LLIST"    attribute="Command" context="Line Number Range"        insensitive="true" />
         <StringDetect String="LOAD"     attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -101,7 +101,7 @@
         <StringDetect String="PRESET"   attribute="Command" context="Coord+Command Parameters" insensitive="true" />
         <StringDetect String="PRINT"    attribute="Command" context="PRINT Parameters"         insensitive="true" />
         <StringDetect String="PSET"     attribute="Command" context="Coord+Command Parameters" insensitive="true" />
-        <StringDetect String="PUT"      attribute="Command" context="Put Commands"             insensitive="true" />
+        <StringDetect String="PUT"      attribute="Command" context="PUT Subcommands"             insensitive="true" />
         <StringDetect String="READ"     attribute="Command" context="Var Parameters"           insensitive="true" />
         <StringDetect String="REM"      attribute="Remark"  context="Inside Remark"            insensitive="true" />
         <StringDetect String="RENUM"    attribute="Command" context="Line Number List"         insensitive="true" />
@@ -123,7 +123,7 @@
         <StringDetect String="WIDTH"    attribute="Command" context="1 Command Parameter"      insensitive="true" />
       </context>
       
-      <context name="Line Commands" lineEndContext="#pop">
+      <context name="LINE Subcommands" lineEndContext="#pop">
         <StringDetect String="INPUT"  attribute="Command" context="#pop!Hash+Command Parameters"  insensitive="true" />
         <AnyChar      String="-S("    lookAhead="true"    context="#pop!Coord+Command Parameters" insensitive="true" />
         <RegExpr      String="[^\s]"  attribute="Error"   context="#pop!Fatal Error"                                 />
@@ -139,7 +139,7 @@
         <DetectSpaces                   attribute="Normal"  context="#stay" />
       </context>
       
-      <context name="Put Commands" lineEndContext="#pop">
+      <context name="PUT Subcommands" lineEndContext="#pop">
         <DetectChar   char=":"         attribute="Error"   context="#pop"                                       />
         <StringDetect String="SPRITE"  attribute="Command" context="#pop!Command Parameters" insensitive="true" />
         <RegExpr      String="[^\s:]+" attribute="Error"   context="#stay"                                      />
