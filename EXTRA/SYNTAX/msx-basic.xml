@@ -46,7 +46,8 @@
 
       <!-- COMMANDS -->
       <context name="Commands" >
-        <DetectChar   char="_"          attribute="Command" context="CALL Parameters"          insensitive="true" />
+        <DetectChar   char=":" attribute="Line Separator" context="#stay" />
+        <DetectChar   char="_"          attribute="Command" context="CALL Parameters"                             />
         <StringDetect String="BEEP"     attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="BLOAD"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="BSAVE"    attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -55,7 +56,7 @@
         <StringDetect String="CLEAR"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="CLOAD?"   attribute="Command" context="1 Command Parameter"      insensitive="true" />
         <StringDetect String="CLOAD"    attribute="Command" context="1 Command Parameter"      insensitive="true" />
-        <StringDetect String="CLOSE"    attribute="Command" context="Command Parameters"       insensitive="true" />
+        <StringDetect String="CLOSE"    attribute="Command" context="File Number Parameters"   insensitive="true" />
         <StringDetect String="CLS"      attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="COLOR"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="CSAVE"    attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -72,7 +73,6 @@
         <StringDetect String="ERROR"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="FOR"      attribute="Flow"    context="FOR Parameters"           insensitive="true" />
         <StringDetect String="FILES"    attribute="Command" context="Command Parameters"       insensitive="true" />
-        <!-- FN -->
         <StringDetect String="GOSUB"    attribute="Flow"    context="Line Number"              insensitive="true" />
         <StringDetect String="GOTO"     attribute="Flow"    context="Line Number"              insensitive="true" />
         <StringDetect String="IF"       attribute="Flow"    context="IF Parameters"            insensitive="true" />
@@ -85,7 +85,7 @@
         <StringDetect String="LLIST"    attribute="Command" context="Line Number Range"        insensitive="true" />
         <StringDetect String="LOAD"     attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="LOCATE"   attribute="Command" context="Command Parameters"       insensitive="true" />
-        <!-- LPRINT -->
+        <StringDetect String="LPRINT"   attribute="Command" context="PRINT Parameters"         insensitive="true" />
         <StringDetect String="MERGE"    attribute="Command" context="1 Command Parameter"      insensitive="true" />
         <StringDetect String="MID$("    attribute="Command" context="Params+Equal+Expr"        insensitive="true" />
         <StringDetect String="MOTOR"    attribute="Command" context="ON|OFF"                   insensitive="true" />
@@ -98,7 +98,7 @@
         <StringDetect String="PLAY"     attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="POKE"     attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="PRESET"   attribute="Command" context="Coord+Command Parameters" insensitive="true" />
-        <!-- PRINT -->
+        <StringDetect String="PRINT"    attribute="Command" context="PRINT Parameters"         insensitive="true" />
         <StringDetect String="PSET"     attribute="Command" context="Coord+Command Parameters" insensitive="true" />
         <StringDetect String="PUT"      attribute="Command" context="Put Commands"             insensitive="true" />
         <StringDetect String="READ"     attribute="Command" context="Var Parameters"           insensitive="true" />
@@ -213,6 +213,14 @@
           <DetectChar char=","            attribute="Normal"         context="#stay"                                   />
           <RegExpr    String="[A-Z]"      attribute="Variable"       context="Inside Variable Name" insensitive="true" />
           <RegExpr    String="[^\s:,]+"   attribute="Error"          context="#stay"                                   />
+      </context>
+      
+      <!-- FILE NUMBER PARAMETERS (MULTIPLE PARAMETERS BUT ALL OF THEM ARE FILE NUMBERS) -->
+      <context name="File Number Parameters" attribute="Normal" lineEndContext="#pop" >
+          <DetectChar char=":"        lookAhead="true"   context="#pop"        />
+          <RegExpr    String="[0-9#]" lookAhead="true"   context="File Number" />
+          <DetectChar char=","        attribute="Normal" context="#stay"       />
+          <DetectSpaces               attribute="Normal" context="#stay"       />
       </context>
       
       <!-- COMMAND PARAMETERS -->
@@ -499,6 +507,24 @@
           <DetectSpaces          attribute="Normal"  context="#stay"           />
       </context>
       
+      <!-- "PRINT" PARAMETERS -->
+      <context name="PRINT Parameters" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!PRINT/Text" >
+          <DetectChar   char=":"       attribute="Line Separator" context="#pop"                                />
+          <DetectChar   char="#"       lookAhead="true"           context="File Number"                         />
+          <StringDetect String="USING" attribute="Command"        context="#pop!PRINT/USING" insensitive="true" />
+          <DetectChar   char=","       attribute="Normal"         context="#stay"                               />
+          <DetectSpaces                attribute="Normal"         contest="#stay"                               />
+      </context>
+      <context name="PRINT/USING" attribute="Error" lineEndContext="#pop" >
+          <DetectChar  char=";" attribute="Operator" context="#pop!PRINT/Text" />
+          <IncludeRules context="Expression" />
+      </context>
+      <context name="PRINT/Text" lineEndContext="#pop" >
+          <DetectChar char=":" lookAhead="true"  context="#pop" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      
 <!--
 ==============================================================================================
                                    EXPRESSIONS
@@ -519,10 +545,10 @@
       </context>
       
       <!-- EXPRESSION -->
-      <context name="Expression" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Line Separator" context="#pop"       />
-          <DetectChar char=")" attribute="Operator"       context="#pop"       />
-          <DetectChar char="(" attribute="Operator"       context="Expression" />
+      <context name="Expression" attribute="Error" lineEndContext="#pop" >
+          <DetectChar char=":"          lookAhead="true"          context="#pop"       />
+          <DetectChar char=")"          attribute="Operator"      context="#pop"       />
+          <DetectChar char="("          attribute="Operator"      context="Expression" />
           <IncludeRules context="Operators" />
           <IncludeRules context="Functions" />
           <StringDetect String="&amp;H" attribute="Hex Number"    context="Inside Hex Number"    insensitive="true" />
@@ -531,6 +557,7 @@
           <RegExpr    String="[+-]?[0-9]*\.?[0-9]+([ED][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"                insensitive="true" />
           <RegExpr    String="[A-Z]"                                       attribute="Variable" context="Inside Variable Name" insensitive="true" />
           <DetectChar char='"'                                             attribute="String"   context="Inside String"                           />
+          <DetectSpaces   attribute="Normal" context="#stay" />
       </context>
       
       <!-- "= EXPRESSION" -->
@@ -662,7 +689,7 @@
       <itemData name="Remark"              defStyleNum="dsComment"      />
       <itemData name="Flow"                defStyleNum="dsControlFlow"  />
       <itemData name="Line Number"         defStyleNum="dsPreprocessor" />
-      <itemData name="Line Separator"      defStyleNum="dsPreprocessor" bold="true" />
+      <itemData name="Line Separator"      defStyleNum="dsControlFlow"  />
       <itemData name="Parameter Separator" defStyleNum="dsNormal"       />
       
       <itemData name="Unnumbered Line" defStyleNum="dsNormal" />
