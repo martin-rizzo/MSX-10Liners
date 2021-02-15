@@ -2,53 +2,38 @@
 <!DOCTYPE language SYSTEM "language.dtd">
 <language name="MSX-BASIC"
           section="Sources" 
-          version="4"
+          version="1"
           kateversion="5.0"
           extensions="*.bas;*.asc"
           priority="10"
           indenter="normal"
           author="Martin Rizzo (martinrizzo@gmail.com)"
           >
-
-<!-- 
-
-  Documentation:
-      https://docs.kde.org/stable5/en/applications/katepart/highlight.html
-
--->
-          
   <highlighting>
-
-  
+    
     <contexts>
-
-
       
-      <context name="Normal" attribute="Unnumbered Line" lineEndContext="#stay">
-          <RegExpr String="[0-9]{6,}"  attribute="Error"        context="Statements"   />
-          <RegExpr String="[0-9]{0,5}" attribute="Line Number"  context="Statements"   />
+      <context name="Normal" attribute="Normal" lineEndContext="#stay">
+          <RegExpr String="[0-9]{6,}"  attribute="Error"       context="Statements" />
+          <RegExpr String="[0-9]{0,5}" attribute="Line Number" context="Statements" />
       </context>
       
-      <context name="Statements" attribute="Normal" lineEndContext="#pop" >
+      <context name="Statements" attribute="Error" lineEndContext="#pop" >
         <IncludeRules context="Commands" />
-        <RegExpr String="[A-Z]"  lookAhead="true"  context="Assignment" insensitive="true" />
-        <RegExpr String="[^\s:]" attribute="Error" context="#stay" />
+        <RegExpr      String="[A-Z]"  lookAhead="true"   context="Assignment" insensitive="true" />
+        <DetectSpaces                 attribute="Normal" context="#stay" />
       </context>
       
-
-
-
 <!--
 ==============================================================================================
-                               COMMANDS AND FUNCTIONS
+                                      COMMANDS
 ==============================================================================================
 -->
-
-      <!-- COMMANDS -->
+      
       <context name="Commands" >
-        <DetectChar   char=":" attribute="Line Separator" context="#stay" />
-        <DetectChar   char="'"          attribute="Remark"  context="Inside Remark"                               />
-        <DetectChar   char="_"          attribute="Command" context="CALL Parameters"                             />
+        <DetectChar char=":" attribute="Line Separator" context="#stay"           />
+        <DetectChar char="'" attribute="Remark"         context="Inside Remark"   />
+        <DetectChar char="_" attribute="Command"        context="CALL Parameters" />
         <StringDetect String="BEEP"     attribute="Command" context="Line Finished"            insensitive="true" />
         <StringDetect String="BLOAD"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="BSAVE"    attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -123,31 +108,31 @@
         <StringDetect String="WAIT"     attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="WIDTH"    attribute="Command" context="1 Command Parameter"      insensitive="true" />
       </context>
-      
       <context name="LINE Subcommands" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
-        <AnyChar      String="-S("    lookAhead="true"    context="#pop!Coord+Command Parameters" insensitive="true" />
-        <StringDetect String="INPUT"  attribute="Command" context="#pop!Hash+Command Parameters"  insensitive="true" />
-        <DetectSpaces                 attribute="Normal"  context="#stay" />
+        <AnyChar      String="-S("      lookAhead="true"    context="#pop!Coord+Command Parameters" insensitive="true" />
+        <StringDetect String="INPUT"    attribute="Command" context="#pop!Hash+Command Parameters"  insensitive="true" />
+        <DetectSpaces                   attribute="Normal"  context="#stay" />
       </context>
-      
       <context name="ON Subcommands" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Expression+Go+Line Number List" >
-        <StringDetect String="ERROR"    attribute="Command" context="Goto+Line Number"       insensitive="true" />
+        <StringDetect String="ERROR"    attribute="Command" context="Goto+Line Number"             insensitive="true" />
         <StringDetect String="INTERVAL" attribute="Command" context="Expression+Gosub+Line Number" insensitive="true" />
-        <StringDetect String="KEY"      attribute="Command" context="Gosub+Line Number List" insensitive="true" />
-        <StringDetect String="SPRITE"   attribute="Command" context="Gosub+Line Number"      insensitive="true" />
-        <StringDetect String="STOP"     attribute="Command" context="Gosub+Line Number"      insensitive="true" />
-        <StringDetect String="STRIG"    attribute="Command" context="Gosub+Line Number List" insensitive="true" />
+        <StringDetect String="KEY"      attribute="Command" context="Gosub+Line Number List"       insensitive="true" />
+        <StringDetect String="SPRITE"   attribute="Command" context="Gosub+Line Number"            insensitive="true" />
+        <StringDetect String="STOP"     attribute="Command" context="Gosub+Line Number"            insensitive="true" />
+        <StringDetect String="STRIG"    attribute="Command" context="Gosub+Line Number List"       insensitive="true" />
+        <DetectSpaces                   attribute="Normal"  context="#stay" />
+      </context>
+      <context name="PUT Subcommands" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+        <StringDetect String="SPRITE"   attribute="Command" context="#pop!Command Parameters" insensitive="true" />
         <DetectSpaces                   attribute="Normal"  context="#stay" />
       </context>
       
-      <context name="PUT Subcommands" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
-        <StringDetect String="SPRITE"  attribute="Command" context="#pop!Command Parameters" insensitive="true" />
-        <DetectSpaces                  attribute="Normal"  context="#stay" />
-      </context>
+<!--
+==============================================================================================
+                                        FUNCTIONS
+==============================================================================================
+-->
       
-      
-      
-      <!-- FUNCTIONS -->
       <context name="Functions" lineEndContext="#pop" >
         <StringDetect String="ABS("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
         <StringDetect String="ASC("     attribute="Function" context="1 Function Parameter"   insensitive="true" />
@@ -218,7 +203,7 @@
       <!-- MULTIPLE COMMAND PARAMETERS -->
       <context name="Command Parameters" attribute="Normal" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char="," attribute="Parameter Separator" context="#stay" />
+          <DetectChar   char="," attribute="Separator" context="#stay" />
           <IncludeRules context="Expression" />
       </context>
       
@@ -233,15 +218,15 @@
       <!-- MULTIPLE FUNCTION PARAMETERS -->
       <context name="Function Parameters" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar char=")" attribute="Function"            context="#pop"  />
-          <DetectChar char="," attribute="Parameter Separator" context="#stay" />
+          <DetectChar char=")" attribute="Function"  context="#pop"  />
+          <DetectChar char="," attribute="Separator" context="#stay" />
           <IncludeRules context="Expression" />
       </context>
       
       <!-- VAR PARAMETERS (MULTIPLE PARAMETERS BUT ALL OF THEM ARE VARIABLE NAMES) -->
       <context name="Var Parameters" attribute="Normal" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char=","            attribute="Normal"         context="#stay"                                   />
+          <DetectChar   char=","            attribute="Separator"      context="#stay"                                   />
           <RegExpr      String="[A-Z]"      attribute="Variable"       context="Inside Variable Name" insensitive="true" />
           <RegExpr      String="[^\s:,]+"   attribute="Error"          context="#stay"                                   />
       </context>
@@ -249,9 +234,9 @@
       <!-- FILE NUMBER PARAMETERS (MULTIPLE PARAMETERS BUT ALL OF THEM ARE FILE NUMBERS) -->
       <context name="File Number Parameters" attribute="Normal" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <RegExpr      String="[0-9#]" lookAhead="true"   context="File Number" />
-          <DetectChar   char=","        attribute="Normal" context="#stay"       />
-          <DetectSpaces                 attribute="Normal" context="#stay"       />
+          <RegExpr      String="[0-9#]" lookAhead="true"      context="File Number" />
+          <DetectChar   char=","        attribute="Separator" context="#stay"       />
+          <DetectSpaces                 attribute="Normal"    context="#stay"       />
       </context>
       
       <!-- STEP(x,y)-STEP(x,y) #pop -->
@@ -303,9 +288,9 @@
       
       <!-- (param,param,..) = EXPRESSION -->
       <context name="Params+Equal+Expr" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
-          <DetectChar char=")" attribute="Command" context="#pop!Equal|Expression" />
-          <DetectChar char="," attribute="Normal"  context="#stay"                 />
-          <DetectSpaces        attribute="Normal"  context="#stay"                 />
+          <DetectChar char=")" attribute="Command"   context="#pop!Equal|Expression" />
+          <DetectChar char="," attribute="Separator" context="#stay"                 />
+          <DetectSpaces        attribute="Normal"    context="#stay"                 />
           <IncludeRules context="Expression" />
       </context>
       
@@ -395,8 +380,8 @@
       </context>
       <context name="CALL CMD Parameters" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar  char=")"  attribute="Command"        context="#pop" />
-          <DetectChar  char=","  attribute="Normal"         context="#stay" />
+          <DetectChar  char=")"  attribute="Command"   context="#pop" />
+          <DetectChar  char=","  attribute="Separator" context="#stay" />
           <IncludeRules context="Expression" />
       </context>
       
@@ -511,10 +496,10 @@
       <!-- "PRINT" PARAMETERS -->
       <context name="PRINT Parameters" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!PRINT/Text" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char="#"       lookAhead="true"           context="File Number"                         />
-          <StringDetect String="USING" attribute="Command"        context="#pop!PRINT/USING" insensitive="true" />
-          <DetectChar   char=","       attribute="Normal"         context="#stay"                               />
-          <DetectSpaces                attribute="Normal"         contest="#stay"                               />
+          <DetectChar   char="#"       lookAhead="true"      context="File Number"                         />
+          <StringDetect String="USING" attribute="Command"   context="#pop!PRINT/USING" insensitive="true" />
+          <DetectChar   char=","       attribute="Separator" context="#stay"                               />
+          <DetectSpaces                attribute="Normal"    contest="#stay"                               />
       </context>
       <context name="PRINT/USING" attribute="Error" lineEndContext="#pop" >
           <DetectChar   char=";" attribute="Operator" context="#pop!PRINT/Text" />
@@ -656,7 +641,7 @@
       </context>
       
       <!-- LINE FINISHED -->
-      <context name="Line Finished" attribute="Normal Text" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
+      <context name="Line Finished" attribute="Normal" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
           <IncludeRules context="#pop-if-line-separator" />
           <DetectSpaces attribute="Normal" context="#stay" />
       </context>
@@ -678,36 +663,35 @@
           <DetectChar   char="," lookAhead="true" context="#pop" />
       </context>
       
-
     </contexts>
-    <itemDatas>
-      <itemData name="Normal"              defStyleNum="dsNormal"       />
-      <itemData name="Normal Text"         defStyleNum="dsNormal"       />
-      <itemData name="Char"                defStyleNum="dsChar"         />
-      <itemData name="Command"             defStyleNum="dsKeyword"      />
-      <itemData name="Function"            defStyleNum="dsBuiltIn"      />
-      <itemData name="User Function"       defStyleNum="dsFunction"     />
-      <itemData name="Operator"            defStyleNum="dsOperator"     />
-      <itemData name="Number"              defStyleNum="dsDecVal"       />
-      <itemData name="Hex Number"          defStyleNum="dsBaseN"        />
-      <itemData name="Octal Number"        defStyleNum="dsBaseN"        />
-      <itemData name="Binary Number"       defStyleNum="dsBaseN"        />
-      <itemData name="Variable"            defStyleNum="dsVariable"     />
-      <itemData name="Constant"            defStyleNum="dsConstant"     />
-      <itemData name="Remark"              defStyleNum="dsComment"      />
-      <itemData name="Flow"                defStyleNum="dsControlFlow"  />
-      <itemData name="Separator"           defStyleNum="dsNormal"       />
-      <itemData name="Line Number"         defStyleNum="dsPreprocessor" />
-      <itemData name="Line Separator"      defStyleNum="dsControlFlow"  />
-      <itemData name="Parameter Separator" defStyleNum="dsNormal"       />
-      
-      <itemData name="Unnumbered Line" defStyleNum="dsNormal" />
-      <itemData name="Error"           defStyleNum="dsError" />
     
-      <itemData name="Code"        defStyleNum="dsNormal"  />
-      <itemData name="Hex"         defStyleNum="dsBaseN"   />
-      <itemData name="String"      defStyleNum="dsString" />
+<!--
+==============================================================================================
+                                     FONT STYLES
+==============================================================================================
+-->
+    
+    <itemDatas>
+        <itemData name="Normal"         defStyleNum="dsNormal"       />
+        <itemData name="Remark"         defStyleNum="dsComment"      />
+        <itemData name="Error"          defStyleNum="dsError"        />
+        <itemData name="Number"         defStyleNum="dsDecVal"       />
+        <itemData name="Hex Number"     defStyleNum="dsBaseN"        />
+        <itemData name="Octal Number"   defStyleNum="dsBaseN"        />
+        <itemData name="Binary Number"  defStyleNum="dsBaseN"        />
+        <itemData name="Line Number"    defStyleNum="dsPreprocessor" />
+        <itemData name="String"         defStyleNum="dsString"       />
+        <itemData name="Operator"       defStyleNum="dsOperator"     />
+        <itemData name="Constant"       defStyleNum="dsConstant"     />
+        <itemData name="Variable"       defStyleNum="dsVariable"     />
+        <itemData name="Flow"           defStyleNum="dsControlFlow"  />
+        <itemData name="Command"        defStyleNum="dsKeyword"      />
+        <itemData name="Function"       defStyleNum="dsBuiltIn"      />
+        <itemData name="User Function"  defStyleNum="dsFunction"     />
+        <itemData name="Separator"      defStyleNum="dsNormal"       />
+        <itemData name="Line Separator" defStyleNum="dsControlFlow"  />
     </itemDatas>
+    
   </highlighting>
   <general>
     <keywords casesensitive="false" />
