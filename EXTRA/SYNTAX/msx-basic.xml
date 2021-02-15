@@ -441,17 +441,17 @@
       <!-- "FOR" PARAMETERS (INCLUDING "TO" and "STEP") -->
       <context name="FOR Parameters" attribute="Normal" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char="="         attribute="Operator" context="#pop!FOR Start"                                 />
+          <DetectChar   char="="         attribute="Operator" context="#pop!FOR/Start Value"                                 />
           <RegExpr      String="[A-Z]"   attribute="Variable" context="Inside Simple Variable Name" insensitive="true" />
           <RegExpr      String="[^\s:]+" attribute="Error"    context="#stay"                                          />
       </context>
-      <context name="FOR Start" attribute="Normal" lineEndContext="#pop" >
+      <context name="FOR/Start Value" attribute="Normal" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char="="    attribute="Error" context="#stay"                           />
-          <StringDetect String="TO" attribute="Flow"  context="#pop!FOR End" insensitive="true" />
+          <DetectChar   char="="    attribute="Error"   context="#stay"                           />
+          <StringDetect String="TO" attribute="Opeator" context="#pop!FOR/End Value" insensitive="true" />
           <IncludeRules context="Expression" />
       </context>
-      <context name="FOR End" attribute="Normal" lineEndContext="#pop" >
+      <context name="FOR/End Value" attribute="Normal" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
           <StringDetect String="STEP" attribute="Flow" context="#pop!Expression" insensitive="true" />
           <IncludeRules context="Expression" />
@@ -530,6 +530,23 @@
 ==============================================================================================
 -->
       
+      <!-- EXPRESSION -->
+      <context name="Expression" attribute="Error" lineEndContext="#pop" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <DetectChar   char=")"        attribute="Operator"      context="#pop"       />
+          <DetectChar   char="("        attribute="Operator"      context="Expression" />
+          <IncludeRules context="Operators" />
+          <IncludeRules context="Functions" />
+          <StringDetect String="TO"     attribute="Error"         context="#stay"                insensitive="true" />
+          <StringDetect String="&amp;H" attribute="Hex Number"    context="Inside Hex Number"    insensitive="true" />
+          <StringDetect String="&amp;O" attribute="Octal Number"  context="Inside Octal Number"  insensitive="true" />
+          <StringDetect String="&amp;B" attribute="Binary Number" context="Inside Binary Number" insensitive="true" />
+          <RegExpr      String="[+-]?[0-9]*\.?[0-9]+([ED][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"                insensitive="true" />
+          <RegExpr      String="[A-Z]"                                       attribute="Variable" context="Inside Variable Name" insensitive="true" />
+          <DetectChar   char='"'                                             attribute="String"   context="Inside String"                           />
+          <DetectSpaces attribute="Normal" context="#stay" />
+      </context>
+      
       <!-- OPERATORS -->
       <!-- it's only to be included in other contexts -->
       <context name="Operators" >
@@ -541,22 +558,6 @@
           <StringDetect String="EQV" attribute="Operator" context="#stay" insensitive="true" />
           <StringDetect String="IMP" attribute="Operator" context="#stay" insensitive="true" />
           <StringDetect String="MOD" attribute="Operator" context="#stay" insensitive="true" />
-      </context>
-      
-      <!-- EXPRESSION -->
-      <context name="Expression" attribute="Error" lineEndContext="#pop" >
-          <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char=")"        attribute="Operator"      context="#pop"       />
-          <DetectChar   char="("        attribute="Operator"      context="Expression" />
-          <IncludeRules context="Operators" />
-          <IncludeRules context="Functions" />
-          <StringDetect String="&amp;H" attribute="Hex Number"    context="Inside Hex Number"    insensitive="true" />
-          <StringDetect String="&amp;O" attribute="Octal Number"  context="Inside Octal Number"  insensitive="true" />
-          <StringDetect String="&amp;B" attribute="Binary Number" context="Inside Binary Number" insensitive="true" />
-          <RegExpr      String="[+-]?[0-9]*\.?[0-9]+([ED][-+]?[0-9]+)?[#!]?" attribute="Number"   context="#stay"                insensitive="true" />
-          <RegExpr      String="[A-Z]"                                       attribute="Variable" context="Inside Variable Name" insensitive="true" />
-          <DetectChar   char='"'                                             attribute="String"   context="Inside String"                           />
-          <DetectSpaces attribute="Normal" context="#stay" />
       </context>
       
       <!-- "= EXPRESSION" -->
