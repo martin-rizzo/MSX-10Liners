@@ -69,6 +69,7 @@
         <StringDetect String="DEF"      attribute="Command" context="DEF Parameters"           insensitive="true" />
         <StringDetect String="DIM"      attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="DRAW"     attribute="Command" context="1 Command Parameter"      insensitive="true" />
+        <StringDetect String="ELSE"     attribute="Flow"    context="#stay"                    insensitive="true" />
         <StringDetect String="END"      attribute="Flow"    context="Line Finished"            insensitive="true" />
         <StringDetect String="ERASE"    attribute="Command" context="Command Parameters"       insensitive="true" />
         <StringDetect String="ERROR"    attribute="Command" context="Command Parameters"       insensitive="true" />
@@ -207,6 +208,36 @@
 ==============================================================================================
 -->
       
+      <!-- 1 COMMAND PARAMETER -->
+      <context name="1 Command Parameter" attribute="Normal" lineEndContext="#pop" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <DetectChar char="," attribute="Error" context="#pop!Fatal Error" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- MULTIPLE COMMAND PARAMETERS -->
+      <context name="Command Parameters" attribute="Normal" lineEndContext="#pop" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <DetectChar   char="," attribute="Parameter Separator" context="#stay" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- 1 FUNCTION PARAMETER -->
+      <context name="1 Function Parameter" lineEndContext="#pop" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <DetectChar   char=")" attribute="Function" context="#pop"                     />
+          <DetectChar   char="," attribute="Error"    context="#pop!Error Until Bracket" />
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- MULTIPLE FUNCTION PARAMETERS -->
+      <context name="Function Parameters" lineEndContext="#pop" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <DetectChar char=")" attribute="Function"            context="#pop"  />
+          <DetectChar char="," attribute="Parameter Separator" context="#stay" />
+          <IncludeRules context="Expression" />
+      </context>
+      
       <!-- VAR PARAMETERS (MULTIPLE PARAMETERS BUT ALL OF THEM ARE VARIABLE NAMES) -->
       <context name="Var Parameters" attribute="Normal" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
@@ -221,20 +252,6 @@
           <RegExpr      String="[0-9#]" lookAhead="true"   context="File Number" />
           <DetectChar   char=","        attribute="Normal" context="#stay"       />
           <DetectSpaces                 attribute="Normal" context="#stay"       />
-      </context>
-      
-      <!-- COMMAND PARAMETERS -->
-      <context name="Command Parameters" attribute="Normal" lineEndContext="#pop" >
-          <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char="," attribute="Parameter Separator" context="#stay" />
-          <IncludeRules context="Expression" />
-      </context>
-      
-      <!-- COMMAND PARAMETERS (ONLY ONE PARAMETER) -->
-      <context name="1 Command Parameter" attribute="Normal" lineEndContext="#pop" >
-          <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar char="," attribute="Error"  context="#pop!Fatal Error" />
-          <IncludeRules context="Expression" />
       </context>
       
       <!-- STEP(x,y)-STEP(x,y) #pop -->
@@ -330,6 +347,18 @@
           <DetectSpaces                     attribute="Normal"         context="#stay" />
       </context>
       
+      <!-- OPTIONAL LINE NUMBER (AS THE ONLY PARAMETER) -->
+      <context name="Op Line Number" attribute="Normal" lineEndContext="#pop" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <IncludeRules context="Line Number" />
+      </context>
+      
+      <!-- OPTIONAL LINE NUMBER OR "NEXT" (AS THE ONLY PARAMETER) -->
+      <context name="Op Line Number|Next" attribute="Normal" lineEndContext="#pop" >
+          <StringDetect String="NEXT"  attribute="Constant" context="#pop!Line Finished" insensitive="true" />
+          <IncludeRules context="Op Line Number" />
+      </context>
+      
       <!-- GOTO <line-number> -->
       <context name="Goto+Line Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
           <StringDetect String="GOTO" attribute="Command" context="#pop!Line Number" />
@@ -348,46 +377,6 @@
           <DetectSpaces                attribute="Normal"  context="#stay"                 />
       </context>
       
-      <!-- OPTIONAL LINE NUMBER (AS THE ONLY PARAMETER) -->
-      <context name="Op Line Number" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Line Separator" context="#pop" />
-          <IncludeRules context="Line Number" />
-      </context>
-      
-      <!-- OPTIONAL LINE NUMBER OR "NEXT" (AS THE ONLY PARAMETER) -->
-      <context name="Op Line Number|Next" attribute="Normal" lineEndContext="#pop" >
-          <StringDetect String="NEXT"  attribute="Constant" context="#pop!Line Finished" insensitive="true" />
-          <IncludeRules context="Op Line Number" />
-      </context>
-      
-      
-      <!-- FUNCTION PARAMETERS (ONLY ONE PARAMETER) -->
-      <context name="1 Function Parameter" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Error"    context="#pop#pop" />
-          <DetectChar char=")" attribute="Function" context="#pop"     />
-          <DetectChar char="," attribute="Error"    context="#pop!Error Until Bracket" />
-          <IncludeRules context="Expression" />
-      </context>
-      
-      <!-- FUNCTION PARAMETERS -->
-      <context name="Function Parameters" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Error"               context="#pop"  />
-          <DetectChar char=")" attribute="Function"            context="#pop"  />
-          <DetectChar char="," attribute="Parameter Separator" context="#stay" />
-          <IncludeRules context="Expression" />
-      </context>
-      
-      <!-- "FN" FUNCTION PARAMETERS -->
-      <context name="FN Function Parameters" attribute="Error" lineEndContext="#pop" >
-          <DetectChar char=":"                attribute="Error"         context="#pop" />
-          <RegExpr    String="[A-Z][0-9A-Z]*" attribute="User Function" context="#pop!FN/Optional User Parameters" insensitive="true" />
-          <DetectSpaces                       attribute="Normal"        context="#stay" />
-      </context>
-      <context name="FN/Optional User Parameters" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop"  >
-          <DetectChar char="(" attribute="User Function"  context="#pop!Function Parameters" />
-          <DetectSpaces        attribute="Normal"         context="#stay"                    />
-      </context>
-
 <!--
 ==============================================================================================
                                  COMMAND SPECIFIC PARAMETERS
@@ -396,16 +385,16 @@
       
       <!-- "CALL" PARAMETERS -->
       <context name="CALL Parameters" lineEndContext="#pop" >
-          <DetectChar char=":" attribute="Line Separator" context="#pop" />
-          <RegExpr String="[A-Z][A-Z0-9]*" attribute="Command" context="#pop!CALL CMD (Parameters)" />
+          <IncludeRules context="#pop-if-line-separator" />
+          <RegExpr      String="[A-Z][A-Z0-9]*" attribute="Command" context="#pop!CALL CMD (Parameters)" />
       </context>
       <context name="CALL CMD (Parameters)" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!CALL CMD Parameters" >
-          <DetectChar char=":" attribute="Line Separator" context="#pop"                     />
+          <IncludeRules context="#pop-if-line-separator" />
           <DetectChar char="(" attribute="Command"        context="#pop!CALL CMD Parameters" />
           <DetectSpaces        attribute="Normal"         context="#stay"                    />
       </context>
       <context name="CALL CMD Parameters" lineEndContext="#pop" >
-          <DetectChar  char=":"  attribute="Line Separator" context="#pop" />
+          <IncludeRules context="#pop-if-line-separator" />
           <DetectChar  char=")"  attribute="Command"        context="#pop" />
           <DetectChar  char=","  attribute="Normal"         context="#stay" />
           <IncludeRules context="Expression" />
@@ -414,16 +403,16 @@
       <!-- "DEFINT"/"DEFSNG"/"DEFDLB"/"DEFSTR" PARAMETERS (EXAMPLE: I-N,W-Z) -->
       <context name="DEFINT Parameters" attribute="Error" lineEndContext="#pop" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char=":"           lookAhead="true"      context="#pop"  />
-          <DetectChar   char="-"           attribute="Operator"  context="#stay" />
-          <DetectChar   char=","           attribute="Separator" context="#stay" />
-          <RegExpr      String="\b[A-Z]\b" attribute="Variable"  context="#stay" insensitive="true" />
-          <DetectSpaces                    attribute="Normal"    context="#stay" />
+          <DetectChar   char="-"                     attribute="Operator"  context="#stay" />
+          <DetectChar   char=","                     attribute="Separator" context="#stay" />
+          <RegExpr      String="[A-Z]{2,}+[\s\-\,:]" attribute="Error"     context="#stay" insensitive="true" />
+          <RegExpr      String="[A-Z]"               attribute="Variable"  context="#stay" insensitive="true" />
+          <DetectSpaces                              attribute="Normal"    context="#stay" />
       </context>
       
       <!-- "DEF FNxxx" PARAMETERS -->
       <context name="DEF Parameters" attribute="Error" lineEndContext="#pop" >
-          <DetectChar   char=":"    attribute="Error"         context="#pop"                            />
+          <IncludeRules context="#pop-if-line-separator" />
           <StringDetect String="FN" attribute="User Function" context="#pop!DEF:Name+Params+Equal+Expr" />
           <DetectSpaces             attribute="Normal"        context="#stay"                           />
       </context>
@@ -432,34 +421,45 @@
           <DetectSpaces                            attribute="Normal"        context="#stay"                      />
       </context>
       <context name="DEF:Params+Equal+Expr" lineEndContext="#pop" >
-          <DetectChar  char=":" attribute="Error"         cotnext="#pop"                   />
-          <DetectChar  char="(" attribute="User Function" context="#pop!Params+Equal+Expr" />
-          <DetectChar  char="=" attribute="Operator"      context="#pop!Expression"        />
-          <DetectSpaces         attribute="Normal"        context="#stay"                  />
+          <IncludeRules context="#pop-if-line-separator" />
+          <DetectChar   char="(" attribute="User Function" context="#pop!Params+Equal+Expr" />
+          <DetectChar   char="=" attribute="Operator"      context="#pop!Expression"        />
+          <DetectSpaces          attribute="Normal"        context="#stay"                  />
+      </context>
+      
+      <!-- "FN" FUNCTION PARAMETERS -->
+      <context name="FN Function Parameters" attribute="Error" lineEndContext="#pop" >
+          <IncludeRules context="#pop-if-line-separator" />
+          <RegExpr      String="[A-Z][0-9A-Z]*" attribute="User Function" context="#pop!FN/Optional User Parameters" insensitive="true" />
+          <DetectSpaces                       attribute="Normal"        context="#stay" />
+      </context>
+      <context name="FN/Optional User Parameters" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop"  >
+          <DetectChar char="(" attribute="User Function"  context="#pop!Function Parameters" />
+          <DetectSpaces        attribute="Normal"         context="#stay"                    />
       </context>
       
       <!-- "FOR" PARAMETERS (INCLUDING "TO" and "STEP") -->
       <context name="FOR Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":"         attribute="Error"    context="#pop"                                           />
-          <DetectChar char="="         attribute="Operator" context="#pop!FOR Start"                                 />
-          <RegExpr    String="[A-Z]"   attribute="Variable" context="Inside Simple Variable Name" insensitive="true" />
-          <RegExpr    String="[^\s:]+" attribute="Error"    context="#stay"                                          />
+          <IncludeRules context="#pop-if-line-separator" />
+          <DetectChar   char="="         attribute="Operator" context="#pop!FOR Start"                                 />
+          <RegExpr      String="[A-Z]"   attribute="Variable" context="Inside Simple Variable Name" insensitive="true" />
+          <RegExpr      String="[^\s:]+" attribute="Error"    context="#stay"                                          />
       </context>
       <context name="FOR Start" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"    attribute="Error"     context="#pop"                            />
-          <DetectChar   char="="    attribute="Error"     context="#stay"                           />
-          <StringDetect String="TO" attribute="Flow" context="#pop!FOR End" insensitive="true" />
+          <IncludeRules context="#pop-if-line-separator" />
+          <DetectChar   char="="    attribute="Error" context="#stay"                           />
+          <StringDetect String="TO" attribute="Flow"  context="#pop!FOR End" insensitive="true" />
           <IncludeRules context="Expression" />
       </context>
       <context name="FOR End" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"      attribute="Line Separator" context="#pop"                          />
-          <StringDetect String="STEP" attribute="Flow"      context="#pop!Expression" insensitive="true" />
+          <IncludeRules context="#pop-if-line-separator" />
+          <StringDetect String="STEP" attribute="Flow" context="#pop!Expression" insensitive="true" />
           <IncludeRules context="Expression" />
       </context>
       
       <!-- "IF" PARAMETERS (INCLUDING "THEN/GOTO" and "ELSE") -->
       <context name="IF Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"      attribute="Error" context="#pop" />
+          <IncludeRules context="#pop-if-line-separator" />
           <StringDetect String="THEN" attribute="Flow"  context="#pop!IF Then" insensitive="true" />
           <StringDetect String="GOTO" attribute="Flow"  context="#pop!IF Goto" insensitive="true" />
           <IncludeRules context="Expression" />
@@ -469,7 +469,7 @@
           <DetectSpaces                attribute="Normal" context="#stay"        />
       </context>
       <context name="IF Goto" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":"            attribute="Error"       context="#pop"               />
+          <IncludeRules context="#pop-if-line-separator" />
           <RegExpr    String="[0-9]{6,}"  attribute="Error"       context="#pop!Line Finished" />
           <RegExpr    String="[0-9]{0,5}" attribute="Line Number" context="#pop!Line Finished" />
           <RegExpr    String="[^\s:]+"    attribute="Error"       context="#pop!Fatal Error"   />
@@ -477,7 +477,7 @@
       
       <!-- "KEY" PARAMETERS -->
       <context name="KEY Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar   char=":"         attribute="Line Separator" context="#pop" />
+          <IncludeRules context="#pop-if-line-separator" />
           <StringDetect String="ON"      attribute="Constant"       context="#stay" insensitive="true" />
           <StringDetect String="OFF"     attribute="Constant"       context="#stay" insensitive="true" />
           <StringDetect String="LIST"    attribute="Constant"       context="#stay" insensitive="true" />
@@ -488,18 +488,18 @@
       
       <!-- "OPEN" PARAMETERS -->
       <context name="OPEN Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar char=":"                 attribute="Line Separator" context="#pop" />
-          <RegExpr    String="(FOR|AS|LENGTH)" lookAhead="true"           context="OPEN:Last Parameters" insensitive="true" />
+          <IncludeRules context="#pop-if-line-separator" />
+          <RegExpr      String="(FOR|AS|LENGTH)" lookAhead="true"           context="OPEN:Last Parameters" insensitive="true" />
           <IncludeRules context="Expression" />
       </context>
       <context name="OPEN:Last Parameters" attribute="Normal" lineEndContext="#pop" >
-          <DetectChar  char=":" attribute="Line Separator" context="#pop" />
+          <IncludeRules context="#pop-if-line-separator" />
           <StringDetect String="FOR" attribute="Command" context="OPEN:Direction" insensitive="true" />
           <StringDetect String="AS"  attribute="Command" context="File Number"    insensitive="true" />
           <StringDetect String="LEN" attribute="Command" context="OPEN:Length"    insensitive="true" />
       </context>
       <context name="OPEN:Direction" attribute="Error" lineEndContext="#pop" >
-          <DetectChar   char=":"                       lookAhead="true"     context="#pop"  />
+          <IncludeRules context="#pop-if-line-separator" />
           <RegExpr      String="(OUTPUT|INPUT|APPEND)" attribute="Constant" context="#pop"  />
           <DetectSpaces                                attribute="Normal"   context="#stay" />
       </context>
@@ -510,21 +510,19 @@
       
       <!-- "PRINT" PARAMETERS -->
       <context name="PRINT Parameters" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!PRINT/Text" >
-          <DetectChar   char=":"       attribute="Line Separator" context="#pop"                                />
+          <IncludeRules context="#pop-if-line-separator" />
           <DetectChar   char="#"       lookAhead="true"           context="File Number"                         />
           <StringDetect String="USING" attribute="Command"        context="#pop!PRINT/USING" insensitive="true" />
           <DetectChar   char=","       attribute="Normal"         context="#stay"                               />
           <DetectSpaces                attribute="Normal"         contest="#stay"                               />
       </context>
       <context name="PRINT/USING" attribute="Error" lineEndContext="#pop" >
-          <DetectChar  char=";" attribute="Operator" context="#pop!PRINT/Text" />
+          <DetectChar   char=";" attribute="Operator" context="#pop!PRINT/Text" />
           <IncludeRules context="Expression" />
       </context>
       <context name="PRINT/Text" lineEndContext="#pop" >
-          <DetectChar char=":" lookAhead="true"  context="#pop" />
           <IncludeRules context="Expression" />
       </context>
-      
       
 <!--
 ==============================================================================================
@@ -633,7 +631,7 @@
       
       <!-- (#<file-number> | #<expression>) // the hash is optional -->
       <context name="File Number" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!File Number:Expr" >
-          <DetectChar   char=":"     lookAhead="true"   context="#pop"                  />
+          <IncludeRules context="#pop-if-line-separator" />
           <DetectChar   char="#"     attribute="Number" context="#pop!File Number:Expr" />
           <DetectSpaces              attribute="Normal" context="#stay"                 />
       </context>
@@ -651,15 +649,15 @@
       
       <!-- POP IF LINE SEPARATOR IS FOUND -->
       <context name="#pop-if-line-separator" >
-          <DetectChar char=":" lookAhead="true" context="#pop" />
-          <DetectChar char="'" lookAhead="true" context="#pop" />
+          <DetectChar   char=":"      lookAhead="true" context="#pop" />
+          <DetectChar   char="'"      lookAhead="true" context="#pop" />
+          <StringDetect String="ELSE" lookAhead="true" context="#pop" />
       </context>
       
       <!-- LINE FINISHED -->
-      <context name="Line Finished" attribute="Normal Text" lineEndContext="#pop" >
+      <context name="Line Finished" attribute="Normal Text" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
           <IncludeRules context="#pop-if-line-separator" />
-          <DetectChar   char=":"         attribute="Line Separator" context="#pop"  />
-          <RegExpr      String="[^\s:]+" attribute="Error"          context="#stay" />
+          <DetectSpaces attribute="Normal" context="#stay" />
       </context>
       
       <!-- FATAL ERROR -->
