@@ -9,6 +9,12 @@
           indenter="normal"
           author="Martin Rizzo (martinrizzo@gmail.com)"
           >
+  <!--
+     To active the MSX-BASIC syntax highlighting for kate editor,
+     copy this file to
+         * [linux]: ~/.local/share/org.kde.syntax-highlighting/syntax/
+         * [macOS]: "$HOME/Library/Application Support/katepart5/syntax/"
+  -->
   <highlighting>
     
     <contexts>
