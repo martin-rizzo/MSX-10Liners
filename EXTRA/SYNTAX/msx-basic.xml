@@ -587,7 +587,7 @@
       
       <!-- INSIDE A VARIABLE NAME (CAN BE AN ARRAY) -->
       <context name="Inside Variable Name" attribute="Normal" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop" >
-          <DetectChar   char="(" attribute="Variable" context="#pop!Inside Array Subscript" />
+          <RegExpr      String="[$%!#]?\s*\(" attribute="Variable" context="#pop!Inside Array Subscript" />
           <IncludeRules context="Inside Simple Variable Name" />
       </context>
       
