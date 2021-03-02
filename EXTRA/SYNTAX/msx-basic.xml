@@ -129,7 +129,7 @@
         <DetectSpaces                   attribute="Normal"  context="#stay" />
       </context>
       <context name="PUT Subcommands" lineEndContext="#pop" fallthrough="true" fallthroughContext="#pop!Fatal Error" >
-        <StringDetect String="SPRITE"   attribute="Command" context="#pop!Command Parameters" insensitive="true" />
+        <StringDetect String="SPRITE"   attribute="Command" context="PUT SPRITE Parameters" insensitive="true" />
         <DetectSpaces                   attribute="Normal"  context="#stay" />
       </context>
       
@@ -512,6 +512,12 @@
           <IncludeRules context="Expression" />
       </context>
       <context name="PRINT/Text" lineEndContext="#pop" >
+          <IncludeRules context="Expression" />
+      </context>
+      
+      <!-- "PUT SPRITE" PARAMETERS -->
+      <context name="PUT SPRITE Parameters" lineEnContext="#pop">
+          <DetectChar   char="," attribute="Separator" context="#pop!Coord+Command Parameters" />
           <IncludeRules context="Expression" />
       </context>
       
