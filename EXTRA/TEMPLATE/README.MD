@@ -12,10 +12,10 @@
 Files
 -----
 
-    { NAME }.BAS   BASIC source code in ASCII.
-    { NAME }.GIF   Game screenshot.
-    { NAME }.DSK   720Kb disk image for use with the emulator.
-    { NAME }.ZIP   ZIP containing a WAV audio file for use on real MSX.
+    { NAME }.BAS   The BASIC source code of the game (ASCII).
+    { NAME }.GIF   A screenshot of the game.
+    { NAME }.DSK   720Kb disk image to use with the emulator.
+    { NAME }.ZIP   ZIP containing the audio file to use on a real MSX.
     README.HTM     Full documentation in HTML.
     README.MD      Full documentation in Markdown format.
     README.TXT     Text file with a brief description of the game.
@@ -24,7 +24,7 @@ Files
 Gameplay
 --------
 
-You must prevent deadly aliens from entering the cockpit. Aim the targeting crosshair at their heads and fire without mercy. Remember, only headshots can stop them!.
+Brief description of the gameplay ...
 
  - Use arrow keys to control the ...
  - Press spacebar to launch a ...
